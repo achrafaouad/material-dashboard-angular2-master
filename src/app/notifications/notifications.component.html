@@ -1,0 +1,913 @@
+<div class="main-content">
+  <div class="container-fluid"> 
+    <div class="card">
+      <div class="card-header card-header-danger">
+        <h3 class="card-title">Notifications</h3>
+        <p class="card-category">
+          Handcrafted by our friend
+          <a target="_blank" href="https://github.com/mouse0270"
+            >Robert McIntosh</a
+          >. Please checkout the
+          <a href="http://bootstrap-notify.remabledesigns.com/" target="_blank"
+            >full documentation.</a
+          >
+        </p>
+      </div>
+      <div class="card-body">
+        <mat-stepper [linear]="false" #stepper>
+          <mat-step [stepControl]="firstFormGroup">
+            <form [formGroup]="firstFormGroup">
+              <ng-template matStepLabel>titre</ng-template>
+              <div class="card">
+                <div class="card-body">
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-4"></div>
+                      <div class="col-4">
+                        <p style="text-align: center">Titre</p>
+                        <input
+                          id="1"
+                          style="
+                            background-color: #c4ffe9;
+                            border: solid black 1px;
+                            color: white;
+                            border-radius: 2px;
+                          "
+                          type="text"
+                          class="form-control"
+                          placeholder="First name"
+                          text
+                          [value]="title"
+                          (change)="titleF($event)"
+                        />
+                      </div>
+                      <div class="col-4"></div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-4">
+                        <p style="text-align: center">coleur</p>
+                        <input
+                          id="2"
+                          style="
+                            border: solid black 1px;
+                            color: white;
+                            border-radius: 2px;
+                          "
+                          [style.backgroundColor]="title_color"
+                          type="text"
+                          class="form-control"
+                          placeholder="First name"
+                          text
+                          [value]="title_color"
+                          (change)="title_colorF($event)"
+                        />
+                      </div>
+                      <div class="col-4">
+                        <p style="text-align: center">coleur de trait</p>
+                        <input
+                          style="
+                            border: solid black 1px;
+                            color: white;
+                            border-radius: 2px;
+                          "
+                          [style.backgroundColor]="title_bgcolor"
+                          class="form-control"
+                          text
+                          [value]="title_bgcolor"
+                          (change)="title_bgcolorF($event)"
+                        />
+                      </div>
+                      <div class="col-4">
+                        <p style="text-align: center">gras</p>
+                        <mat-slide-toggle (change)="changedGras()">
+                          titre en gras</mat-slide-toggle
+                        >
+                      </div>
+                    </div>
+                    <hr />
+                    <p style="text-align: center">aperçu</p>
+                    <div
+                      style="border: black solid 2px"
+                      [style.backgroundColor]="title_bgcolor"
+                      [style.color]="title_color"
+                      [style.font-weight]="boldTitle"
+                    >
+                      <p style="text-align: center">{{ title }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <button mat-button matStepperNext>Next</button>
+              </div>
+            </form>
+          </mat-step>
+          <mat-step [stepControl]="secondFormGroup" label="Province">
+            <form [formGroup]="secondFormGroup">
+              <div class="container">
+                <div class="row">
+                  <div class="col-sm">
+                    <div class="card">
+                      <div class="card-body">
+                        <p style="text-align: center">Province/Fond</p>
+                        <hr />
+                        <div class="row">
+                          <div class="col-6">
+                            <mat-form-field appearance="fill">
+                              <mat-label>Province</mat-label>
+                              <mat-select
+                                [(value)]="province"
+                                (selectionChange)="onchangeP($event.value)"
+                              >
+                                <mat-option
+                                  *ngFor="let the of provinces"
+                                  value="{{ the }}"
+                                  >{{ the }}</mat-option
+                                >
+                              </mat-select>
+                            </mat-form-field>
+                          </div>
+
+                          <div class="col-6">
+                            <mat-form-field appearance="fill">
+                              <mat-label>fond</mat-label>
+                              <mat-select
+                                [(value)]="fond"
+                                (selectionChange)="onchangeFond($event.value)"
+                              >
+                                <mat-option
+                                  *ngFor="let the of mesFonds"
+                                  value="{{ the.value }}"
+                                  >{{ the.name }}</mat-option
+                                >
+                              </mat-select>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                        <br /><br /><br />
+                        <div id="wrapper" style="  width: 100%;
+              height: 45px;
+              display: flex;
+              align-items: center;
+              justify-content: center;">  
+                     
+                            <button
+                            style="width: 100%;"
+                              mat-raised-button
+                              color="primary"
+                              data-target="#PrevLineModal"
+                              data-toggle="modal"
+                              (click)="previewLineData()"
+                            >
+                              Prevoir les données
+                            </button>
+                         
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm">
+                    <div class="card">
+                      <div class="card-body">
+                        <p style="text-align: center">
+                          le style de votre province
+                        </p>
+                        <div class="container">
+                          <div class="row">
+                            <div class="col-6">
+                              <p style="text-align: center">coleur de trait</p>
+                              <input
+                                style="
+                                  border: solid black 1px;
+                                  color: white;
+                                  border-radius: 2px;
+                                "
+                                [style.backgroundColor]="province_color"
+                                class="form-control"
+                                text
+                                [value]="province_color"
+                                (change)="provinceColor($event)"
+                              />
+                            </div>
+                            <div class="col-6">
+                              <p style="text-align: center">largeur de trait</p>
+                              <input
+                                style="
+                                  border: solid black 1px;
+                                  color: black;
+                                  border-radius: 2px;
+                                "
+                                class="form-control"
+                                type="number"
+                                [value]="strokeWidthP"
+                                (change)="strokeWidthF($event)"
+                              />
+                            </div>
+                          </div>
+                          <hr />
+                          <p style="text-align: center">
+                            choix de type de trait
+                          </p>
+                          <mat-radio-group
+                            aria-label="Select an option"
+                            (change)="onchangeTrait($event.value)"
+                          >
+                            <mat-radio-button
+                              *ngFor="let trs of traits"
+                              [value]="trs.name"
+                            >
+                              {{ trs.value }}
+                            </mat-radio-button>
+                            
+                            <p style="text-align: center;color:green" >{{ trait }}</p>
+                          </mat-radio-group>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row"></div>
+              </div>
+              <div>
+                <button mat-button matStepperPrevious>Back</button>
+                <button mat-button matStepperNext>Next</button>
+              </div>
+            </form>
+          </mat-step>
+          <mat-step>
+            <ng-template matStepLabel>évenements</ng-template>
+            <div class="container">
+              <div class="row">
+                <div class="col-sm">
+                  <div class="card">
+                    <div class="card-body">
+                      <p style="text-align: center">première évenement</p>
+                        <mat-slide-toggle  color="primary" [style.color]='firstEventActivatedStatusColor' (change)="firstEventActivated()">
+                          {{firstEventActivatedStatus}} </mat-slide-toggle
+                        >
+                     <div class="row">
+                      <div class="col-6">
+                        <label> Donnée: </label>
+                        <mat-form-field appearance="fill">
+                          <mat-label>type de donnée </mat-label>
+                          <mat-select
+                            [(value)]="selectedTypeData"
+                            (selectionChange)="onchangeDonne1($event.value)"
+                          >
+                            <mat-option value="ponctuel">Ponctuel</mat-option>
+                            <mat-option value="lineaire">Lineaire</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-6">
+                        <label> Thematique: </label>
+                        <mat-form-field appearance="fill">
+                          <mat-label>Choisie la thematique</mat-label>
+                          <mat-select
+                            [(value)]="selectedTh"
+                            (selectionChange)="onchange11($event.value)"
+                          >
+                            <mat-option
+                              *ngFor="let the of thematique"
+                              value="{{ the }}"
+                              >{{ the }}</mat-option
+                            >
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm">
+                  <div class="card">
+                    <div class="card-body" >
+                      <div *ngIf="verifyEvent1() else poly" >
+
+                      
+                     <p style="text-align: center" >Style</p>
+                     <div class="row">
+                       <div class="col-4">
+                        <label for="colorPoint1">fillColor : </label>
+                        <input class="form-control" type="color" id="colorPoint1"  [value]="colorPointEvent1" (change)="colorPointEvent1F($event)">
+                       </div>
+                       <div class="col-4">
+                        <label for="colorPoint1">fillOpacity : </label>
+                        <input  class="form-control" type="number" id="colorPoint2"  [value]="fillOpacityPointEvent1" (change)="fillOpacityPointEvent1F($event)" >
+                       </div>
+                       <div class="col-4">
+                        <label for="colorPoint1">pointRadius :</label>
+                        <input  class="form-control"type="number" id="colorPoint3"  [value]="pointRadiusPointEvent1" (change)="pointRadiusPointEvent1F($event)" >
+                       </div>
+                     </div>
+                     
+                        
+                    </div>
+                    <ng-template #poly>
+                      <!--  -->
+                      <div>
+
+                      
+                        <p style="text-align: center" >Style</p>
+                        <div class="row">
+                          <div class="col-4">
+                           <label for="colorPoint1">fillColor : </label>
+                           <input class="form-control" type="color" id="colorPoint1"  [(ngModel)]="fillColorPol1" >
+                          </div>
+                          <div class="col-4">
+                           <label for="colorPoint1">strock_color : </label>
+                           <input class="form-control" type="color" id="colorPoint1"  [(ngModel)]="strock_colorPpl1" >
+                          </div>
+                          <div class="col-4">
+                           <label for="colorPoint1">strokeWidth :</label>
+                           <input  class="form-control"type="number" id="colorPoint3"  [(ngModel)]="strokeWidthPol1" >
+                          </div>
+                        </div>
+                        <hr color="#19a2b0">
+                 
+                        <div class="row">
+                          <div class="col-6">
+                           <label for="colorPoint1select">strokeLinecap : </label>
+                           <select class="form-control "  id="colorPoint1select"  [(ngModel)]="strokeLinecapPol1" >
+                                    <option>square</option>
+                                    <option>round</option>
+   
+                                   </select>
+                          </div>
+                          <div class="col-6">
+                           <label for="colorPoint1select">strokeDashstyle : </label>
+                           <select class="form-control "  id="colorPoint1select"  [(ngModel)]="strokeDashstylePol1" >
+                                    <option>dot</option>
+                                    <option>dash</option>
+                                    <option>dashdot</option>
+                                    <option>longdashdot</option>
+   
+                                   </select>
+                          </div>
+                        
+                        </div>
+                        </div>
+                      <!--  -->
+
+                    </ng-template>
+                  </div>
+                </div>
+                </div>
+              </div>
+
+              <!-- --------------------------- -->
+              <div class="row">
+                <div class="col-sm">
+                  <div class="card">
+                    <div class="card-body">
+                      <p style="text-align: center">Deuxième évenement</p>
+                      
+                  <mat-slide-toggle color="primary"(change)="secondEventActivated()" [style.color]='secondEventActivatedStatusColor'>
+                   {{secondEventActivatedStatus}} </mat-slide-toggle
+                  >
+                     <div class="row">
+                      <div class="col-6">
+                        <label> Donnée: </label>
+                        <mat-form-field appearance="fill">
+                          <mat-label>type de donnée </mat-label>
+                          <mat-select
+                            [(value)]="selectedTypeData2"
+                            (selectionChange)="onchangeDonne2($event.value)"
+                          >
+                            <mat-option value="ponctuel">Ponctuel</mat-option>
+                            <mat-option value="lineaire">Lineaire</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-6">
+                        <label> Thematique: </label>
+                        <mat-form-field appearance="fill">
+                          <mat-label>Choisie la thematique</mat-label>
+                          <mat-select
+                            [(value)]="selectedTh2"
+                            (selectionChange)="onchange22($event.value)"
+                          >
+                            <mat-option
+                              *ngFor="let the of thematique"
+                              value="{{ the }}"
+                              >{{ the }}</mat-option
+                            >
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm">
+                  <div class="card">
+                    <div class="card-body">
+                      <div *ngIf="verifyEvent2() else poly22">
+
+                      
+                            <p style="text-align: center" >Style</p>
+                                    <div class="row">
+                                      <div class="col-4">
+                                        <label for="colorPoint1">fillColor : </label>
+                                        <input class="form-control" type="color" id="colorPoint1"  [(ngModel)]="fillColorPol2" >
+                                      </div>
+                                      <div class="col-4">
+                                        <label for="colorPoint1">strock_color : </label>
+                                        <input class="form-control" type="color" id="colorPoint1"  [(ngModel)]="strock_colorPpl2" >
+                                      </div>
+                                      <div class="col-4">
+                                        <label for="colorPoint1">strokeWidth :</label>
+                                        <input  class="form-control"type="number" id="colorPoint3"  [(ngModel)]="strokeWidthPol2" >
+                                      </div>
+                                    </div>
+                          <hr color="#19a2b0">
+              
+                            <div class="row">
+                              <div class="col-6">
+                                <label for="colorPoint1select">strokeLinecap : </label>
+                                <select class="form-control "  id="colorPoint1select"  [(ngModel)]="strokeLinecapPol2" >
+                                        <option>square</option>
+                                        <option>round</option>
+
+                                        </select>
+                              </div>
+                              <div class="col-6">
+                                <label for="colorPoint1select">strokeDashstyle : </label>
+                                <select class="form-control "  id="colorPoint1select"  [(ngModel)]="strokeDashstylePol2" >
+                                        <option>dot</option>
+                                        <option>dash</option>
+                                        <option>dashdot</option>
+                                        <option>longdashdot</option>
+
+                                        </select>
+                              </div>
+                     
+                         </div>
+                      </div>
+                      <!--  -->
+                      <ng-template #poly22>
+                        <p style="text-align: center" >Style</p>
+                     <div class="row">
+                       <div class="col-4">
+                        <label for="colorPoint1">fillColor : </label>
+                        <input class="form-control" type="color" id="colorPoint1"  [value]="colorPointEvent2" (change)="colorPointEvent2F($event)" >
+                       </div>
+                       <div class="col-4">
+                        <label for="colorPoint1">fillOpacity : </label>
+                        <input  class="form-control" type="number" id="colorPoint2"  [value]="fillOpacityPointEvent2" (change)="fillOpacityPointEvent2F($event)"  >
+                       </div>
+                       <div class="col-4">
+                        <label for="colorPoint1">pointRadius :</label>
+                        <input  class="form-control"type="number" id="colorPoint3"  [value]="pointRadiusPointEvent2" (change)="pointRadiusPointEvent2F($event)" >
+                       </div>
+                     </div>
+                     
+
+                      </ng-template>
+
+                     
+                        
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+
+
+
+              <!-- --------------------- -->
+            </div>
+
+
+            <!-- second row -->
+            
+            <!--  -->
+            <div>
+              <button mat-button matStepperPrevious>Back</button>
+              <button mat-button  matStepperNext >Next</button>
+            </div>
+          </mat-step>
+          <mat-step>
+            <ng-template matStepLabel>Filtre et requette</ng-template>
+            <div class="container">
+              <div class="card">
+                <div class="card-body">
+
+                  <p style="text-align: center; font-size: 20px;">Filtre 
+                    <mat-slide-toggle  (change)="ApplyFilte()">
+                     </mat-slide-toggle
+                     >
+
+                  </p>
+                  <table style="width:100%" *ngIf="whatToshowIntheFilter(); else singleTh">
+                    <tr>
+                      <th style="text-align: center" >Donnée 1</th>
+                      <th style="text-align: center">Thematique</th>
+                      <th style="text-align: center" >Operation</th>
+                      <th style="text-align: center">Donnée 2</th>
+                      <th style="text-align: center">Thematique</th>
+                    </tr>
+                    <tr>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td style="text-align: center">{{selectedTypeData}}</td>
+                      <td style="text-align: center">{{selectedTh}}</td>
+                      <td >
+                        
+                        <mat-form-field appearance="fill">
+                          <mat-label>choisie un opérateur</mat-label>
+                          <mat-select [(value)]="operateur" (selectionChange)="Opp($event.value)">
+                            <mat-option value={{op}} *ngFor="let op of operateurs">{{op}}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      
+                    </td>
+                      <td style="text-align: center">{{selectedTypeData2}}</td>
+                      <td style="text-align: center">{{selectedTh2}}</td>
+                    </tr>
+
+                     </table>
+                     <ng-template #singleTh>
+                      <table style="width:100%" >
+                        <tr>
+                          <th style="text-align: center" >Donnée</th>
+                          <th style="text-align: center">Thematique</th>
+                          <th style="text-align: center" >Attribute</th>
+                          <th style="text-align: center">Operation</th>
+                          <th style="text-align: center">Valeur</th>
+                        </tr>
+                        <tr>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <td style="text-align: center">{{selectedTypeData144}}</td>
+                          <td style="text-align: center">{{selectedTh144}}</td>
+                          <td style="text-align: center">
+
+                            <mat-form-field appearance="fill">
+                              <mat-label>sélectionner un </mat-label>
+                              <mat-select [(value)]="selectedAttribute"  (selectionChange)="attribute($event.value)">
+                                <mat-option value="{{att.champ_db_stock}}" *ngFor="let att of attributes" >{{att.champs_event}}</mat-option>
+                            
+                              </mat-select>
+                            </mat-form-field>
+                          
+                          
+                          
+                          </td>
+                          <td >
+                            
+                            <mat-form-field appearance="fill">
+                              <mat-label>choisie un opérateur</mat-label>
+                              <mat-select [(value)]="operateur" (selectionChange)="Opp($event.value)">
+                                <mat-option value={{op}} *ngFor="let op of operateurs">{{op}}</mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          
+                        </td>
+                          <td style="text-align: center">
+                            <mat-form-field appearance="fill">
+                              <mat-label>choisie une valeur</mat-label>
+                              <mat-select [(value)]="valueTO" (selectionChange)="valueRequette($event.value)">
+                                <mat-option value={{op}} *ngFor="let op of valueTOs">{{op}}</mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          
+                          </td>
+                        
+                        </tr>
+    
+                         </table>
+                     </ng-template>
+                  </div>
+              </div>
+              </div>
+            
+            <div>
+              <button mat-button matStepperPrevious >Back</button>
+              <button mat-button  matStepperNext (click)="applaySingleFiltre()">Next</button>
+            </div>
+          </mat-step>
+
+
+        <mat-step>
+          <ng-template matStepLabel>Nord et legendre</ng-template>
+          <form [formGroup]="secondFormGroup">
+            <div class="container">
+              <div class="row">
+                <div class="col-sm">
+                  <div class="card">
+                    <div class="card-body">
+                      <p style="text-align: center">Legendre</p>
+                      <hr />
+                    
+                      
+                          <label for="transparence">Transparence : </label>
+                          <mat-radio-group
+                          aria-label="Select an option"
+                          (change)="LegendreTransparence($event.value)"
+                        >
+                          <mat-radio-button
+                            *ngFor="let trs of trnasparence"
+                            [value]="trs.value"
+                          >
+                            {{ trs.name }}
+                          </mat-radio-button>
+                        </mat-radio-group>
+                        <br>
+
+                        <p style="text-align: center">coleur de legendre</p>
+                        <input
+                          style="
+                            border: solid black 1px;
+                            color: white;
+                            border-radius: 2px;
+                          "
+                          [style.backgroundColor]="lenged_color"
+                          class="form-control"
+                          text
+                          [value]="lenged_color"
+                          (change)="lenged_colorF($event)"
+                        />
+                        
+
+                      
+                   <br><br>
+                 
+                    
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm">
+                  <div class="card">
+                    <div class="card-body">
+                      <p style="text-align: center">
+                        Choix de Nord Symbol
+                      </p>
+                      <hr/>
+                      <mat-radio-group
+                      aria-label="Select an option"
+                      (change)="NorthF($event)"
+                    >
+                      <mat-radio-button
+                        *ngFor="let trs of norths"
+                        [value]="trs.name"
+                      >
+                        <img style="width:100px;height:auto" src={{trs.value}} alt={{trs.name}}/>
+                      </mat-radio-button>
+                    </mat-radio-group>
+
+
+
+                      
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+              <div class="card">
+                <div class="card-body">
+                  <p style="text-align: center">Grille</p>
+                  <mat-slide-toggle color="primary" (change)="changedGrille()">
+                   active </mat-slide-toggle
+                  >
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm">
+                      <p style="text-align: center">coleur des coordonnées</p>
+                      
+                      <input
+                        style="
+                          border: solid black 1px;
+                          color: white;
+                          border-radius: 2px;
+                        "
+                        [style.backgroundColor]="labelColor"
+                        class="form-control"
+                        text
+                        [value]="labelColor"
+                        (change)="labelColorF($event)"
+                      />
+                    </div>
+
+                    <div class="col-sm">
+                      <p style="text-align: center">coleur de Halo</p>
+                      <input
+                        style="
+                          border: solid black 1px;
+                          color: white;
+                          border-radius: 2px;
+                        "
+                        [style.backgroundColor]="haloColor"
+                        class="form-control"
+                        text
+                        [value]="haloColor"
+                        (change)="haloColorrF($event)"
+                      />
+                    </div>
+
+                    <div class="col-sm">
+                      <p style="text-align: center">Type </p>
+                      <mat-radio-group
+                      aria-label="Select an option"
+                      (change)="typeOfCroi($event.value)"
+                    >
+                      <mat-radio-button
+                        *ngFor="let trs of coisillants"
+                        [value]="trs.value"
+                      >
+                        {{trs.name}}
+                      </mat-radio-button>
+                    </mat-radio-group>
+                    </div>
+
+
+                  </div>
+
+                  <br>
+                  <br>
+
+                  <div class="row">
+                    <div class="col-sm">
+                      <p style="text-align: center">taille de Halo </p>
+                      <input   style="
+                      border: solid black 1px;
+                      color: black;
+                      border-radius: 2px;
+                    " class="form-control"type="number" id="taillehalo"  (change)="haloRadiusF($event)" [value]="haloRadius" >
+
+          
+          </div>
+
+                    <div class="col-sm">
+                      <p style="text-align: center">Nombre de lines </p>
+                      <input  style="
+                          border: solid black 1px;
+                          color: rgb(0, 0, 0);
+                          border-radius: 2px;
+                        " class="form-control"type="number" id="numberOfLines"   (change)="numberOfLinesF($event)" [value]="numberOfLines" >
+
+          
+          </div>
+          </div>
+
+
+          </div>
+            </div>
+           
+              
+            </div>
+            <div>
+              <button mat-button matStepperPrevious>Back</button>
+              <button mat-button matStepperNext>Next</button>
+            </div>
+          </form>
+        </mat-step>
+
+      <mat-step>
+
+
+        
+        <ng-template matStepLabel>Print </ng-template>
+
+
+        <div class="constainer">
+          <div class="row">
+            <div class="col-sm">
+              <p style="text-align: center">Une Petite description sera utile </p>
+
+              <hr>
+                      <input   style="
+                      border: solid black 1px;
+                      color: black;
+                      background-color:#c4ffe9; 
+                      border-radius: 2px;
+                    " class="form-control"type="text" id="descriptionF"  (change)="descriptionF($event)" [value]="description" >
+              <br>
+              
+            </div>
+            <div class="col-sm">
+              <p style="text-align: center">la table attributaire</p>
+              <hr>
+              <mat-slide-toggle (change)="AfficherTable()">
+                Afficher </mat-slide-toggle
+               >
+              <mat-slide-toggle (change)="SorterTable()">
+                sorter </mat-slide-toggle
+               >
+            
+
+            <div class="row">
+              <br>
+              <div class="col-6">
+               
+                
+                <mat-form-field appearance="fill">
+                  <mat-label>colonne</mat-label>
+                  <mat-select
+                    [(value)]="colonne"
+                    (selectionChange)="comlonne($event)"
+                  >
+                    <mat-option
+                      *ngFor="let the of colonnes"
+                      value="{{ the.value }}"
+                      >{{ the.name }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <div class="col-6">
+                <mat-form-field appearance="fill">
+                  <mat-label>type de sort</mat-label>
+                  <mat-select
+                    [(value)]="sorttype"
+                    (selectionChange)="onchangetypeSort($event.value)"
+                  >
+                    <mat-option value="Asc">Asc</mat-option
+                    >
+                    <mat-option value="Desc" >Desc</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+
+
+
+            </div>
+          </div>
+        </div>
+        
+
+
+        <button
+        mat-raised-button
+        (click)="prepareAndPrint()"
+      >
+        print
+      </button>
+
+      </mat-step>
+
+
+
+        </mat-stepper>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="PrevLineModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header" style="text-align: center">
+        <h2 class="modal-title" id="exampleModalLabel">
+          Vevify ure data befor submit
+        </h2>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- 
+        <div style="width :auto;height:auto">
+          <div class="mapPrevLine" id="mapPrevLine"  style="width :auto;height:auto" ></div>
+        </div> -->
+
+        <div id="mapWrap" style="width: 100%; height: 400px">
+          <div
+            id="mapPrev"
+            class="mapPrev"
+            style="width: 100%; height: 400px"
+          ></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

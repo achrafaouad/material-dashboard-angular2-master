@@ -1,0 +1,1192 @@
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
+<div id="map" class="map">
+  
+  <div class="draw" id="draw" style="left:45%;" >
+    <button type="button" id="addRoute" class="myButton" data-toggle="modal" data-target="#exampleModal" style="visibility:hidden;">+</button>
+    <button type="button" id="addPoint" class="myButton" data-toggle="modal" data-target="#PointModal" style="visibility:hidden;">+</button>
+    <button type="button" class="myButton" id="drow_Line" style="backgroundColor:rgba(48, 95, 153,0.63)"><i class="bi bi-signpost-split"></i></button>
+    <button type="button" class="myButton" id="drow_Point" style="backgroundColor:rgba(48, 95, 153,0.63)"><i class="bi bi-bullseye"></i></button>
+    <button type="button" class="myButton" id="drow_LineEvent" style="backgroundColor:rgba(48, 95, 153,0.63)"> <i class="bi bi-border-width"></i> </button>
+    <button type="button"  id="instantEvent" class="myButton" data-toggle="modal" data-target="#voleeTh"style="backgroundColor:rgba(48, 95, 153,0.63)"> <i class="bi bi-balloon-fill"></i> </button>
+    
+    <button class="myButton " type="button" id="undo" style= "visibility:hidden; backgroundColor:rgba(250, 176, 5,0.8)">u</button>
+    <button class="myButton"type="button"id="submit_par"style=" visibility: hidden, backgroundColor:rgba(255, 37, 0,0.8)">R</button>
+  </div>
+  <div class="editDiv"> 
+    <button type="button" class="myButton" id="editButton" ><i class="bi bi-info-circle-fill"></i></button>
+
+  </div>
+    
+
+  
+
+  <div class="attQueryDiv" id="attQueryDiv">
+    <div class="headerDiv" id="headerDiv">
+        <label for="">Attribute Query</label>
+    </div><br>
+    <label for="">Select Layer</label>
+    <select name="selectLayer" id="selectLayer">
+    </select><br><br>
+
+    <label for="">Select Attribute</label>
+    <select name="selectAttribute" id="selectAttribute">
+    </select><br><br>
+
+    <label for="">Select Operator</label>
+    <select name="selectOperator" id="selectOperator">
+    </select><br><br>
+
+    <label for="">Enter Value</label>
+    <input type="text" name="enterValue" id="enterValue">
+    <br><br>
+
+    <button type="button" id="attQryRun" class="attQryRun" onclick="attributeQuery()">Run</button>
+    </div>
+
+  <div *ngIf="visibleVideo"  class="videoDiv" id="videoDiv">
+   <div>
+    <button mat-mini-fab color="warn" style="right:0PX" (click)="closeVideo()">	<mat-icon>close</mat-icon></button>
+   </div> 
+    <video src={{this.videoPath}} (play)="ee($event)" (pause)="pp($event)" width="240px" height="auto" id="myvideo" controls preload="none" >
+    </video>
+
+  </div>
+</div>
+
+
+
+<div id="popup" class="ol-popup">
+    <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+    <div id="popup-content"></div>
+  </div>
+
+
+  
+
+
+  <!-- Modal -->
+<div class="modal fade" id="voleeTh" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Ajouter une thematique a la volée </h5>
+        <button type="button" class="close" data-dismiss="modal" id="closing" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="productForm" (ngSubmit)="onSubmitTest()">  
+                          
+                          
+          <div class="container">
+            
+              <p style="text-align:center;font-family:verdana;font-size: 18px;">Evenement</p>  
+              <input style="
+              background-color: #c4ffe9;
+              border: solid black 1px;
+              color: black;
+              border-radius: 2px;"
+               type="text" id="name" name="name" formControlName="name" class="form-control" [(ngModel)]="thmeatiqueName">  
+
+          </div>
+
+        <table class="table" formArrayName="quantities">  
+          <tr>  
+            <th colspan="2">Ajouter votre attributs:</th>  
+            <th width="150px"><button [disabled]="event_exist()" type="button" (click)="addQuantity()" mat-raised-button color="primary">Add More</button></th>  
+          </tr>  
+          <tr *ngFor="let quantity of quantities().controls; let i=index" [formGroupName]="i">  
+            <td> 
+    
+                <label for="name">Atrribut de la table:</label>  
+                  <input 
+                  style="
+              background-color: #c4ffe9;
+              border: solid black 1px;
+              color: black;
+              border-radius: 2px;"
+                  type="text" formControlName="attributes_table" id="exampleFormControlSelect1" class="form-control" [value]="head">
+
+            </td>  
+            <td>  
+                  
+                <label for="name">Attribut de la BD:</label>
+                  <select class="form-control" formControlName="attributes_toSaveOnDataBase" id="exampleFormControlSelect1">
+                    <option>c1</option>
+                    <option>c2</option>
+                    <option>c3</option>
+                    <option>d1</option>
+                    <option>d2</option>
+                    <option>d3</option>
+                    <option>t1</option>
+                    <option>t2</option>
+                    <option>t3</option>
+                  </select> 
+            </td>  
+
+            <td>  
+                <button (click)="removeQuantity(i)" mat-raised-button >Remove</button>  
+            </td>  
+          </tr>  
+        </table>
+        <div>
+          <button mat-raised-button  style="margin-left:8px" (click)="addEvent_typePoint()">ponctuel Event </button> 
+          <button mat-raised-button  (click)="addEvent_typeLine()" >lineaire Event </button> 
+        </div> 
+      </form>  
+         
+      
+  </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="onSubmit(f)" #f="ngForm">
+
+
+          <div class="form-group">
+            <label>La route ajoutée sera une </label>
+            <div class="radio" *ngFor="let segment of segmentType">
+              
+              <label style="margin: 10px;">
+                  <input type="radio" name="segmentType" ngModel [value]="segment" segmentType required  (ngModelChange)="routeType($event)" > 
+                  {{segment}}
+              </label> 
+          </div>
+          </div>
+
+        <div class="form-group" *ngIf="!extension">
+            <label for="exampleInputEmail1">Route Name</label>
+            <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Ajouter le nom de la section que vous avez ajouté" aria-describedby="emailHelp" ngModel #RouteName="ngModel" name="routeName" id="RouteName" text required>
+            <small *ngIf="!RouteName.valid && RouteName.touched" style="color: red;" > ajouter un nom</small>
+          </div>
+
+          <div class="form-group" *ngIf="!extension">
+            <label>Choisie Le référentiel de votre route.</label>
+
+          <select  name="référence" ngModel required #ref  class="form-control form-select form-select-lg mb-3" id="selectReference"aria-label=".form-select-lg example" (ngModelChange)="EnChangeRef($event)">
+            <option value = 1>
+              1
+           </option>
+           <option value = 2>
+            2
+         </option>
+          </select>
+          <small *ngIf="!ref.valid  && ref.touched " style="color: red;" > ajouter un référentiel</small>
+
+        </div>
+
+        <div class="form-group" *ngIf="!extension">
+          <label>Choisie La voie de votre route.</label>
+
+        <select  name="voie" ngModel required #voie  class="form-control form-select form-select-lg mb-3" id="selectVoie"aria-label=".form-select-lg example" (ngModelChange)="voieFunction($event)">
+          <option value = 1>
+            1
+         </option>
+         <option value = 2>
+          2
+       </option>
+        </select>
+        <small *ngIf="!voie.valid && voie.touched " style="color: red;" > ajouter un référentiel</small>
+
+      </div>
+
+          <div class="form-group">
+            <label for="exampleInputPassword1">Json File format</label>
+            <input type="text" class="form-control" id="exampleInputPassword1" value={{last_feature}} ngModel #RouteJson="ngModel" id="RouteJson" name="RouteJson" text >
+            <small *ngIf="!RouteJson.valid" style="color: red;" > ajouter une section</small>
+
+          </div>
+   
+         
+        <div class="form-group">
+      <div class="form-group" style="rigth:0">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button [disabled]="!f.valid" type="submit" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+    </form>
+  </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="PointModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel" *ngIf="singlePoint else doublee">Add Point Event</h5>
+       <ng-template #doublee> <h5 class="modal-title" id="14" >Add line Event</h5></ng-template> 
+        <button type="button" class="close" data-dismiss="modal" id="closeModal144" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="onSubmitPoint(ff)" #ff="ngForm">
+
+          <div class="form-group">
+            <label for="exampleInputEmail1" *ngIf="singlePoint else doublee2">Choisie La thematique de votre point.</label>
+            <ng-template #doublee2> <label for="exampleInputEmail1" >Choisie La thematique de votre lineaire.</label></ng-template> 
+
+          <select  name="thematique" ngModel required  class="form-control form-select form-select-lg mb-3" id="selectThematique"aria-label=".form-select-lg example" (ngModelChange)="eventTypeVhanged($event)">
+            <option *ngFor="let item of eventTypes" [ngValue]="item">
+              {{item}}
+           </option>
+          </select>
+        </div>
+
+        <div class="container">
+          <div class="row">
+            <div class="col-4">
+              <label for="exampleInputEmail1">{{c1Name}}</label>
+              <input type="text" class="form-control" id='c1' placeholder="Ajouter un {{c1Name}}" aria-describedby="emailHelp" ngModel #c1="ngModel" name="c1"  text [required]="c1Name ? '' : null"  >
+              <small *ngIf="!c1.valid && c1.touched" style="color: red;" >Ajouter un {{c1Name}}</small>
+            
+              </div>
+              <div class="col-4">
+                <label for="exampleInputEmail1">{{c2Name}}</label>
+                <input type="text" class="form-control" id='c2' placeholder="Ajouter {{c2Name}}" aria-describedby="emailHelp" ngModel #c2="ngModel" name="c2" text [required]="c2Name ? '' : null"   >
+                <small *ngIf="!c2.valid && c2.touched" style="color: red;" >Ajouter un {{c2Name}}</small>
+              
+              </div>
+              <div class="col-4">
+                <label for="exampleInputEmail1">{{c3Name}}</label>
+                <input type="text" class="form-control" id="c3" placeholder="Ajouter {{c3Name}}" aria-describedby="emailHelp" ngModel #c3="ngModel" name="c3"text [required]="c3Name ? '' : null"  >
+                <small *ngIf="!c3.valid && c3.touched" style="color: red;" >Ajouter un {{c3Name}}</small>
+              
+              </div>
+              </div>
+              </div>
+              <br>
+              <br>
+
+
+
+              <div class="container">
+                <div class="row">
+                  <div class="col-4">
+                    <label for="exampleInputEmail1">{{d1Name}}</label>
+                    <input type="text" class="form-control" id="d1" placeholder="Ajouter {{d1Name}}" aria-describedby="emailHelp" ngModel #d1="ngModel" name="d1" text [required]="d1Name ? '' : null"   > 
+                    <small *ngIf="!d1.valid && d1.touched" style="color: red;" >Ajouter un {{d1Name}}</small>
+                  
+                    </div>
+                    <div class="col-4">
+                      <label for="exampleInputEmail1">{{d2Name}}</label>
+                      <input type="text" class="form-control" id="d2" placeholder="Ajouter {{d2Name}}" aria-describedby="emailHelp" ngModel #d2="ngModel" name="d2"  text [required]="d2Name ? '' : null"  >
+                      <small *ngIf="!d2.valid && d2.touched" style="color: red;" >Ajouter un {{d2Name}}</small>
+                    
+                    </div>
+                    <div class="col-4">
+                      <label for="exampleInputEmail1">{{d3Name}}</label>
+                      <input type="text" class="form-control" id="d3" placeholder="Ajouter {{d3Name}}" aria-describedby="emailHelp" ngModel #d3="ngModel" name="d3"  text [required]="d3Name ? '' : null"  >
+                      <small *ngIf="!d3.valid && d3.touched" style="color: red;" >Ajouter un {{d3Name}}</small>
+                    
+                    </div>
+                    </div>
+                    </div>
+                    <br>
+                    <br>
+
+
+                    <div class="container">
+                      <div class="row">
+                        <div class="col-4">
+                          <label for="exampleInputEmail1">{{t1Name}}</label>
+                          <input type="date" class="form-control" id="t1" placeholder="Ajouter {{t1Name}}" aria-describedby="emailHelp" ngModel #t1="ngModel" name="t1" text [required]="t1Name ? '' : null"  >
+                          <small *ngIf="!t1.valid && t1.touched" style="color: red;" >Ajouter un {{t1Name}}</small>
+                        
+                          </div>
+                          <div class="col-4">
+                            <label for="exampleInputEmail1">{{t2Name}}</label>
+                            <input type="date" class="form-control" id="t2" placeholder="Ajouter {{t2Name}}" aria-describedby="emailHelp" ngModel #t2="ngModel" name="t2"  text [required]="t2Name ? '' : null"  >
+                            <small *ngIf="!t2.valid && t2.touched" style="color: red;" >Ajouter un {{t2Name}}</small>
+                          
+                          </div>
+                          <div class="col-4">
+                            <label for="exampleInputEmail1">{{t3Name}}</label>
+                            <input type="date" class="form-control" id="t3" placeholder="Ajouter {{t3Name}}" aria-describedby="emailHelp" ngModel #t3="ngModel" name="t3"  text [required]="t3Name ? '' : null"  >
+                            <small *ngIf="!t3.valid && t3.touched" style="color: red;" >Ajouter un {{t3Name}}</small>
+                          
+                          </div>
+                          </div>
+                          </div>
+                          <br>
+                          <br>
+              
+
+<div class="container">
+  <div class="row">
+ 
+    <div class="col-12">
+      <label for="exampleInputPassword1">Coordinates</label>
+      <p> {{coordinate12}}</p>
+      
+
+    </div>
+  </div>
+</div>
+         
+            
+          
+            
+     
+          
+        <div class="form-group">
+      <div class="form-group" >
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeModalvolle" (click)="delete()">Close</button>
+        <button [disabled]="!ff.valid" type="submit" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+    </form>
+  </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+<!-- //todo -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="ModalVolee" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel" *ngIf="singlePoint else doublee">Add Point Event</h5>
+       <ng-template #doublee> <h5 class="modal-title" id="14" >Add line Event</h5></ng-template> 
+        <button type="button" #close class="close btn14" data-dismiss="modal" id="closingShit" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="onSubmitVolee(volee)" #volee="ngForm">
+
+          <div class="form-group">
+            <label for="exampleInputEmail1" *ngIf="singlePoint else doublee24"> votre point {{thmeatiqueName}}</label>
+            <ng-template #doublee24> <label for="exampleInputEmail1" > votre lineaire {{thmeatiqueName}}</label></ng-template> 
+
+         
+        </div>
+
+        <div class="container">
+          <div class="row">
+            <div class="col-sm" *ngIf="c1Volee">
+              <label for="exampleInputEmail1">{{c1Name}}</label>
+              <input style="
+              background-color: #c4ffe9;
+              border: solid black 1px;
+              color: black;
+              border-radius: 2px;"
+               type="text" class="form-control" id='c1Volee' placeholder="Ajouter un {{c1Name}}" aria-describedby="emailHelp" ngModel #c1="ngModel" name="c1"  text [required]="c1Name ? '' : null"  >
+              <small *ngIf="!c1.valid && c1.touched" style="color: red;" >Ajouter un {{c1Name}}</small>
+            
+              </div>
+              <div class="col-sm" *ngIf="c2Volee">
+                <label for="exampleInputEmail1">{{c2Name}}</label>
+                <input style="
+                background-color: #c4ffe9;
+                border: solid black 1px;
+                color: black;
+                border-radius: 2px;"
+                 type="text" class="form-control" id='c2Volee' placeholder="Ajouter {{c2Name}}" aria-describedby="emailHelp" ngModel #c2="ngModel" name="c2" text [required]="c2Name ? '' : null"   >
+                <small *ngIf="!c2.valid && c2.touched" style="color: red;" >Ajouter un {{c2Name}}</small>
+              
+              </div>
+              <div class="col-sm" *ngIf="c3Volee">
+                <label for="exampleInputEmail1">{{c3Name}}</label>
+                <input style="
+                background-color: #c4ffe9;
+                border: solid black 1px;
+                color: black;
+                border-radius: 2px;"
+                 type="text" class="form-control" id="c3Volee" placeholder="Ajouter {{c3Name}}" aria-describedby="emailHelp" ngModel #c3="ngModel" name="c3"text [required]="c3Name ? '' : null"  >
+                <small *ngIf="!c3.valid && c3.touched" style="color: red;" >Ajouter un {{c3Name}}</small>
+              
+              </div>
+              </div>
+              </div>
+              <br *ngIf="spacesd()">
+              <br *ngIf="spacesd()">
+
+
+
+              <div class="container">
+                <div class="row">
+                  <div class="col-sm" *ngIf="d1Volee">
+                    <label for="exampleInputEmail1">{{d1Name}}</label>
+                    <input type="text" style="
+                    background-color: #c4ffe9;
+                    border: solid black 1px;
+                    color: black;
+                    border-radius: 2px;"
+                     class="form-control" id="d1Volee" placeholder="Ajouter {{d1Name}}" aria-describedby="emailHelp" ngModel #d1="ngModel" name="d1" text [required]="d1Name ? '' : null"   > 
+                    <small *ngIf="!d1.valid && d1.touched" style="color: red;" >Ajouter un {{d1Name}}</small>
+                  
+                    </div>
+                    <div class="col-sm" *ngIf="d2Volee">
+                      <label for="exampleInputEmail1">{{d2Name}}</label>
+                      <input style="
+                      background-color: #c4ffe9;
+                      border: solid black 1px;
+                      color: black;
+                      border-radius: 2px;"
+                       type="text" class="form-control" id="d2Volee" placeholder="Ajouter {{d2Name}}" aria-describedby="emailHelp" ngModel #d2="ngModel" name="d2"  text [required]="d2Name ? '' : null"  >
+                      <small *ngIf="!d2.valid && d2.touched" style="color: red;" >Ajouter un {{d2Name}}</small>
+                    
+                    </div>
+                    <div class="col-sm" *ngIf="d3Volee">
+                      <label for="exampleInputEmail1" >{{d3Name}}</label>
+                      <input style="
+                      background-color: #c4ffe9;
+                      border: solid black 1px;
+                      color: black;
+                      border-radius: 2px;"
+                      type="text" class="form-control" id="d3Volee" placeholder="Ajouter {{d3Name}}" aria-describedby="emailHelp" ngModel #d3="ngModel" name="d3"  text [required]="d3Name ? '' : null"  >
+                      <small *ngIf="!d3.valid && d3.touched" style="color: red;" >Ajouter un {{d3Name}}</small>
+                    
+                    </div>
+                    </div>
+                    </div>
+                    <br *ngIf="spacest()">
+                    <br  *ngIf="spacest()">
+
+
+                    <div class="container">
+                      <div class="row">
+                        <div class="col-sm" *ngIf="t1Volee">
+                          <label for="exampleInputEmail1" >{{t1Name}}</label>
+                          <input type="date" class="form-control" id="t1Volee" placeholder="Ajouter {{t1Name}}" aria-describedby="emailHelp" ngModel #t1="ngModel" name="t1" text [required]="t1Name ? '' : null"  >
+                          <small *ngIf="!t1.valid && t1.touched" style="color: red;" >Ajouter un {{t1Name}}</small>
+                        
+                          </div>
+                          <div class="col-sm" *ngIf="t2Volee">
+                            <label for="exampleInputEmail1" >{{t2Name}}</label>
+                            <input type="date" class="form-control" id="t2Volee" placeholder="Ajouter {{t2Name}}" aria-describedby="emailHelp" ngModel #t2="ngModel" name="t2"  text [required]="t2Name ? '' : null"  >
+                            <small *ngIf="!t2.valid && t2.touched" style="color: red;" >Ajouter un {{t2Name}}</small>
+                          
+                          </div>
+                          <div class="col-sm" *ngIf="t3Volee">
+                            <label for="exampleInputEmail1" >{{t3Name}}</label>
+                            <input type="date" class="form-control" id="t3Volee" placeholder="Ajouter {{t3Name}}" aria-describedby="emailHelp" ngModel #t3="ngModel" name="t3"  text [required]="t3Name ? '' : null"  >
+                            <small *ngIf="!t3.valid && t3.touched" style="color: red;" >Ajouter un {{t3Name}}</small>
+                          
+                          </div>
+                          </div>
+                          </div>
+                          <br>
+                          <br>
+                    <div class="container" *ngIf="stream">
+                      <webcam *ngIf="notPictured; else picture " [trigger] = "$trigger" (imageCapture)="snapshot($event)"></webcam>
+                      <ng-template  #picture> <img [src]="previewImage" alt=""></ng-template>
+                    </div>
+                    <button type="button" class="btn btn-secondary" (click)="checkpermitions()">ajouter une photo</button>
+                    <button type="button" class="btn btn-secondary" (click)="captrueImage()">capturer</button>
+              
+
+<div class="container">
+  <div class="row">
+ 
+    <div class="col-12">
+      <label for="exampleInputPassword1">Coordinates</label>
+      <p> {{coordinate12}}</p>
+      
+
+    </div>
+  </div>
+</div>
+         
+            
+          
+            
+     
+          
+        <div class="form-group">
+      <div class="form-group" >
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeModalvolle" (click)="closingVolee()">Close</button>
+        <button [disabled]="!volee.valid" type="submit" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+    </form>
+  </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="EditModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">La Route N {{currentId}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       
+
+            <form (ngSubmit)="onSubmitEdit(formula)" #formula="ngForm">
+              <div class="form-group">
+                <label for="exampleInputEmail1">Route Name</label>
+                <input style="
+                background-color: #c4ffe9;
+                border: solid black 1px;
+                color: black;
+                border-radius: 2px;" type="text" class="form-control" id="eeInputEmail1" aria-describedby="emailHelp" ngModel #route_name="ngModel" name="route_name"  id="pointClassement" text    value={{name}} (change)="nameF($event)"> 
+                <small *ngIf="!route_name.valid" style="color: red;" >Ajouter un Nom</small>
+              </div>
+              <div class="container">
+                <div class="row">
+                  <div class="col-6">
+                    <div class="form-group">
+                      <label for="exampleInputEmail1">point kilometrique Début </label>
+                      <input style="
+                      background-color: #c4ffe9;
+                      border: solid black 1px;
+                      color: black;
+                      border-radius: 2px;" type="text" class="form-control"  aria-describedby="emailHelp" ngModel #pkd="ngModel" name="pkd" id="pointClassement" text  value={{pkdd}} (change)="pkddF($event)"> 
+                      <small *ngIf="!pkd.valid" style="color: red;" >Ajouter un pkd</small>
+                    </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">point kilometrique fin </label>
+                        <input style="
+                        background-color: #c4ffe9;
+                        border: solid black 1px;
+                        color: black;
+                        border-radius: 2px;" type="text" class="form-control" aria-describedby="emailHelp" ngModel #pekaF="ngModel" name="pekaF" id="posement" text  value={{pkfd}} (change)="pkfdF($event)"> 
+                        <small *ngIf="!pekaF.valid" style="color: red;" >Ajouter un pkf</small>
+                      </div>
+                      
+                  </div>
+                </div>
+              </div>
+       
+              <br>
+              <div id="wrapper" style="  width: 100%;
+              height: 45px;
+              display: flex;
+              align-items: center;
+              justify-content: center;">  
+                <button mat-raised-button color="warn" style="width: 100%;
+                height: 30px; color:white;" (click)="deleteSection()" type="button"> suprimer la route </button>
+              </div>
+              
+            
+
+
+            <div class="form-group">
+          <div class="form-group" >
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button [disabled]="!formula.valid || verifyy()" type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+        </form>
+
+    
+  </div>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+<div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="false" >
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Evenement Lineaire</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <mat-tab-group mat-align-tabs="center" >
+          <mat-tab label="videos list"> 
+
+            <div class="container">
+              <div class="row">
+                <div class="col-md">
+                  <p style="text-align:center">Route</p>
+                  <mat-form-field appearance="fill" >
+                    <mat-label>Choisie la route</mat-label>
+                    <mat-select [(value)]="selectedRouteT" (selectionChange)="onchangeRouteTable($event.value)"  >
+                      
+                      <mat-option *ngFor="let the of routes" value={{the}}>{{the}}</mat-option>
+                   
+                    </mat-select>
+                  </mat-form-field>
+
+                </div>
+                <div class="col-md">
+                  <p style="text-align:center">Voie</p>  
+                  <mat-form-field appearance="fill">  
+                    <mat-label>Voie</mat-label>
+                    <mat-select [(value)]="selectedVoieT" (selectionChange)="onchangeVoietable($event.value)">
+
+                      <mat-option  value=1 >1</mat-option>
+                      <mat-option  value=2 >2</mat-option>
+                   
+                    </mat-select>
+                  </mat-form-field>
+
+                </div>
+              </div>
+              <table class="table user-view-table m-0"  >
+                <thead>
+                  <tr>
+                    <th>Nom video</th>
+                    <th>pk debut</th>
+                    <th>pk fin</th>
+                    <th>video</th>
+                    
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let v of videos">
+                    <td>{{v.name}}</td>
+                    <td>{{v.pkd}}</td>
+                    <td>{{v.pkf}}</td>
+                    <td><button type="submit" mat-mini-fab  color="primary"  (click)="getMyvideo(v.path,v.pkd,v.pkf,v.voie,v.lrs_routes.route_name)"><mat-icon>play_circle_outline</mat-icon></button></td>
+ 
+                  </tr>
+
+                </tbody>  
+                
+                </table>
+
+
+
+            </div>
+
+          </mat-tab>
+
+
+          <mat-tab label="upload a video">
+            
+
+            <form (ngSubmit)="saveEventvideo(de)" #de="ngForm">
+              <table class="table user-view-table m-0"  >
+                <tbody>
+                
+                  <tr>
+                    <td><label> Route  </label></td>
+                  <td> 
+                    <mat-form-field appearance="fill" ngModel>
+                      <mat-label>Choisie la route</mat-label>
+                      <mat-select [(value)]="selectedRoute" (selectionChange)="onchangeRoute($event.value)"  >
+                        
+                        <mat-option *ngFor="let the of routes" value={{the}}>{{the}}</mat-option>
+                     
+                      </mat-select>
+                    </mat-form-field>
+                  </td>
+                  </tr>
+
+                  <tr>
+
+                    <td><label> Voie  </label></td>
+                  <td>
+                     <mat-form-field appearance="fill">  
+                      <mat-label >Voie</mat-label>
+                      <mat-select [(value)]="selectedVoie" (selectionChange)="onchangeVoie($event.value)" >
+
+                        <mat-option  value=1 >1</mat-option>
+                        <mat-option  value=2 >2</mat-option>
+                     
+                      </mat-select>
+                    </mat-form-field>
+                  </td>
+
+
+                  </tr>
+
+                  <tr>
+                    <td><label> Nom de la video  </label></td>
+                    <input style="
+                    background-color: #c4ffe9;
+                    border: solid black 1px;
+                    color: purple;
+                    border-radius: 2px;"
+                     type="text" id="5678" name="name"  text class="form-control"  [value]="videoName" (change)="videoNameF($event)" >  
+                  </tr>
+                  <tr>
+                    <td><label> pk début </label></td>
+                    <td><label> pk fin </label></td>
+                      
+                  </tr>
+                  <tr>
+                    <td><input style="
+                      background-color: #c4ffe9;
+                      border: solid black 1px;
+                      color: purple;
+                      border-radius: 2px;"
+                       type="number" id="432" name="name" number class="form-control"   [value]="pkd"  (change)="pkdF($event)"> </td>
+                    <td><input style="
+                      background-color: #c4ffe9;
+                      border: solid black 1px;
+                      color: purple;
+                      border-radius: 2px;"
+                       type="number" id="123" name="name" number class="form-control"   [value]="pkf" (change)="pkfF($event)" > </td>
+                
+
+                  </tr>
+
+                  <tr>
+                    <td><label >Ajouter une video :</label></td>
+                    <td><input type="file" style="background-color: white; width:100%"  name="image" (change)="onFileSelect($event)"  > </td></tr>
+
+                  </tbody>
+                  </table>
+
+                  <div class="d-flex flex-row-reverse">
+
+                    <div class="p-2"> <button type="submit" mat-raised-button style="margin-left:5px">Sauvgarder</button></div>   
+                    <div class="p-2"> <button type="submit" mat-raised-button style="margin-left:5px" (click)="return()">Annuler</button></div>   
+                    
+                                     
+                   </div>
+            </form>
+           
+          </mat-tab>
+        
+        
+  </mat-tab-group>
+  </div>
+
+
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="false" >
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Evenement Lineaire</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <mat-tab-group mat-align-tabs="center">
+          <mat-tab label="import du referentiel"> 
+         <br>
+    
+     
+       
+        <input type="file" #fileImportInputP name="File Upload" id="csvFileUploadP" (change)="fileChangeListenerP($event) "
+        accept=".csv"  formControlName="firstCtrlP"  required/>
+              
+              <div id="wrapper" style="  width: 100%;
+              height: 45px;
+              display: flex;
+              align-items: center;
+              justify-content: center;">  
+
+
+                <button [disabled]="importation" mat-raised-button color="warn" style="width: 100%; 
+                height: 30px; color:white;"  type="button" (click)="submitRef()"> Importer le refrenciel </button>
+              </div>
+               </mat-tab>
+
+              <mat-tab label="import des routes">
+                <br>
+            
+                 <div class="container">
+
+                 
+                <div class="row">
+                  <div class="col-md">
+                    <p style="text-align:center">Route</p>
+                    <mat-form-field appearance="fill" >
+                      <mat-label>Choisie la route</mat-label>
+                      <mat-select [(value)]="selectedRouteT" (selectionChange)="onchangeRouteTable($event.value)"  >
+                        
+                        <mat-option *ngFor="let the of routes" value={{the}}>{{the}}</mat-option>
+                     
+                      </mat-select>
+                    </mat-form-field>
+  
+                  </div>
+                  <div class="col-md">
+                    <p style="text-align:center">Voie</p>  
+                    <mat-form-field appearance="fill">  
+                      <mat-label>Voie</mat-label>
+                      <mat-select [(value)]="selectedVoieT" (selectionChange)="onchangeVoietable($event.value)">
+  
+                        <mat-option  value=1 >1</mat-option>
+                        <mat-option  value=2 >2</mat-option>
+                     
+                      </mat-select>
+                    </mat-form-field>
+  
+                  </div>
+
+                </div>
+                <div class="row">
+                  <div class="col-md">
+
+                  
+                  <p style="text-align:center">Réferenciel</p>  
+                  <mat-form-field appearance="fill">  
+                    <mat-label>Réferenciel</mat-label>
+                    <mat-select [(value)]="selectedrefT" (selectionChange)="onchangereferenciel($event.value)">
+                      <mat-option  value=1 >1</mat-option>
+                      <mat-option  value=2 >2</mat-option>
+                   
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md">
+                    <input type="file" #fileImportInputP name="File Upload" id="csvFileUploadP" (change)="fileChangeListener($event) "
+                    accept=".csv"  formControlName="firstCtrlP"  required/>
+
+              </div>
+              <div class="col-md">
+                <div id="wrapper" style="  width: 100%;
+                height: 45px;
+                display: flex;
+                align-items: center;
+                justify-content: center;">  
+  
+  
+                  <button [disabled]="importation" mat-raised-button color="warn" style="width: 100%; 
+                  height: 30px; color:white;"  type="button" (click)="submitRoute()" > Importer </button>
+                </div>
+              </div>
+              </div>
+              </div>
+              
+              </mat-tab>
+               
+            </mat-tab-group>
+
+           
+          
+  </div>
+
+
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="achrafAouad" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="false" >
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">selectioner les évenements a afficher</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+     <p style="text-align:center"> selectioner les évenements a afficher </p>
+      <div class="container" style="display: flex;
+      flex-flow: row wrap">
+        <div *ngFor="let leer of this.params">
+           <mat-checkbox class="example-margin" color="primary" style="padding:5px" [checked]="checkedEvents(leer.eventType.id)" (click)="addedProvince(leer.eventType.id)">{{leer.eventType.name}}</mat-checkbox>
+        </div>
+      </div>
+      
+  </div>
+
+
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="printModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="false" >
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Prend une capture d'écrant</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <p style="text-align:center"> Titre </p>
+        <textarea class="areaQuery" id="val11" type="text"  rows="2"  [(ngModel)]="val11" (change)="titre($event.value)" > </textarea>
+        <p style="text-align:center"> Commentaire  </p>
+        <textarea class="areaQuery" id="val12" type="text"  rows="10"  [(ngModel)]="val12" (change)="body($event.value)" > </textarea>
+        
+          <div id="wrapper" style="  width: 100%;
+          height: 45px;
+          display: flex;
+          align-items: center;
+          justify-content: center;">  
+
+
+            <button [disabled]="importation" mat-raised-button color="primary" style="width: 100%; 
+            height: 30px; color:white;"  type="button" (click)="imprimer()" > Imprimer </button>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="AccidentModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <!-- <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">l'evenement ponctuel</h5> -->
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      <!-- </div> -->
+      <div class="modal-body">
+        <!-- <mat-tab-group mat-align-tabs="center" > -->
+          <!-- <mat-tab label="l'évenement">  -->
+
+           
+            <a href={{image}} target="_blank">
+              <div  style=" 
+             background-image: url({{image}});
+            width: 100%;
+            height: 200px;
+            background-size:cover;
+            position:center center;
+            ">
+             </div>
+           </a>
+            
+
+            <div class="container">
+             
+             
+                <h2 style="text-align: center; font:italic bold; font-size: large;"> {{this.eventName}} </h2>
+
+              <table *ngIf="!edited" class="table user-view-table m-0">
+                <tbody>
+                  <tr *ngFor="let data of eventParams">
+                    <td>{{data.title}}</td>
+                    <td>{{data.value}}</td>
+                  </tr>
+                 
+                </tbody>
+              </table>
+
+              <form *ngIf="edited" (ngSubmit)="saveEvent(ff)" #ff="ngForm">
+                <table class="table user-view-table m-0">
+                  <tbody>
+                    <tr *ngFor="let data of eventParamsEdit; let i = index">
+                     <td><label >{{data.title}} :</label> </td> 
+                     <td>
+
+                      <input type="text" class="form-control" id={{data.title}} aria-describedby="emailHelp" name={{data.title}} text ngModel [(ngModel)]='eventParamsEdit[i].value'>
+
+                     </td> 
+                    
+
+                    </tr>
+                    <tr>
+                      <td><label >Modifier l'image de votre évenement :</label></td>
+                      <td><input type="file" style="background-color: white; width:100%"  name="image" (change)="onFileSelect($event)" ngModel> </td></tr>
+
+                    </tbody>
+                    </table>
+
+                    <div class="d-flex flex-row-reverse">
+
+                      <div class="p-2"> <button type="submit" mat-raised-button style="margin-left:5px">Sauvgarder</button></div>   
+                      <div class="p-2"> <button type="submit" mat-raised-button style="margin-left:5px" (click)="return()">Annuler</button></div>   
+                      
+                                       
+                     </div>
+              </form>
+
+
+              <div class="d-flex flex-row-reverse">
+              <div class="p-2" *ngIf="!edited" > <button  mat-raised-button color="primary" (click)="modifierPoitEvent()">Modifier </button>  </div> 
+     
+
+            </div>
+            </div>
+        
+
+<!-- 
+          </mat-tab> -->
+          
+          <!-- <mat-tab label="Edit info">
+            <form (ngSubmit)="onSubmit_upload()" #formdata="ngForm">
+
+              <input type="file"  name="image" (change)="onFileSelect($event)" ngModel>
+              <button type="submit">Upload</button>
+    
+             </form>
+          </mat-tab> -->
+        
+        
+  <!-- </mat-tab-group> -->
+  </div>
+
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="EtatModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <!-- <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">l'evenement ponctuel</h5> -->
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      <!-- </div> -->
+      <div class="modal-body">
+        <!-- <mat-tab-group mat-align-tabs="center" > -->
+          <!-- <mat-tab label="l'évenement">  -->
+
+           
+            <a href={{image}} target="_blank">
+              <div  style=" 
+             background-image: url({{image}});
+            width: 100%;
+            height: 200px;
+            background-size:cover;
+            position:center center;
+            ">
+             </div>
+           </a>
+            
+
+            <div class="container">
+             
+             
+                <h2 style="text-align: center; font:italic bold; font-size: large;"> {{this.eventName}} </h2>
+
+              <table *ngIf="!edited" class="table user-view-table m-0">
+                <tbody>
+                  <tr *ngFor="let data of eventParams">
+                    <td>{{data.title}}</td>
+                    <td>{{data.value}}</td>
+                  </tr>
+                 
+                </tbody>
+              </table>
+
+              <form *ngIf="edited" (ngSubmit)="saveEventLinear(ff)" #ff="ngForm">
+                <table class="table user-view-table m-0">
+                  <tbody>
+                    <tr *ngFor="let data of eventParamsEdit; let i = index">
+                     <td><label >{{data.title}} :</label> </td> 
+                     <td>
+
+                      <input type="text" class="form-control" id={{data.title}} aria-describedby="emailHelp" name={{data.title}} ngModel text  [(ngModel)]='eventParamsEdit[i].value'>
+
+                     </td> 
+                    
+
+                    </tr>
+                    <tr>
+                      <td><label >Modifier l'image de votre évenement :</label></td>
+                      <td><input type="file" style="background-color: white; width:100%"  name="image" (change)="onFileSelect($event)" ngModel> </td></tr>
+
+                    </tbody>
+                    </table>
+
+                    <div class="d-flex flex-row-reverse">
+
+                      <div class="p-2"> <button type="submit" mat-raised-button style="margin-left:5px">Sauvgarder</button></div>   
+                      <div class="p-2"> <button type="submit" mat-raised-button style="margin-left:5px" (click)="return()">Annuler</button></div>   
+                      
+                                       
+                     </div>
+              </form>
+
+
+              <div class="d-flex flex-row-reverse">
+              <div class="p-2" *ngIf="!edited" > <button  mat-raised-button color="primary" (click)="modifierPoitEvent()">Modifier </button>  </div> 
+     
+
+            </div>
+            </div>
+        
+
+<!-- 
+          </mat-tab> -->
+          
+          <!-- <mat-tab label="Edit info">
+            <form (ngSubmit)="onSubmit_upload()" #formdata="ngForm">
+
+              <input type="file"  name="image" (change)="onFileSelect($event)" ngModel>
+              <button type="submit">Upload</button>
+    
+             </form>
+          </mat-tab> -->
+        
+        
+  <!-- </mat-tab-group> -->
+  </div>
+
+
+    </div>
+  </div>
+</div>
+
+

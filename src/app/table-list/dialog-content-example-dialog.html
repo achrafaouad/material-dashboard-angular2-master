@@ -1,0 +1,34 @@
+<h1 mat-dialog-title>Dialog with elements</h1>
+<div mat-dialog-content class="mat-typography">
+    
+    <table >
+        <thead>
+          <tr>
+            <th>#</th>
+            <th *ngFor="let heder of headerTable"> {{heder}}</th>
+            
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr *ngFor="let csvData of csvRecords;let i = index;">
+            <td>{{i+1}}</td>
+
+            <td *ngFor="let heder of headerTable;let j = index;">
+                <span>{{csvData[headerTable[j]]}}</span>
+              </td>
+    
+          
+    
+          </tr>
+        </tbody>
+      </table>
+    
+    
+
+
+
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Close</button>
+</div>

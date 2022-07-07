@@ -1,0 +1,90 @@
+.csv-file-chooser-section {
+    padding: 10px;
+    margin: 5%;
+    border: 1px solid;
+    text-align: center;
+  }
+  
+  .csv-result-table {
+    margin: 5%;
+  
+  }
+  
+  /* Structure */
+table {
+  width: 100%;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+tr{
+  border:none;
+}
+
+
+.mat-stepper-vertical {
+  margin-top: 8px;
+}
+
+.mat-form-field {
+  margin-top: 16px;
+}
+
+
+.container1 {
+  height: 200px;
+  position: relative;
+}
+
+.vertical-center {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  transform: translateX(50%);
+}
+
+
+
+.containerB {
+  height: 200px;
+  position: relative;
+
+}
+
+.vertical-centerB {
+  margin: 0;
+  position: absolute;
+  top: 10%;
+  left:30%;
+
+
+}
+
+
+.mapWrap {
+  height: 100%;
+  width: 100%;
+
+  }
+.mapWrap1 {
+  height: 100%;
+  width: 100%;
+
+  }
+  #mapWrap {
+  width: 100%;
+
+  height : 100%;
+
+ }
+  #mapWrap1 {
+  width: 100%;
+
+  height : 100%;
+
+ }

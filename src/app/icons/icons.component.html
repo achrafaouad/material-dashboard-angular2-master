@@ -1,0 +1,208 @@
+<div class="main-content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header card-header-danger">
+              <h4 class="card-title">Simple Table</h4>
+              <p class="card-category">Here is a subtitle for this table</p>
+            </div>
+           
+  
+            <div class="card-body">
+                <mat-card>
+                    <div style="text-align: center;">
+                        <h2 >Requetteur</h2>
+ 
+                    </div>
+
+
+<div>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm">
+     
+          <div class="row">
+            <div class="col-6">
+              <label> Donnée: </label>
+              <mat-form-field appearance="fill">
+                <mat-label>type de donnée </mat-label>
+                <mat-select [(value)]="selectedTypeData" (selectionChange)="onchangeDonne($event.value)">
+                  <mat-option value="ponctuel">Ponctuel</mat-option>
+                  <mat-option value="lineaire">Lineaire</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+            
+            </div>
+            <div class="col-6">
+            
+              <label> Thematique: </label>
+              <mat-form-field appearance="fill">
+                <mat-label>Choisie la thematique</mat-label>
+                <mat-select [(value)]="selectedTh" (selectionChange)="onchange($event.value)">
+                  
+                  <mat-option *ngFor="let the of thematique" value={{the}} >{{the}}</mat-option>
+               
+                </mat-select>
+              </mat-form-field>
+            
+          </div>
+        </div>
+       
+
+       
+       
+     
+   
+            <div *ngIf="requetteType()">
+              <label> choisie un Attribut  </label>
+              <mat-form-field appearance="fill">
+                <mat-label>Select an option</mat-label>
+                <mat-select [(value)]="selectedAttribute"  (selectionChange)="attribute($event.value)">
+                  <mat-option value="{{att.champ_db_stock}}" *ngFor="let att of attributes" >{{att.champs_event}}</mat-option>
+              
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div *ngIf="!requetteType()">
+            
+          <div class="row">
+            <div class="col-6">
+              <label> Donnée: </label>
+              <mat-form-field appearance="fill">
+                <mat-label>type de donnée </mat-label>
+                <mat-select [(value)]="selectedTypeData2" (selectionChange)="onchangeDonne($event.value)">
+                  <mat-option value="ponctuel">Ponctuel</mat-option>
+                  <mat-option value="lineaire">Lineaire</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+            
+            </div>
+            <div class="col-6">
+            
+              <label> Thematique: </label>
+              <mat-form-field appearance="fill">
+                <mat-label>Choisie la thematique</mat-label>
+                <mat-select [(value)]="selectedTh2" (selectionChange)="onchange22($event.value)">
+                  
+                  <mat-option *ngFor="let the of thematique" value={{the}} >{{the}}</mat-option>
+               
+                </mat-select>
+              </mat-form-field>
+            
+          </div>
+        </div>
+
+            </div>
+
+      </div>
+
+      <div class="col-sm">
+        
+        <h5>Operation</h5>
+        
+        <mat-form-field appearance="fill">
+          <mat-label>choisie un opérateur</mat-label>
+          <mat-select [(value)]="operateur" (selectionChange)="Opp($event.value)">
+            <mat-option value={{op}} *ngFor="let op of operateurs">{{op}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+     
+
+
+        <table>
+          <thead>
+            <th></th>
+            <th></th>
+            <th></th>
+          </thead>
+          <tbody>
+            <tr>
+              <td scope="col"><button mat-raised-button (click)="reinitialiser()">réinitialiser</button></td>
+              <td scope="col"><button mat-raised-button  (click)="add()">Ajouter</button></td>
+              <td scope="col"><button mat-raised-button (click)="onSubmitReqTest()" >test</button></td>
+              <td scope="col"><button mat-raised-button color="primary" (click)="onSubmitReq()">Run</button></td>
+            </tr>
+
+        </table>
+        <hr>  
+        <label for="requetteType">Requette :</label>
+        <mat-radio-group aria-label="Select an option" id="requetteType" [(ngModel)]="selectRequettype">
+          <mat-radio-button value="1">Simple</mat-radio-button>
+          <mat-radio-button value="2">Avancé</mat-radio-button>
+        </mat-radio-group>
+        <button  mat-raised-button color="primary" data-target="#PrevLineModal" data-toggle="modal" (click)="previewLineData()">Prevoir les données</button> 
+        <button  mat-raised-button color="primary" (click)="dynamicDownloadTxt()">KML</button> 
+        <button  mat-raised-button color="primary" (click)="dynamicDownloadJson()">GeoJSON</button>
+
+ 
+   
+      </div>  
+      <div class="col-sm" *ngIf="verificationVal">
+        <br>
+        <h3 for="exampleFormControlTextarea1">Valeur</h3>
+        <textarea class="areaQuery" id="val1" type="text"  rows="2"  [(ngModel)]="val11" (change)="val1($event.value)" > </textarea>
+        <br>
+        <br>
+        <textarea *ngIf="bet()"  class="areaQuery"   id="val2" rows="2" [(ngModel)]="val12" (change)="val2($event.value)"></textarea>
+
+      </div>
+
+      </div>
+      </div>
+      </div>
+ 
+                </mat-card>
+               
+                
+                  <ag-grid-angular
+                  style="width: auto; height: 500px;"
+                  class="ag-theme-alpine"
+                  [rowData]="rowData"
+                  [columnDefs]="columnDefs"
+                  [defaultColDef]="defaultColDef"
+              >
+              
+              </ag-grid-angular>
+  
+           
+
+                
+            </div>
+            </div>
+            </div>
+            </div>
+
+
+
+
+
+
+
+
+            <!-- Modal -->
+<div class="modal fade" id="PrevLineModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header" style="text-align:center">
+        <h2 class="modal-title" style="text-align:center" id="exampleModalLabel">Carte</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+<!-- 
+        <div style="width :auto;height:auto">
+          <div class="mapPrevLine" id="mapPrevLine"  style="width :auto;height:auto" ></div>
+        </div> -->
+       
+        <div id="mapWrap" style="width: 100%; height: 400px;">
+          <div id="mapPrevLine" class="mapPrevLine" style="width: 100%; height: 400px;"></div>
+      </div>
+
+      </div>
+      </div>
+      </div>
+      </div>

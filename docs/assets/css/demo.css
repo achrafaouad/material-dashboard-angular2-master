@@ -1,0 +1,548 @@
+/*!
+
+=========================================================
+* Material Dashboard Angular - v2.6.0
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/material-dashboard-angular2
+* Copyright 2021 Creative Tim (https://www.creative-tim.com)
+* Licensed under MIT (https://github.com/creativetimofficial/material-dashboard-angular2/blob/master/LICENSE.md)
+
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+@import "~bootstrap-icons/font/bootstrap-icons.css";
+*/
+@import "~bootstrap-icons/font/bootstrap-icons.css";
+.tim-typo{
+  padding-left: 25%;
+  margin-bottom: 40px;
+  position: relative;
+  width: 100%;
+}
+.tim-typo .tim-note{
+  bottom: 5px;
+  color: #c0c1c2;
+  display: block;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 15px;
+  left: 0;
+  margin-left: 20px;
+  position: absolute;
+  width: 260px;
+}
+
+
+
+.ol-mouse-position{
+  position: absolute;
+  left: 50%;
+  width: fit-content;
+  height: fit-content;
+  margin-top: 45%;
+  text-align: center;
+   transform: translateX(-50%);
+   border: 1px solid grey;
+  border-radius: 10px;
+  padding: 5px;
+  background-color: rgba(225, 225,225, 0.4);
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 12px;
+  font-weight: bolder;
+ 
+}
+
+.tile-manager {
+  position: absolute;
+  left: 0.5em;
+  bottom: 4em;
+}
+
+.tile-manager > button {
+  background-image: url("../../app/maps/assets/layers.png");
+  background-size: 25px 25px;
+  
+}
+
+.tile-manager-content {
+  display: none;
+  position: absolute;
+  min-width: 200px;
+  bottom: 0;
+  border: 1px solid grey;
+  border-radius: 10px;
+  padding: 2px;
+  z-index: 1;
+}
+
+.tile-manager-content > button {
+  width: 100%;
+  background-color: rgba(76, 101, 134, 0.5);
+}
+
+.tile-manager-content > button:disabled {
+  background-color: rgba(76, 101, 134, 0.5);
+}
+
+.tile-manager:hover .tile-manager-content {
+  display: block;
+  
+}
+
+
+
+.map .ol-custom-overviewmap,
+      .map .ol-custom-overviewmap.ol-uncollapsible {
+        bottom: auto;
+        left: auto;
+        right: 0.5em;
+        top: 2em;
+      }
+
+      .map .ol-custom-overviewmap:not(.ol-collapsed)  {
+        border: 1px solid black;
+      }
+
+      .map .ol-custom-overviewmap .ol-overviewmap-map {
+        border: none;
+        width: 300px;
+      }
+
+      .map .ol-custom-overviewmap .ol-overviewmap-box {
+        border: 2px solid red;
+      }
+
+      .map .ol-custom-overviewmap:not(.ol-collapsed) button{
+        bottom: auto;
+        left: auto;
+        right: 1px;
+        top: 1px;
+      }
+
+      
+      .map .layer-switcher.shown.layer-switcher-activation-mode-click {
+       
+
+      }
+      .map .layer-switcher.shown.layer-switcher-activation-mode-click > button {
+        right: 0;
+        border-left: 0;
+        margin-top: 10px;
+        
+      }
+
+
+      .map  .layer-switcher{
+        margin-top: 10px;
+      }
+
+/* 
+
+      .ol-popup {
+        position: absolute;
+        background-color: white;
+        box-shadow: 6px 7px 7px black;
+        padding: 15px;
+        border-radius: 10px;
+        border: 1px solid #cccccc;
+        bottom: 12px;
+        left: -50px;
+        min-width: 280px;
+      }
+      .ol-popup:after,
+      .ol-popup:before {
+        top: 100%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+      }
+      .ol-popup:after {
+        border-top-color: white;
+        border-width: 10px;
+        left: 48px;
+        margin-left: -10px;
+      }
+      .ol-popup:before {
+        border-top-color: #cccccc;
+        border-width: 11px;
+        left: 48px;
+        margin-left: -11px;
+      }
+      .ol-popup-closer {
+        text-decoration: none;
+        position: absolute;
+        top: 2px;
+        right: 8px;
+      }
+      .ol-popup-closer:after {
+        content: "✖";
+      }
+      .input-hidden {
+        position: absolute;
+        left: -9999px;
+      }
+
+
+       */
+       .ol-popup {
+        position: absolute;
+        background-color: white;
+        -webkit-filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
+        filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
+        padding: 15px;
+        border-radius: 10px;
+        border: 1px solid #cccccc;
+        bottom: 12px;
+        left: -50px;
+        min-width: 280px;
+      }
+      .ol-popup:after, .ol-popup:before {
+        top: 100%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+      }
+      .ol-popup:after {
+        border-top-color: white;
+        border-width: 10px;
+        left: 48px;
+        margin-left: -10px;
+      }
+      .ol-popup:before {
+        border-top-color: #cccccc;
+        border-width: 11px;
+        left: 48px;
+        margin-left: -11px;
+      }
+      .ol-popup-closer {
+        text-decoration: none;
+        position: absolute;
+        top: 2px;
+        right: 8px;
+      }
+      .ol-popup-closer:after {
+        content: "✖";
+      }
+
+
+      #customers {
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+      
+      #customers td, #customers th {
+        border: 1px solid #ddd;
+        padding: 8px;
+      }
+      
+      #customers tr:nth-child(even){background-color: #f2f2f2;}
+      
+      #customers tr:hover {background-color: #ddd;}
+      
+      #customers th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #04AA6D;
+        color: white;
+      }
+    
+
+      .featureInfoDiv {
+        width: fit-content;
+        margin-top: 70px;
+        margin-left: 10px;
+        position: relative;
+        display: block;
+      }
+      .myButton:hover{
+        background-color: rgb(0, 60, 136, 1);
+      }
+      .myButton {
+        background-color:rgba(22, 85, 167, 0.6);
+        box-shadow: 2px 2px 0px white;
+        color: white;
+        font-weight: 700;
+        text-align: center;
+        height: 25px;
+        width: 25px;
+        border-radius: 2px;
+        border: none;
+        align-items: center;
+    }
+
+    .modalhr{
+      background-color:rgba(22, 85, 167, 0.6);
+        box-shadow: 2px 2px 0px white;
+        color: white;
+        font-weight: 700;
+        text-align: center;
+    }
+
+    .drow_polygone{
+      background-color:rgba(22, 85, 167, 0.6);
+        box-shadow: 2px 2px 0px white;
+        color: white;
+        font-weight: 700;
+        text-align: center;
+    }
+    .undo{
+      background-color:rgba(22, 85, 167, 0.6);
+        box-shadow: 2px 2px 0px white;
+        color: white;
+        font-weight: 700;
+        text-align: center;
+    }
+    .submit_par{
+      background-color:rgba(22, 85, 167, 0.6);
+        box-shadow: 2px 2px 0px white;
+        color: white;
+        font-weight: 700;
+        text-align: center;
+
+    }
+      
+      .myButton.clicked{
+        background-color: rgba(22, 170, 35, 0.8);
+      }
+      
+      .myButton.clicked:hover{
+      background-color: rgba(22, 170, 35, 1);
+      }
+
+     /* run query of my  */
+      .attQueryDiv {
+        position: absolute;
+        /* display: block; */
+        display: none;
+        margin: 70px auto auto 45px;
+        /* padding: 10px; */
+        width: 250px;
+        background-color: rgba(255, 255, 255, 0.9);
+        font-family: inherit;
+        font-size: 1em;
+        line-height: 1.45;
+        border-radius: 2px;
+        border: 1px solid #d1d1d1;
+        box-shadow: 0px 0px 15px rgba(252, 213, 213, 0.5);
+         z-index: 1;  
+        /* overflow: scroll; */
+      }
+
+      .videoDiv {
+        position: absolute;
+        /* display: block; */
+        
+        margin: 70px auto auto 45px;
+
+         z-index: 1;  
+         bottom: 15px;
+         right: 15px;
+        /* overflow: scroll; */
+      }
+      #myvideo {
+        border: 1px solid red;
+        border-radius: 5px ;
+        box-shadow: 2px 2px rgba(0, 0, 0, 0.5);
+      }
+
+
+
+      #headerDiv{
+        background-color: midnightblue;
+        height: 35px;
+      }
+      
+      #headerDiv label {
+      color: white;
+      }
+    
+      .attQueryDiv select {
+        width: 225px;
+        height: 35px;
+        border: 1px solid lightgrey;
+        border-radius: 3px;
+        margin: 0px auto 0px 10px;
+      }
+      
+      .attQueryDiv input {
+        width: 225px;
+        height: 35px;
+        border: 1px solid lightgrey;
+        border-radius: 3px;
+        margin: 0px auto 0px 10px;
+      }
+      
+      .attQueryDiv label {
+        color: grey;
+        margin: 10px 10px 0px 10px;
+      }
+      
+      .attQueryDiv label:nth-child(1) {
+        margin: 10px;
+        font-weight: bold;
+       }
+      
+      .attQryRun {
+        color: white;
+        background-color: green;
+        border-radius: 3px;
+        border: 1px solid darkgreen;
+        height: 35px;
+        width: 50px;
+        margin: 10px;
+      }
+    /* run query of my  */
+
+
+    
+      .attListDiv {
+        position: absolute;
+        display: none;
+        margin: 350px auto auto 350px;
+        /* padding: 10px; */
+        width: auto;
+        max-width: 750px;
+        /* height: auto; */
+        /* max-height: 250px; */
+        height: 250px;
+        background-color: rgba(255, 255, 255, 0.9);
+        font-family: inherit;
+        font-size: 1em;
+        line-height: 1.45;
+        border-radius: 2px;
+        border: 1px solid #d1d1d1;
+        box-shadow: 2px 3px 2px rgba(0, 0, 0, 0.5);
+        /* z-index: 5; */
+        overflow: scroll;
+      }
+      
+      #attQryTable {
+        position: absolute;
+        display: none;
+        padding: 0;
+        border-collapse: collapse;
+        z-index: 1; 
+      }
+      
+      #attQryTable, td, th {
+        padding: 0px 5px 0px 5px;
+        /* border: 1px solid black; */
+      }
+      
+      #attQryTable th {
+        color: white;
+        background-color: midnightblue;
+        position: sticky;
+        top: 0;
+        font-style: normal;
+        padding: 5px 10px 5px 10px;
+      }
+    
+      #attQryTable tr:hover
+      /* {font-weight: bolder; background-color: rgb(225, 225, 225);} */
+      {background-color: lightgrey;}
+
+
+      #qryButton{
+        margin-top: 10px;
+        margin-left: 10px;
+
+      }
+      #Print{
+        margin-top: 10px;
+        margin-left: 10px;
+
+      }
+
+
+      .helloInfoDiv {
+        width: fit-content;
+        margin-top: 20px;
+        margin-left: 10px;
+        position: relative;
+        display: block;
+      }
+      
+      .editDiv{
+        width: fit-content;
+        margin-top: 20px;
+        margin-left: 10px;
+        position: relative;
+        display: block;
+      }
+      .videoDivox{
+        width: fit-content;
+        margin-top: 20px;
+        margin-left: 10px;
+        position: relative;
+        display: block;
+      }
+
+
+
+      #legend{
+        position: absolute;
+        display: none;
+        margin: 350px auto auto 350px;
+      }
+
+
+
+      .draw{
+        position: absolute;
+        z-index: 1;
+        width:fit-content;
+        height:fit-content;
+      }
+
+      .editDiv{
+        position: absolute;
+        z-index: 1;
+        width:fit-content;
+        height:fit-content;
+      }
+
+      .myButtonDiv{
+        width:fit-content;
+        height:fit-content;
+
+      }
+      #editButton{
+        padding:0px;
+        margin-left: 10px;
+        margin-top: 10px;
+      }
+      label{
+        color:black
+      }
+
+      .modal-demo .ui-modal {
+        width: 37.5rem;
+        /* for resize limits use min-width, min-height, max-width, max-height in css */
+      } 
+      .modal-demo .ui-modal-overlay, .modal-demo .ui-modal {
+        z-index: 100014;
+        border-radius: 10px;
+      }
+      /* colors */
+      :root {
+        --dt-color-primary: #272426;
+      }
+      /* for IE */
+      .ui-modal-header {
+        background-color: #272426;
+        border-radius: 10px;
+      }
+      

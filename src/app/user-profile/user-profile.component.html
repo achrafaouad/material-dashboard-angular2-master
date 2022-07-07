@@ -1,0 +1,123 @@
+<div id="background">
+</div>
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
+
+<div class="main-content">
+  <div class="container-fluid">
+      <div class="row">
+          <div class="col-md-8">
+              <div class="card">
+                <div class="card-body">
+                  <form>
+                    <h6 class="heading-small text-muted mb-4" >User information</h6>
+                    <div class="pl-lg-4">
+                      <div class="row">
+                        <div class="col-lg-6">
+                          <div class="form-group">
+                            <p class="form-control-label" >Username</p>
+                            <input style="border-radius: 5px; box-shadow:2px 2px rgba(0,0,0,0.2);background-color: rgba(0, 0, 0, 0.068); width:100%" type="text" id="input-username1"   [(value)]="user.username">
+                          </div>
+                        </div>
+                        <div class="col-lg-6">
+                          <div class="form-group">
+                            <p class="form-control-label" >Email address</p>
+                            <input type="email" style="border-radius: 5px; box-shadow:2px 2px rgba(0,0,0,0.2);background-color: rgba(0, 0, 0, 0.068); width:100%"   [(value)]="user.email">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-lg-6">
+                          <div class="form-group">
+                            <p class="form-control-label" >First name</p>
+                            <input type="text"  style="border-radius: 5px; box-shadow:2px 2px rgba(0,0,0,0.2);background-color: rgba(0, 0, 0, 0.068); width:100%" placeholder="First name"   [(value)]="user.firstName" (change)="hola('firstName',$event.target.value)">
+                          </div>
+                        </div>
+                        <div class="col-lg-6">
+                          <div class="form-group">
+                            <p class="form-control-label" >Last name</p>
+                            <input type="text"  style="border-radius: 5px; box-shadow:2px 2px rgba(0,0,0,0.2);background-color: rgba(0, 0, 0, 0.068); width:100%" placeholder="Last name"  [(value)]="user.lastName" (change)="hola('lastName',$event.target.value)" >
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <hr style="background-image: linear-gradient(to right, #FF5F6D , #FFC371); border-radius: 5px;" />
+                    <!-- Address -->
+                    <h6 class="heading-small text-muted mb-4"   >Contact information</h6>
+                    <div class="pl-lg-4">
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <p class="form-control-label">Address</p>
+                            <input  style="border-radius: 5px; box-shadow:2px 2px rgba(0,0,0,0.2);background-color: rgba(0, 0, 0, 0.068); width:100%" placeholder="Home Address" value="Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09" type="text" >
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-lg-4">
+                          <div class="form-group">
+                            <p class="form-control-label" >Phone</p>
+                            <input type="text"  style="border-radius: 5px; box-shadow:2px 2px rgba(0,0,0,0.2);background-color: rgba(0, 0, 0, 0.068); width:100%" placeholder="City"   [(value)]="user.userPhone" (change)="hola('userPhone',$event.target.value)">
+                          </div>
+                        </div>
+                        <div class="col-lg-4">
+                          <div class="form-group">
+                            <p class="form-control-label">sex</p>
+                            <input type="text"  style="border-radius: 5px; box-shadow:2px 2px rgba(0,0,0,0.2);background-color: rgba(0, 0, 0, 0.068); width:100%" placeholder="Country" [(value)]="user.sex" (change)="hola('sex',$event.target.value)">
+                          </div>
+                        </div>
+                        <div class="col-lg-4">
+                          <div class="form-group">
+                            <p class="form-control-label" >CIN</p>
+                            <input type="text"  style="border-radius: 5px; box-shadow:2px 2px rgba(0,0,0,0.2);background-color: rgba(0, 0, 0, 0.068); width:100%" [(value)]="user.cin" (change)="hola('cin',$event.target.value)">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <hr style="background-image: linear-gradient(to right, #FF5F6D , #FFC371); border-radius: 5px;" />
+                    <!-- Description -->
+                    <h6 class="heading-small text-muted mb-4">About me</h6>
+                    <div class="pl-lg-4">
+                      <div class="form-group">
+                        <p>About Me</p>
+                        <textarea rows="4" style="border-radius: 5px; box-shadow:2px 2px rgba(0,0,0,0.2);background-color: rgba(0, 0, 0, 0.068); width:100%"  placeholder="A few words about you ...">A beautiful Dashboard for Bootstrap 4. It is Free and Open Source.</textarea>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              
+          </div>
+          <div class="col-md-4">
+              <div class="card card-profile">
+                  <div class="card-avatar">
+                      <a href="javascript:void(0)">
+                          <img class="img" src="./assets/img/faces/marc.jpg" />
+                      </a>
+                  </div>
+                  <hr style="background-image: linear-gradient(to right, #FF5F6D , #FFC371); border-radius: 5px; padding-left:5px;padding-right:5px;" />
+                  <div class="card-body">
+                  
+        
+                      <div class="text-center">
+                        <h3>
+                          USER: {{user.firstName}} {{user.lastName}}<span class="font-weight-light"></span>
+                        </h3>
+                        <div class="h5 font-weight-300">
+                          <i class="ni location_pin mr-2"></i>
+                          ROLE: {{user.roles[0].name}}
+                        </div>
+                        <div class="h5 mt-4"> 
+                          <i class="ni business_briefcase-24 mr-2"></i>
+                          Code Number : {{user.userCodeNumber}}
+                          </div>
+                          
+
+                          <button mat-raised-button color="primary" (click)="updateInfo()">update</button>
+                        
+                    </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
