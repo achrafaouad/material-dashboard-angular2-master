@@ -44,7 +44,7 @@ import { JwtClientService } from 'app/jwt-client.service';
 import { AgentProfilEditComponent } from 'app/agent-profil-edit/agent-profil-edit.component';
 import { NgxSpinnerModule } from "ngx-spinner";
 import { NotificationService } from 'app/notification.service';
-
+import {DragDropModule} from '@angular/cdk/drag-drop';
 @NgModule({
   imports: [
     CommonModule,
@@ -73,7 +73,8 @@ import { NotificationService } from 'app/notification.service';
     MatIconModule,
     WebcamModule,
     ModalModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    DragDropModule
   ], 
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   declarations: [

@@ -591,9 +591,49 @@
                         </tr>
     
                          </table>
+                         <div class="d-flex flex-row-reverse">
+                          <button mat-mini-fab color="primary" aria-label="Example icon button with a plus one icon" (click)="addMore()"> <i class="bi bi-plus"></i></button>
+                           
+                  
+                         </div>
+
+                         <div class="container">
+                          <div *ngFor="let he of singlethematique" class="card" >
+                            <div class="card-body" class="areaQuery" >
+                             
+                              <table style="width:100%" >
+                                <tr>
+                                  <th style="text-align: center" >Donnée</th>
+                                  <th style="text-align: center">Thematique</th>
+                                  <th style="text-align: center" >Attribute</th>
+                                  <th style="text-align: center">Operation</th>
+                                  <th style="text-align: center">Valeur</th>
+                                </tr>
+                                <tr>
+                                  <td></td>
+                                  <td></td>
+                                  <td></td>
+                                  <td></td>
+                                  <td></td>
+                                </tr>
+                                <tr>
+                                  <td style="text-align: center">{{selectedTypeData144}}</td>
+                                 <td style="text-align: center">{{selectedTh144}}</td>
+                                 <td style="text-align: center">{{he.attr}}</td>
+                                  <td style="text-align: center">{{he.opp}}</td>
+                                  <td style="text-align: center" >{{he.value}}</td>
+                                  
+                                </tr>
+                                </table>
+                              </div>
+                              </div>
+                              </div>
                      </ng-template>
+
+                     
+                     
                   </div>
-              </div>
+                 </div>
               </div>
             
             <div>

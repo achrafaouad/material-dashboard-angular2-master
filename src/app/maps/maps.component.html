@@ -1,13 +1,43 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
-<div id="map" class="map">
+<app-modal  #hellomodal class="modal-demo1" [maximizable] = "true" [backdrop] = "false">
+  <ng-container class="app-modal-header" >Legend</ng-container>
+  <ng-container class="app-modal-body">
+    <table>
+      <tr>
+        <th></th>
+        <th></th>
+      </tr>
+      <tr style="margin:50px"*ngFor="let te of legendPoint;let i = index">
+         <td> <div class="box" [style.color]="returnJSon(te).fill" [style.background-color]="returnJSon(te).fill" [style.border]="returnJSon(te).radius" [style.border-radius]="radius" [style.width]="width" [style.height]="height" > </div></td>
+        <td> <div style="color:black">{{returnProvinceById(returnJSon(te).thematique)}} </div></td>
+      </tr>
+      <tr>
+        <td>------------------</td>
+        <td>----------------</td>
+      </tr>
+      <tr style="margin:50px"*ngFor="let te of legendLine;let i = index">
+         <td> <div class="box" [style.color]="returnJSon(te).fill" [style.background-color]="returnJSon(te).fill" [style.border]="returnJSon(te).radius" [style.width]="width" [style.height]="height" > </div></td>
+        <td> <div style="color:black">{{returnProvinceById(returnJSon(te).thematique)}} </div></td>
+      </tr>
+      
+     </table> 
+  </ng-container>  
   
+</app-modal>
+
+<div id="map" class="map" >
+  
+
+
+
   <div class="draw" id="draw" style="left:45%;" >
-    <button type="button" id="addRoute" class="myButton" data-toggle="modal" data-target="#exampleModal" style="visibility:hidden;">+</button>
+    <button type="button" id="addRoute" class="myButton" data-toggle="modal" data-target="#exampleModal" style="visibility:hidden;" (click)="hellomodal.show()">+</button>
     <button type="button" id="addPoint" class="myButton" data-toggle="modal" data-target="#PointModal" style="visibility:hidden;">+</button>
     <button type="button" class="myButton" id="drow_Line" style="backgroundColor:rgba(48, 95, 153,0.63)"><i class="bi bi-signpost-split"></i></button>
     <button type="button" class="myButton" id="drow_Point" style="backgroundColor:rgba(48, 95, 153,0.63)"><i class="bi bi-bullseye"></i></button>
     <button type="button" class="myButton" id="drow_LineEvent" style="backgroundColor:rgba(48, 95, 153,0.63)"> <i class="bi bi-border-width"></i> </button>
     <button type="button"  id="instantEvent" class="myButton" data-toggle="modal" data-target="#voleeTh"style="backgroundColor:rgba(48, 95, 153,0.63)"> <i class="bi bi-balloon-fill"></i> </button>
+    <button type="button"  id="hello" class="myButton" style="backgroundColor:rgba(48, 95, 153,0.63)" (click)="hellomodal.show()">L</button>
     
     <button class="myButton " type="button" id="undo" style= "visibility:hidden; backgroundColor:rgba(250, 176, 5,0.8)">u</button>
     <button class="myButton"type="button"id="submit_par"style=" visibility: hidden, backgroundColor:rgba(255, 37, 0,0.8)">R</button>
@@ -17,7 +47,7 @@
 
   </div>
     
-
+ 
   
 
   <div class="attQueryDiv" id="attQueryDiv">
@@ -932,8 +962,8 @@
      <p style="text-align:center"> selectioner les évenements a afficher </p>
       <div class="container" style="display: flex;
       flex-flow: row wrap">
-        <div *ngFor="let leer of this.params">
-           <mat-checkbox class="example-margin" color="primary" style="padding:5px" [checked]="checkedEvents(leer.eventType.id)" (click)="addedProvince(leer.eventType.id)">{{leer.eventType.name}}</mat-checkbox>
+        <div *ngFor="let leer of this.events">
+           <mat-checkbox class="example-margin" color="primary" style="padding:5px" [checked]="checkedEvents(leer.id)" (change)="addedProvince(leer.id)">{{leer.name}}</mat-checkbox>
         </div>
       </div>
       

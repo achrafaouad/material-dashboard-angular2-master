@@ -287,6 +287,20 @@ data1: Object [] = [];
   object123: {};
   selectedTypeData144: any;
   selectedTh144: any;
+  themtiqueTree :Boolean;
+  val1: any;
+  operateur1: any;
+  selectedAttribute1: any;
+  operateur2: any;
+  selectedAttribute2: any;
+  val2: any;
+  val3: any;
+  operateur3: any;
+  selectedAttribute3: any;
+  singlethematique : Object[]= [];
+  datas: Object[]= [];
+  incriment = 0;
+  selected: any;
   constructor(private _formBuilder: FormBuilder,private lrsServiceService: LrsServiceService,private notifyService : NotificationService) { 
     this.getProvinces();
     this.getThematiques();
@@ -912,7 +926,64 @@ async prepareAndPrint() {
           if(this.firstEvent==true && this.secondEvent ==false || this.firstEvent==false && this.secondEvent ==true ){
             if(this.firstEvent==true && this.secondEvent ==false){
               if(this.selectedTypeData == "ponctuel"){
-                this.rapport = 'point';
+                if(this.themtiqueTree){
+                   console.log('achraf aouad');
+                   this.sendData.attributes.table.columns= ["id","évenement","PK_event","Route_id","Route","voie"];
+                   for(let i= 0;i<this.datas.length;i++){
+                   for(let j= 0;j<this.datas[i]['data'].length;j++){
+                   this.sendData['attributes'].map.layers[1].geojson.features.push(
+                      {
+                      "name":"achraf",
+                      "type": "Feature",
+                      "properties": { "_type":`${this.datas[i]["id"]}` , "_name":`${this.datas[i]["id"]}`},
+                      "geometry": this.datas[i]["data"][j]["ROUTE_GEOMETRY"]
+                        }
+            
+                    );
+                    
+                    
+// -------------------------
+          this.dataTable.push([this.datas[i]["data"][j]['id'],this.datas[i]["data"][j]['event_name'],((this.datas[i]["data"][j]['pkEvent'])/1000).toFixed(3).toString(),this.datas[i]["data"][j]['route_id'].toString(),this.datas[i]["data"][j]['route_name'],this.datas[i]["data"][j]['voie']])
+
+        
+          if(this.datas[i]["id"] == 1) {this.pointRadiusPointEvent1 = this.pointRadiusPointEvent1,this.colorPointEvent1='red'};
+          if(this.datas[i]["id"] == 2) {this.pointRadiusPointEvent1 = this.pointRadiusPointEvent1 * 2,this.colorPointEvent1='green'};
+          if(this.datas[i]["id"] == 3) {this.pointRadiusPointEvent1 = this.pointRadiusPointEvent1 * 3,this.colorPointEvent1='blue'};
+
+          this.sendData['attributes'].map.layers[1].style[`[_type = ${this.datas[i]["id"]}]`] = {
+            // values defined in symbolizer will override defaults
+            symbolizers: [
+              {
+                "type": "point",
+                "fillColor": this.colorPointEvent1,
+                "fillOpacity": this.fillOpacityPointEvent1,
+                "strokeColor": this.colorPointEvent1,
+                "strokeOpacity": 1,
+                "pointRadius": this.pointRadiusPointEvent1,
+                "strokeWidth": 5,
+                "strokeLinecap": "square",
+                "strokeDashstyle": "longdashdot"
+              },{
+                "type": "text",
+                "fontColor": "#000000",
+                "fontSize": "10px",
+                "label": "[_name]",
+                "goodnessOfFit": 0,
+                "spaceAround": 0,
+                "haloColor": "#ffffff",
+             "haloOpacity": "0.7",
+             "haloRadius": "0.5",
+              }
+          ]
+          }
+
+                   }
+                   }
+
+                   console.log(this.sendData)
+                }
+                else{
+                  this.rapport = 'point';
                 this.sendData.attributes.table.columns= ["id","évenement","PK_event","Route_id","Route","voie"];
                 console.log("this is done filter");
                 for(let i= 0;i< this.data1.length ; i++){
@@ -926,7 +997,7 @@ async prepareAndPrint() {
           
                   )
                   
-                  this.dataTable.push([this.data1[i]['id'],this.data1[i]['event_name'],((this.data1[i]['pkEvent'])/1000).toFixed(3).toString(),this.data1[i]['route_id'].toString(),this.data1[i]['route_name'],this.data1[i]['voie']])
+            this.dataTable.push([this.data1[i]['id'],this.data1[i]['event_name'],((this.data1[i]['pkEvent'])/1000).toFixed(3).toString(),this.data1[i]['route_id'].toString(),this.data1[i]['route_name'],this.data1[i]['voie']])
           
                     }
             this.sendData['attributes'].map.layers[1].style["[_type = 'pointy']"] = {
@@ -957,7 +1028,64 @@ async prepareAndPrint() {
             }
 
                console.log(this.sendData)
+                }
+                
       }else if(this.selectedTypeData == "lineaire"){
+        if(this.themtiqueTree){
+          console.log("zboba")
+          this.rapport = 'lineaire';
+          this.sendData.attributes.table.columns= ["id","évenement","Pkd","Pkf","Route_id","Route","voie"]
+          console.log(this.datas.length);
+          console.log(this.datas.length);
+          for(let i= 0;i<this.datas.length;i++){
+            for(let j= 0;j<this.datas[i]['data'].length;j++){
+
+            this.sendData['attributes'].map.layers[1].geojson.features.push(
+              {
+              "name":"achraf",
+              "type": "Feature",
+              "properties": { "_type": `${this.datas[i]["id"]}`, "_name":`${this.datas[i]["data"][j]['id']}`},  
+              "geometry": this.datas[i]["data"][j]["ROUTE_GEOMETRY"]
+                }
+            )
+
+            this.dataTable.push([this.datas[i]["data"][j]['id'],this.datas[i]["data"][j]['event_name'],((this.datas[i]["data"][j]['pkd'])/1000).toFixed(3).toString(),((this.datas[i]["data"][j]['pkf'])/1000).toFixed(3).toString(),this.datas[i]["data"][j]['route_id'],this.datas[i]["data"][j]['route_name'],this.datas[i]["data"][j]['voie']])
+            if(this.datas[i]["id"] == 1) {this.strokeWidthPol1 = this.strokeWidthPol1 , this.strock_colorPpl1 = 'red'}  ;
+            if(this.datas[i]["id"] == 2) {this.strokeWidthPol1 = this.strokeWidthPol1 * 1.2 , this.strock_colorPpl1 = 'blue'};
+            if(this.datas[i]["id"] == 3) {this.strokeWidthPol1 = this.strokeWidthPol1 * 1.3, this.strock_colorPpl1 = 'green'};
+            this.sendData['attributes'].map.layers[1].style[`[_type = ${this.datas[i]["id"]}]`] = {
+              // values defined in symbolizer will override defaults
+              symbolizers: [
+                {
+                    type: "polygon",
+                    fillColor: this.fillColorPol1,
+                    "fillOpacity": 1,
+                    "strokeColor": this.strock_colorPpl1,
+                    "strokeOpacity": 1,
+                    "strokeWidth": this.strokeWidthPol1,
+                    "strokeLinecap": this.strokeLinecapPol1,
+                    "strokeDashstyle": this.strokeDashstylePol1
+                    },{
+                      "type": "text",
+                      "fontColor": "#000000",
+                      "fontSize": "10px",
+                      "label": "[_name]",
+                      "goodnessOfFit": 0,
+                      "spaceAround": 0,
+                      "haloColor": "#ffffff",
+                   "haloOpacity": "0.7",
+                   "haloRadius": "0.5",
+                    }
+                          ]
+            }
+  
+          }
+
+          console.log('line')
+          console.log(this.sendData)
+          }
+     
+        }else{
         this.rapport = 'lineaire';
         this.sendData.attributes.table.columns= ["id","évenement","Pkd","Pkf","Route_id","Route","voie"]
         for(let i= 0;i< this.data1.length ; i++){
@@ -1000,12 +1128,18 @@ async prepareAndPrint() {
         }
 
       }
+        }
+        
     }
 
 
 
     if(this.firstEvent==false && this.secondEvent ==true){
       if(this.selectedTypeData == "ponctuel"){
+        if(this.themtiqueTree){
+                  //todo
+                  console.log('achraf aouad');
+        }
         this.rapport = 'point';
         this.sendData.attributes.table.columns= ["id","évenement","PK_event","Route_id","Route","voie"];
         console.log("this is done filter");
@@ -1052,6 +1186,61 @@ async prepareAndPrint() {
 
                console.log(this.sendData)
       }else if(this.selectedTypeData == "lineaire"){
+        if(this.themtiqueTree){
+          console.log("zboba")
+          this.rapport = 'lineaire';
+          this.sendData.attributes.table.columns= ["id","évenement","Pkd","Pkf","Route_id","Route","voie"]
+          console.log(this.datas.length);
+          console.log(this.datas.length);
+          for(let i= 0;i<this.datas.length;i++){
+            for(let j= 0;j<this.datas[i]['data'].length;j++){
+
+            this.sendData['attributes'].map.layers[1].geojson.features.push(
+              {
+              "name":"achraf",
+              "type": "Feature",
+              "properties": { "_type": `${this.datas[i]["id"]}`, "_name":`${this.datas[i]["data"][j]['id']}`},  
+              "geometry": this.datas[i]["data"][j]["ROUTE_GEOMETRY"]
+                }
+            )
+
+            this.dataTable.push([this.datas[i]["data"][j]['id'],this.datas[i]["data"][j]['event_name'],((this.datas[i]["data"][j]['pkd'])/1000).toFixed(3).toString(),((this.datas[i]["data"][j]['pkf'])/1000).toFixed(3).toString(),this.datas[i]["data"][j]['route_id'],this.datas[i]["data"][j]['route_name'],this.datas[i]["data"][j]['voie']])
+            if(this.datas[i]["id"] == 1) {this.strokeWidthPol2 = this.strokeWidthPol2, this.strock_colorPpl2= 'red'}  ;
+            if(this.datas[i]["id"] == 2) {this.strokeWidthPol2 = this.strokeWidthPol2 * 1.2 , this.strock_colorPpl2 = 'blue'};
+            if(this.datas[i]["id"] == 3) {this.strokeWidthPol2 = this.strokeWidthPol2 * 1.3, this.strock_colorPpl2 = 'green'};
+            this.sendData['attributes'].map.layers[1].style[`[_type = ${this.datas[i]["id"]}]`] = {
+              // values defined in symbolizer will override defaults
+              symbolizers: [
+                {
+                    type: "polygon",
+                    fillColor: this.fillColorPol2,
+                    "fillOpacity": 1,
+                    "strokeColor": this.strock_colorPpl2,
+                    "strokeOpacity": 1,
+                    "strokeWidth": this.strokeWidthPol2,
+                    "strokeLinecap": this.strokeLinecapPol2,
+                    "strokeDashstyle": this.strokeDashstylePol2
+                    },{
+                      "type": "text",
+                      "fontColor": "#000000",
+                      "fontSize": "10px",
+                      "label": "[_name]",
+                      "goodnessOfFit": 0,
+                      "spaceAround": 0,
+                      "haloColor": "#ffffff",
+                   "haloOpacity": "0.7",
+                   "haloRadius": "0.5",
+                    }
+                          ]
+            }
+  
+          }
+
+          console.log('line')
+          console.log(this.sendData)
+          }
+     
+        }
         this.rapport = 'lineaire';
         this.sendData.attributes.table.columns= ["id","évenement","Pkd","Pkf","Route_id","Route","voie"]
         for(let i= 0;i< this.data2.length ; i++){
@@ -1980,86 +2169,190 @@ if(this.filtre){
       this.sendData['attributes'].firstLegendClass =this.thematique1 ;
 
       if(this.selectedTypeData == "ponctuel" ){
+        if(this.themtiqueTree){
+          this.sendData['attributes'].project_compelte_color ='red' ;
+          this.sendData['attributes'].firstLegendClass = this.singlethematique[0]['attr'] +this.singlethematique[0]['opp']+this.singlethematique[0]['value']  ;
+          this.sendData['attributes'].secondLegendClass = this.singlethematique[1]['attr'] +this.singlethematique[1]['opp']+this.singlethematique[1]['value']  ;
+          this.sendData['attributes']['secondLegendClass2'] = this.singlethematique[2]['attr'] +this.singlethematique[2]['opp']+this.singlethematique[2]['value']  ;
 
-        this.sendData['attributes'].project_compelte_color =this.colorPointEvent1 ;
-        await fetch("http://localhost:8015/print-servlet-3.28.1/print/resource_bundle3singlepoint/report.pdf",{
-          method:'POST',
-          headers:{'Content-Type':"application/json"},
-          body: JSON.stringify(this.sendData)
-        }).then(response =>{
-        if(response.ok){
-         return response.json();
+          this.sendData['attributes'].project_medium_compelte_color ='green' ;
+          this.sendData['attributes']['project_medium_compelte_color2'] ='blue' ;
+          await fetch("http://localhost:8015/print-servlet-3.28.1/print/resource_bundle2PointReport/report.pdf",{
+            method:'POST',
+            headers:{'Content-Type':"application/json"},
+            body: JSON.stringify(this.sendData)
+          }).then(response =>{
+          if(response.ok){
+           return response.json();
+          }
+          throw new Error('request failed');}, networkError => console.log("chi le3ba") )
+          .then(responseJson =>{
+            console.log(responseJson)
+            this.downloadWhenReady(startTime, responseJson);
+            
+          })
+
         }
-        throw new Error('request failed');}, networkError => console.log("chi le3ba") )
-        .then(responseJson =>{
-          console.log(responseJson)
-          this.downloadWhenReady(startTime, responseJson);
-          
-        })
+        else{
+          this.sendData['attributes'].project_compelte_color =this.colorPointEvent1 ;
+          await fetch("http://localhost:8015/print-servlet-3.28.1/print/resource_bundle3singlepoint/report.pdf",{
+            method:'POST',
+            headers:{'Content-Type':"application/json"},
+            body: JSON.stringify(this.sendData)
+          }).then(response =>{
+          if(response.ok){
+           return response.json();
+          }
+          throw new Error('request failed');}, networkError => console.log("chi le3ba") )
+          .then(responseJson =>{
+            console.log(responseJson)
+            this.downloadWhenReady(startTime, responseJson);
+            
+          })
+        }
+
+        
 
       }
       else if(this.selectedTypeData == "lineaire"){
+        if(this.themtiqueTree){
+          console.log('print print line')
+          this.sendData['attributes'].project_compelte_color ='red' ;
+          this.sendData['attributes'].firstLegendClass = this.singlethematique[0]['attr'] +this.singlethematique[0]['opp']+this.singlethematique[0]['value']  ;
+          this.sendData['attributes'].secondLegendClass = this.singlethematique[1]['attr'] +this.singlethematique[1]['opp']+this.singlethematique[1]['value']  ;
+          this.sendData['attributes']['secondLegendClass2'] = this.singlethematique[2]['attr'] +this.singlethematique[2]['opp']+this.singlethematique[2]['value']  ;
 
-        this.sendData['attributes'].project_compelte_color =this.strock_colorPpl1 ;
-             console.log(this.sendData);
-        await fetch("http://localhost:8015/print-servlet-3.28.1/print/resource_bundle3line/report.pdf",{
-          method:'POST',
-          headers:{'Content-Type':"application/json"},
-          body: JSON.stringify(this.sendData)
-        }).then(response =>{
-        if(response.ok){
-         return response.json();
+          this.sendData['attributes'].project_medium_compelte_color ='green' ;
+          this.sendData['attributes']['project_medium_compelte_color2'] ='blue' ;
+          await fetch("http://localhost:8015/print-servlet-3.28.1/print/resource_bundle2LineReport/report.pdf",{
+            method:'POST',
+            headers:{'Content-Type':"application/json"},
+            body: JSON.stringify(this.sendData)
+          }).then(response =>{
+          if(response.ok){
+           return response.json();
+          }
+          throw new Error('request failed');}, networkError => console.log("chi le3ba") )
+          .then(responseJson =>{
+            console.log(responseJson)
+            this.downloadWhenReady(startTime, responseJson);
+            
+          })
+
         }
-        throw new Error('request failed');}, networkError => console.log("chi le3ba") )
-        .then(responseJson =>{
-          console.log(responseJson)
-          this.downloadWhenReady(startTime, responseJson);
-          
-        })
-
+        else{
+          this.sendData['attributes'].project_compelte_color =this.strock_colorPpl1 ;
+          console.log(this.sendData);
+     await fetch("http://localhost:8015/print-servlet-3.28.1/print/resource_bundle3line/report.pdf",{
+       method:'POST',
+       headers:{'Content-Type':"application/json"},
+       body: JSON.stringify(this.sendData)
+     }).then(response =>{
+     if(response.ok){
+      return response.json();
+     }
+     throw new Error('request failed');}, networkError => console.log("chi le3ba") )
+     .then(responseJson =>{
+       console.log(responseJson)
+       this.downloadWhenReady(startTime, responseJson);
+       
+     })
+        }
       }
     
     }else if(this.firstEvent==false && this.secondEvent ==true){
 
-      this.sendData['attributes'].firstLegendClass =this.thematique2 ;
-
+      this.sendData['attributes'].firstLegendClass =this.thematique2;
       if(this.selectedTypeData == "ponctuel" ){
+        if(this.themtiqueTree){
+          this.sendData['attributes'].project_compelte_color ='red' ;
+          this.sendData['attributes'].firstLegendClass = this.singlethematique[0]['attr'] +this.singlethematique[0]['opp']+this.singlethematique[0]['value']  ;
+          this.sendData['attributes'].secondLegendClass = this.singlethematique[1]['attr'] +this.singlethematique[1]['opp']+this.singlethematique[1]['value']  ;
+          this.sendData['attributes']['secondLegendClass2'] = this.singlethematique[2]['attr'] +this.singlethematique[2]['opp']+this.singlethematique[2]['value']  ;
 
-        this.sendData['attributes'].project_compelte_color =this.colorPointEvent2;
-        await fetch("http://localhost:8015/print-servlet-3.28.1/print/resource_bundle3singlepoint/report.pdf",{
-          method:'POST',
-          headers:{'Content-Type':"application/json"},
-          body: JSON.stringify(this.sendData)
-        }).then(response =>{
-        if(response.ok){
-         return response.json();
+          this.sendData['attributes'].project_medium_compelte_color ='green' ;
+          this.sendData['attributes']['project_medium_compelte_color2'] ='blue' ;
+          await fetch("http://localhost:8015/print-servlet-3.28.1/print/resource_bundle2PointReport/report.pdf",{
+            method:'POST',
+            headers:{'Content-Type':"application/json"},
+            body: JSON.stringify(this.sendData)
+          }).then(response =>{
+          if(response.ok){
+           return response.json();
+          }
+          throw new Error('request failed');}, networkError => console.log("chi le3ba") )
+          .then(responseJson =>{
+            console.log(responseJson)
+            this.downloadWhenReady(startTime, responseJson);
+            
+          })
+
         }
-        throw new Error('request failed');}, networkError => console.log("chi le3ba") )
-        .then(responseJson =>{
-          console.log(responseJson)
-          this.downloadWhenReady(startTime, responseJson);
-          
-        })
+        else{
+
+          this.sendData['attributes'].project_compelte_color =this.colorPointEvent2;
+          await fetch("http://localhost:8015/print-servlet-3.28.1/print/resource_bundle3singlepoint/report.pdf",{
+            method:'POST',
+            headers:{'Content-Type':"application/json"},
+            body: JSON.stringify(this.sendData)
+          }).then(response =>{
+          if(response.ok){
+           return response.json();
+          }
+          throw new Error('request failed');}, networkError => console.log("chi le3ba") )
+          .then(responseJson =>{
+            console.log(responseJson)
+            this.downloadWhenReady(startTime, responseJson);
+            
+          })
+        }
+
+        
         
       }
       else if(this.selectedTypeData == "lineaire"){
+        if(this.themtiqueTree){
+          this.sendData['attributes'].project_compelte_color ='red' ;
+          this.sendData['attributes'].firstLegendClass = this.singlethematique[0]['attr'] +this.singlethematique[0]['opp']+this.singlethematique[0]['value']  ;
+          this.sendData['attributes'].secondLegendClass = this.singlethematique[1]['attr'] +this.singlethematique[1]['opp']+this.singlethematique[1]['value']  ;
+          this.sendData['attributes']['secondLegendClass2'] = this.singlethematique[2]['attr'] +this.singlethematique[2]['opp']+this.singlethematique[2]['value']  ;
 
-        this.sendData['attributes'].project_compelte_color =this.strock_colorPpl2 ;
+          this.sendData['attributes'].project_medium_compelte_color ='green' ;
+          this.sendData['attributes']['project_medium_compelte_color2'] ='blue' ;
+          await fetch("http://localhost:8015/print-servlet-3.28.1/print/resource_bundle2LineReport/report.pdf",{
+            method:'POST',
+            headers:{'Content-Type':"application/json"},
+            body: JSON.stringify(this.sendData)
+          }).then(response =>{
+          if(response.ok){
+           return response.json();
+          }
+          throw new Error('request failed');}, networkError => console.log("chi le3ba") )
+          .then(responseJson =>{
+            console.log(responseJson)
+            this.downloadWhenReady(startTime, responseJson);
+            
+          })
 
-        await fetch("http://localhost:8015/print-servlet-3.28.1/print/resource_bundle3line/report.pdf",{
-          method:'POST',
-          headers:{'Content-Type':"application/json"},
-          body: JSON.stringify(this.sendData)
-        }).then(response =>{
-        if(response.ok){
-         return response.json();
+        }else{
+          this.sendData['attributes'].project_compelte_color =this.strock_colorPpl2 ;
+
+          await fetch("http://localhost:8015/print-servlet-3.28.1/print/resource_bundle3line/report.pdf",{
+            method:'POST',
+            headers:{'Content-Type':"application/json"},
+            body: JSON.stringify(this.sendData)
+          }).then(response =>{
+          if(response.ok){
+           return response.json();
+          }
+          throw new Error('request failed');}, networkError => console.log("chi le3ba") )
+          .then(responseJson =>{
+            console.log(responseJson)
+            this.downloadWhenReady(startTime, responseJson);
+            
+          })
         }
-        throw new Error('request failed');}, networkError => console.log("chi le3ba") )
-        .then(responseJson =>{
-          console.log(responseJson)
-          this.downloadWhenReady(startTime, responseJson);
-          
-        })
+        
 
       }
     }
@@ -2347,9 +2640,7 @@ console.log(this.sorttype);
 
 
 Opp(val){
-
-
-  if(val == "intersect"){
+if(val == "intersect"){
     this.verificationVal = false;
   }
   else this.verificationVal = true;
@@ -2650,7 +2941,7 @@ getValues(){
 
 
 applaySingleFiltre(){
-
+if(!this.themtiqueTree){
   if(this.filtre == true){
     this.data1=[]
     this.data2=[]
@@ -2801,6 +3092,8 @@ console.log(this.object123)
 
   }
   }
+}
+  
 
 }
 
@@ -2821,6 +3114,177 @@ showToasterWarning(titre,message){
   this.notifyService.showWarning(titre, message)
 }
 
+
+addMore(){
+  if(this.incriment > 3) this.incriment = 0;
+  this.themtiqueTree = true;
+  this.incriment ++;
+
+if(this.singlethematique.length<3){
+  if(this.firstEvent==true && this.secondEvent ==false){
+      
+    for(let j= 0;j<this.events.length;j++){
+      if(this.events[j]['name'] == this.selectedTh){
+        console.log('this is the one');
+        this.thmValuesOf = this.events[j]['id']
+        console.log(this.thmValuesOf)
+      }
+   }
+
+    this.object123={
+      thematiqueid:this.thmValuesOf,
+      attribute:this.selectedAttribute,
+      operateur:this.operateur,
+      valeur:this.valueTO
+    }
+
+   console.log(this.object123)
+    if(this.selectedTypeData == "ponctuel"){
+      this.selectedTypeData144 =  "ponctuel"
+      this.selectedTh144 =  this.selectedTh
+      console.log("ponctuel")
+      this.colonnes =  [{name:'id', value:1},{name:'évenement', value:2},{name:"PK_event", value:3},{name:"Route_id", value:4},{name:"nom de la route", value:5},{name:"voie", value:6}];
+      //todo machi blastha
+      console.log(this.object123)
+      this.lrsServiceService.queryPonctuelDataForMap(this.object123).subscribe(res=>{
+        this.data1 = []
+        for(let i= 0;i<res.length;i++){
+          res[i]["ROUTE_GEOMETRY"] = { "type": "Point", "coordinates": new GeoJSON({ featureProjection: 'EPSG:3857' }).readFeature(JSON.parse(res[i]['jsond'])).getGeometry()['flatCoordinates']}
+          this.data1.push(res[i])
+        }
+        this.datas.push({id:this.incriment,data:this.data1})
+        console.log(this.datas);
+     },err=>{
+      console.log(err)
+     })
+
+    }
+    else if(this.selectedTypeData == "lineaire"){
+      console.log("zomah")
+      this.selectedTypeData144 =  "lineaire"
+      this.selectedTh144 =  this.selectedTh
+    this.colonnes =  [{name:'id', value:1},{name:'évenement', value:2},{name:"PKD", value:3},{name:"PKF", value:4},{name:"Route_id", value:5},{name:"nom de la route", value:6},{name:"voie", value:7}];
+    this.lrsServiceService.queryLinearDataForMap(this.object123).subscribe(res=>{
+      this.data1 = []
+      for(let i= 0;i<res.length;i++){
+        let j = 0
+        this.cord0 = [[]]
+        this.rt_geom = new GeoJSON({ featureProjection: 'EPSG:3857' }).readFeature(JSON.parse(res[i]['jsond'])).getGeometry()['flatCoordinates'];
+        while(j<(this.rt_geom.length)){
+   
+          this.cord0[0].push([this.rt_geom[j],this.rt_geom[j+1]])
+          j=j+2
+         }
+  
+  
+        res[i]['ROUTE_GEOMETRY'] =  { "type": "Polygon", "coordinates": this.cord0}
+        
+        this.data1.push(res[i])
+
+
+      }
+      this.datas.push({id:this.incriment,data:this.data1})
+
+
+    console.log(this.datas);
+   },err=>{
+    console.log(err)
+   })
+
+    }
+  }
+// ----------------------------------------------------------------------------------------------------------------------------------
+
+  if(this.firstEvent==false && this.secondEvent ==true){
+    this.selectedAttribute
+    for(let j= 0;j<this.events.length;j++){
+      if(this.events[j]['name'] == this.selectedTh2){
+        console.log('this is the one');
+        this.thmValuesOf = this.events[j]['id']
+        console.log(this.thmValuesOf)
+      }
+   }
+
+    this.object123={
+      thematiqueid:this.thmValuesOf,
+      attribute:this.selectedAttribute,
+      operateur:this.operateur,
+      valeur:this.valueTO
+
+    }
+ console.log(this.object123)
+    if(this.selectedTypeData == "ponctuel"){
+      this.selectedTypeData144 =  "ponctuel"
+      this.selectedTh144 =  this.selectedTh2
+      console.log("ponctuel")
+      this.colonnes =  [{name:'id', value:1},{name:'évenement', value:2},{name:"PK_event", value:3},{name:"Route_id", value:4},{name:"nom de la route", value:5},{name:"voie", value:6}];
+      //todo machi blastha
+      console.log(this.object123)
+      this.lrsServiceService.queryPonctuelDataForMap(this.object123).subscribe(res=>{
+        this.data2 = []
+        for(let i= 0;i<res.length;i++){
+          res[i]["ROUTE_GEOMETRY"] = { "type": "Point", "coordinates": new GeoJSON({ featureProjection: 'EPSG:3857' }).readFeature(JSON.parse(res[i]['jsond'])).getGeometry()['flatCoordinates']}
+          this.data2.push(res[i])
+        }
+        this.datas.push({id:this.incriment,data:this.data2})
+
+        console.log(this.datas)
+    
+     },err=>{
+      console.log(err)
+     })
+
+    }
+    else if(this.selectedTypeData == "lineaire"){
+      this.selectedTypeData144 =  "lineaire"
+      this.selectedTh144 =  this.selectedTh2
+    this.colonnes =  [{name:'id', value:1},{name:'évenement', value:2},{name:"PKD", value:3},{name:"PKF", value:4},{name:"Route_id", value:5},{name:"nom de la route", value:6},{name:"voie", value:7}];
+    this.lrsServiceService.queryLinearDataForMap(this.object123).subscribe(res=>{
+      this.data2 = []
+      for(let i= 0;i<res.length;i++){
+        let j = 0
+        this.cord0 = [[]]
+        this.rt_geom = new GeoJSON({ featureProjection: 'EPSG:3857' }).readFeature(JSON.parse(res[i]['jsond'])).getGeometry()['flatCoordinates'];
+        while(j<(this.rt_geom.length)){
+   
+          this.cord0[0].push([this.rt_geom[j],this.rt_geom[j+1]])
+          j=j+2
+         }
+  
+  
+        res[i]['ROUTE_GEOMETRY'] =  { "type": "Polygon", "coordinates": this.cord0}
+        
+        this.data2.push(res[i]);
+      }
+
+      this.datas.push({id:this.incriment,data:this.data2})
+
+
+    console.log(this.datas);
+    console.log('linear');
+   },err=>{
+    console.log(err)
+   })
+
+    }
+  }
+}
+ 
+
+
+
+  if(this.singlethematique.length<3){
+    this.singlethematique.push({
+      opp:this.operateur,
+      value:this.valueTO,
+      attr:this.selectedAttribute
+    })
+  }
+  
+   
+    
+  console.log(this.singlethematique);
+}
 
 
 }

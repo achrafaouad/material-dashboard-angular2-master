@@ -536,6 +536,15 @@
         z-index: 100014;
         border-radius: 10px;
       }
+      .modal-demo1 .ui-modal {
+        width: 100px;
+        height: 300px;
+        /* for resize limits use min-width, min-height, max-width, max-height in css */
+      } 
+      .modal-demo1 .ui-modal-overlay, .modal-demo1 .ui-modal {
+        z-index: 100014;
+        border-radius: 10px;
+      }
       /* colors */
       :root {
         --dt-color-primary: #272426;
@@ -546,3 +555,68 @@
         border-radius: 10px;
       }
       
+
+
+
+
+      
+
+.example-box {
+  position: absolute;
+  z-index: 1;
+  width: 200px;
+  height: 200px;
+  border: solid 1px #ccc;
+  color: rgba(0, 0, 0, 0.87);
+  cursor: move;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: #fff;
+  border-radius: 4px;
+  position: relative;
+  z-index: 1;
+  transition: box-shadow 200ms cubic-bezier(0, 0, 0.2, 1);
+  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+              0 2px 2px 0 rgba(0, 0, 0, 0.14),
+              0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.example-box:active {
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+              0 8px 10px 1px rgba(0, 0, 0, 0.14),
+              0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* .modal-demo1 .ui-modal11 {
+  width: 37.5rem;
+  /* for resize limits use min-width, min-height, max-width, max-height in css */
+/* }
+.modal-demo1 .ui-modal-overlay1, .modal-demo1 .ui-modal1 {
+  z-index: 10000;
+  position: relative;
+} */
+/* colors */
+/* :root {
+  --dt-color-primary: #5b9bd5;
+} */
+/* for IE */
+/* .ui-modal-header1 {
+  background-color: red;
+  border: 5px solid red;
+  border-radius: 10px;
+}  */

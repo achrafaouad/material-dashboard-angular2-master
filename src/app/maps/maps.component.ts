@@ -57,6 +57,7 @@ import Feature from "ol/Feature";
 import Point from "ol/geom/Point";
 import { NotificationService } from "app/notification.service";
 import { NgxSpinnerService } from "ngx-spinner";
+import { altKeyOnly } from "ol/events/condition";
 
 
 @Component({
@@ -71,6 +72,11 @@ export class MapsComponent implements OnInit {
   paramschecked: any=[];
   dataFlow: any[];
   ver: any;
+  events: any;
+  selectedEvent: string = "";
+  legendPoint = new Set<string>();
+  legendLine = new Set<string>();
+  legendPointFIltred: any[] = [];
 
   constructor(private ngxCsvParser: NgxCsvParser,
     private lrsServiceService: LrsServiceService,
@@ -79,6 +85,7 @@ export class MapsComponent implements OnInit {
     private spinner: NgxSpinnerService) {
     this.getAllParams();
     this.getRoutesName();
+    this.getEvent();
     // this.getLrsLabelStyle();
     // this.getEtatLabelStyle();
     // this.getEtatColorStyle();
@@ -91,7 +98,11 @@ export class MapsComponent implements OnInit {
     
     this.showToasterSuccess('bonjour monsieur ', JSON.parse(localStorage.getItem('user')).firstName);
   } 
-
+  color = "red"
+  boeder = "solid black 10px"
+  radius = "50%"
+  width = "25px"
+  height = "25px"
   popup: Overlay;
   map: Map;
   mapView: View;
@@ -443,8 +454,6 @@ this.spinner.show();
         this.items  =  this.items + ",''" + this.user.provinces[i].id + "''"
         this.items2  =  this.items2 + ",'" + this.user.provinces[i].id + "'"
       }
-      
-   
 
     }
 
@@ -555,8 +564,7 @@ this.spinner.show();
         return (
           "http://localhost:8081/geoserver/i2singineerie/ows?service=WFS&" +  
           "version=1.1.0&request=GetFeature&typename=i2singineerie:LINEAR_EVENT&CQL_FILTER=INTERSECTS(ROUTE_GEOMETRY, collectGeometries(queryCollection('i2singineerie:PROVINCE', 'GEOMETRY', 'ID IN("+
-          this.items +")')))&" +
-          "outputFormat=application/json"
+          this.items +")'))) AND EVENT_TYPE_ID IN (" + this.selectedEvent +")&outputFormat=application/json"
         );
       },
       strategy: bboxStrategy,
@@ -615,6 +623,7 @@ this.spinner.show();
         this.ressores
         this.colorsd
 
+        
 
         // console.error(resolution)
         var event_type_id = feature.get("EVENT_TYPE_ID");
@@ -642,7 +651,15 @@ this.spinner.show();
                   this.colorsd = <ColorLike>(JSON.parse(this.thematiques[i]["style"]).colorBor)
                   
                 }
-
+               
+                  this.legendLine.add(JSON.stringify({
+                    fill:JSON.parse(this.thematiques[i]["style"]).remplissageC,
+                    radius:"5px solid " + this.colorsd,
+                    thematique:event_type_id
+                  }))
+                
+                
+                
 
               return new Style({
                 fill: new Fill({
@@ -709,9 +726,7 @@ this.spinner.show();
         return (
           "http://localhost:8081/geoserver/i2singineerie/ows?service=WFS&" +
           "version=1.1.0&request=GetFeature&typename=i2singineerie:PONCTUEL_EVENTS&CQL_FILTER=INTERSECTS(ROUTE_GEOMETRY, collectGeometries(queryCollection('i2singineerie:PROVINCE', 'GEOMETRY', 'ID IN("+
-          this.items +
-          ")')))&" +
-          "outputFormat=application/json"
+          this.items +")'))) AND EVENT_TYPE_ID IN (" + this.selectedEvent +")&outputFormat=application/json"
         );
       },
       strategy: bboxStrategy,
@@ -729,7 +744,20 @@ this.spinner.show();
 
             if (this.thematiques[i]["id"] == event_type_id) {
               if (this.thematiques[i]["pointStyle"]) {
-                // console.log("in");
+               
+                this.legendPoint.add(
+                  JSON.stringify({
+                  fill:JSON.parse(this.thematiques[i]["pointStyle"]).color,
+                  radius:"5px solid " + JSON.parse(this.thematiques[i]["pointStyle"]).Ocolor,
+                  thematique:event_type_id
+                }))                
+    
+                
+               
+
+
+                
+                
                 return new Style({
                   image: new CircleStyle({
                     radius: JSON.parse(this.thematiques[i]["pointStyle"])
@@ -2702,18 +2730,43 @@ Upload(data, eventType) {
       );
   }
 
+
+  getEvent(){
+    this.lrsServiceService.getEventypes().subscribe(
+      (res) => {
+        this.events = res;
+        for(let i = 0;i<this.events.length;i++){
+          this.paramschecked.push(res[i]['id']);
+          if(res[i]['id']){
+
+            if(this.selectedEvent == ""){
+              this.selectedEvent  =  this.selectedEvent + "'" + res[i]['id'] + "'"
+            }else{
+              this.selectedEvent  =  this.selectedEvent + ",'" + res[i]['id']+ "'"
+            }
+
+          }
+          
+        }
+
+        
+        this.accident.getSource().refresh();
+        this.linear_events.getSource().refresh()
+
+
+      },
+      (err: HttpErrorResponse) => this.showToasterWarning('something goes wrong', 'check that you did that properly')
+      )
+  }
+
+
   getAllParams(){
     this.name = "";
     this.lrsServiceService.getAllEventParams().subscribe(
       (res) => {
-        this.params = new Set(res);
-        // for(let i = 0;i<res.length;i++){
-        //   this.paramschecked.push(res[i]['eventType'].id);
-        // }
-        for(let v of this.params){
-          this.paramschecked.push(v.eventType.id);
-        }
-        this.paramschecked = new Set(this.paramschecked);
+        this.params =res
+    
+       
         
       },
       (err: HttpErrorResponse) => this.showToasterWarning('something goes wrong', 'check that you did that properly')
@@ -3635,18 +3688,6 @@ async imprimer(){
       this.spinnerHide();
 }
 
-
-
-// eventsToshow(){
-
-//   for(var i of this.params){ 
-//     this.paramschecked.push(i['event_type'].id)
-//     console.log(this.paramschecked)
-//   }
-
-// }
-
-
 checkedEvents(id){
   
 if(this.paramschecked.length > 0){
@@ -3659,24 +3700,71 @@ if(this.paramschecked.length > 0){
 }
 
 addedProvince(id){
-  console.log("hello world",id)
-  if(!this.checkedEvents(id)){
-    for(let i = 0;i<this.params.length;i++){
-      if(this.params[i].eventType.id === id){
-        this.paramschecked.push(this.params[i].eventType.id)
-      }
-    }
- }
-  if(this.checkedEvents(id)){
+  
+
+  if(this.checkedEvents(id) == true){
+   
     for(let i = 0;i<this.paramschecked.length;i++){ 
   
       if (this.paramschecked[i] === id) { 
         this.paramschecked.splice(i, 1); 
       }
   }
+  this.refresh();
+  return
   }
+
+  if(this.checkedEvents(id) == false){
+   
+  this.paramschecked.push(id);
+  this.refresh();
+     return 
+ }
+ 
+
+  
+  
 
 }
 
+
+refresh(){
+  if(this.events){
+
+    this.selectedEvent = "";
+    for(let i = 0;i<this.paramschecked.length;i++){
+      if(this.paramschecked[i]){
+        if(this.selectedEvent == ""){
+          this.selectedEvent  =  this.selectedEvent + "'" + this.paramschecked[i] + "'"
+        }else{
+          this.selectedEvent  =  this.selectedEvent + ",'" + this.paramschecked[i]+ "'"
+        }
+      }
+      
+    }
+    
+    this.accident.getSource().refresh();
+    this.linear_events.getSource().refresh();   
+
+  
+
+  }
+}
+
+
+returnJSon(te){
+  console.log(te)
+  return JSON.parse(te)
+
+}
+
+returnProvinceById(id){
+  console.log(this.events)
+  for(let t = 0 ; t<this.events.length;t++){
+    if(this.events[t].id === id){
+      return this.events[t].name
+    }
+  }
+}
 
 }
