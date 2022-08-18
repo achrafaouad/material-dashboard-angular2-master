@@ -60,7 +60,10 @@ import Feature from "ol/Feature";
 import Point from "ol/geom/Point";
 import { NotificationService } from "app/notification.service";
 import { NgxSpinnerService } from "ngx-spinner";
-import { altKeyOnly } from "ol/events/condition";
+//mesure
+import {LineString, Polygon} from 'ol/geom';
+import {getArea, getLength} from 'ol/sphere';
+import {unByKey} from 'ol/Observable';
 declare let html2canvas: any;
 
 export interface PeriodicElement {
@@ -110,6 +113,17 @@ export class MapsComponent implements OnInit {
   clickedRows = new Set<PeriodicElement>();
   vectorSource: any;
   vectorLayer: olVectorLayer<any>;
+  sourceMesure: any;
+  vectorMesure: olVectorLayer<any>;
+  sketch: any;
+  helpTooltipElement: any;
+  measureTooltipElement: any;
+  continuePolygonMsg: string;
+  continueLineMsg: string;
+  measureTooltip: any;
+  helpTooltip: any;
+  typeSelect: HTMLElement;
+  listener: any;
   constructor(private ngxCsvParser: NgxCsvParser,
     private lrsServiceService: LrsServiceService,
     private httpClient: HttpClient,private fb:FormBuilder,
@@ -258,6 +272,7 @@ export class MapsComponent implements OnInit {
 
   segmentType = ["nouvelle route", "Exention"];
   draw: any;
+  draw1: any;
   videoPath
   @ViewChild('close') close: ElementRef;
   olOverlay: Overlay;
@@ -891,8 +906,123 @@ this.spinner.show();
       },
     } as BaseLayerOptions);
 
-    ///////////////////////////Mesure/////////////////////////////
-    
+    ///////////////////////////Mesure14////////////////////////
+    var lengthButton = document.createElement('button');
+      lengthButton.innerHTML = '<i class="bi bi-rulers"></i>';
+      lengthButton.className = 'myButton';
+      lengthButton.id = 'lengthButton';
+
+      var lengthElement = document.createElement('div');
+      lengthElement.className = 'lengthButtonDiv';
+      lengthElement.appendChild(lengthButton);
+
+      var lengthControl = new Control({
+          element: lengthElement
+      })
+
+      var lengthFlag = false;
+    lengthButton.addEventListener("click", () => {
+        // disableOtherInteraction('lengthButton');
+        lengthButton.classList.toggle('clicked');
+        lengthFlag = !lengthFlag;
+        document.getElementById("map").style.cursor = "default";
+        if (lengthFlag) {
+            this.map.removeInteraction(this.draw1);
+            this.addInteraction1();
+            //toto
+              // this.createHelpTooltip()
+        } else {
+
+            this.map.removeInteraction(this.draw1);
+            this.sourceMesure.clear();
+            const elements = document.getElementsByClassName("ol-tooltip ol-tooltip-static");
+            while (elements.length > 0) elements[0].remove();
+        }
+
+    })
+
+   
+
+
+    this.sourceMesure = new VectorSource();
+
+      this.vectorMesure = new VectorLayer({
+        source: this.sourceMesure,
+        style: new Style({
+          fill: new Fill({
+            color: 'rgba(255, 255, 255, 0.2)',
+          }),
+          stroke: new Stroke({
+            color: '#ffcc33',
+            width: 2,
+          }),
+          image: new CircleStyle({
+            radius: 7,
+            fill: new Fill({
+              color: '#ffcc33',
+            }),
+          }),
+        }),
+      });
+      this.map.addLayer(this.vectorMesure);
+
+      this.sketch;
+      this.helpTooltipElement;
+      this.helpTooltip;
+      this.measureTooltipElement;
+      this.measureTooltip;
+      this.continuePolygonMsg = 'Click to continue drawing the polygon';
+      this.continueLineMsg = 'Click to continue drawing the line';
+      if(lengthFlag){
+        this.map.on('pointermove', (evt)=> {
+          if (evt.dragging) {
+            return;
+          }
+         
+          let helpMsg = 'Click to start drawing';
+        
+          if (this.sketch) {
+            const geom = this.sketch.getGeometry();
+            if (geom instanceof Polygon) {
+              helpMsg = this.continuePolygonMsg;
+            } else if (geom instanceof LineString) {
+              helpMsg = this.continueLineMsg;
+            }
+          }
+          if(!this.helpTooltipElement){
+            this.createHelpTooltip()
+          }
+         
+           this.helpTooltipElement.innerHTML = helpMsg;
+           this.helpTooltip.setPosition(evt.coordinate);
+         
+           this.helpTooltipElement.classList.remove('hidden');
+          
+           
+        });
+  
+  
+        this.map.getViewport().addEventListener('mouseout',  ()=> {
+          if(this.helpTooltipElement){
+            this.helpTooltipElement.classList.add('hidden');
+          }
+          
+        });
+  
+        // this.typeSelect = document.getElementById('type');
+        this.draw1;
+  
+        // this.typeSelect.onchange =  ()=> {
+        //   this.map.removeInteraction(this.draw1);
+        //   this.addInteraction1();
+        // };
+        
+      }
+   
+      
+
+
+
     ////////////////////////////////////////////////////////
 
     var layerSwitcher = new LayerSwicher({
@@ -925,6 +1055,7 @@ this.spinner.show();
     this.map.addLayer(this.Routes);
 
     this.map.addLayer(this.mediumLowPoint);
+    
  
     console.log("layerSwitcher")
     this.map.addControl(layerSwitcher);
@@ -1571,7 +1702,7 @@ console.log(this.displayedColumns)
     });
 
     this.map.addControl(EditControl);
-
+ 
   
    
 
@@ -1680,7 +1811,8 @@ console.log(this.displayedColumns)
             this.edit.remove();
           }
         });
-
+        ///////////////////////hadi blastha//////////////////////////
+        
         /////////////////////////////////////////////////////
 
         this.map.on("singleclick", (evt: any) => {
@@ -1750,6 +1882,10 @@ console.log(this.displayedColumns)
        
       }
     });
+
+//mesure14
+    // this.addInteraction1();
+    this.map.addControl(lengthControl);
   }
 
   addInteraction(typo: String) {
@@ -3467,6 +3603,147 @@ setTimeout(()=>{
   }
 
 
+  //////////////////Mesure14///////////////////////////////
+ formatLength = (line)=> {
+  const length = getLength(line);
+  let output;
+ 
+    output = Math.round(length * 100) + ' ' + 'km';
+  
+  return output;
+};
+
+
+ addInteraction1(){
+  // const type = typeSelect.value == 'area' ? 'Polygon' : 'LineString';
+  console.log("add interaction")
+  const type = 'LineString';
+  this.draw1 = new Draw({
+    source: this.sourceMesure,
+    type: type,
+    style: new Style({
+      fill: new Fill({
+        color: 'rgba(255, 255, 255, 0.2)',
+      }),
+      stroke: new Stroke({
+        color: 'rgba(0, 0, 0, 0.5)',
+        lineDash: [10, 10],
+        width: 2,
+      }),
+      image: new CircleStyle({
+        radius: 5,
+        stroke: new Stroke({
+          color: 'rgba(0, 0, 0, 0.7)',
+        }),
+        fill: new Fill({
+          color: 'rgba(255, 255, 255, 0.2)',
+        }),
+      }),
+    }),
+  });
+  this.map.addInteraction(this.draw1);
+  console.log('add interaction1')
+  console.log('lah ir7em lwaliden')
+
+  // this.createMeasureTooltip();
+  console.log('add interaction2')
+  
+  this.createHelpTooltip();
+  
+  console.log("jello")
+  this.draw1.on('drawstart', (evt)=> {
+    // set sketch
+    //  console.log("drawstart")
+     console.log(this.sketch);
+
+    this.sketch = evt.feature;
+
+    let tooltipCoord = evt.coordinate;
+
+    this.listener = this.sketch.getGeometry().on('change', (evt)=> {
+       
+      // console.log("tooltipCoord")
+      const geom = evt.target;
+      let output;
+       if (geom instanceof LineString) {
+        output = this.formatLength(geom);
+        tooltipCoord = geom.getLastCoordinate();
+        // console.log('tooltipCoord',tooltipCoord)
+      }
+      console.log("drawstart" , output);
+      if(!this.measureTooltipElement){
+        this.createMeasureTooltip()
+      }
+      this.measureTooltipElement.innerHTML = output;
+      this.measureTooltip.setPosition(tooltipCoord);
+    });
+  });
+
+  this.draw1.on('drawend',  ()=> {
+    console.log("hello mother fucker")
+    this.measureTooltipElement.className = 'ol-tooltip ol-tooltip-static';
+    this.measureTooltip.setOffset([0, -7]);
+    // unset sketch
+    this.sketch = null;
+    // unset tooltip so that a new one can be created
+    this.measureTooltipElement = null;
+    this.createMeasureTooltip();
+    unByKey(this.listener);
+  });
+}
+
+
+
+createMeasureTooltip() {
+
+  if (this.measureTooltipElement) {
+    this.measureTooltipElement.parentNode.removeChild(this.measureTooltipElement);
+  }
+
+
+  this.measureTooltipElement = document.createElement('div');
+ 
+  this.measureTooltipElement.className = 'ol-tooltip ol-tooltip-measure';
+ 
+  this.measureTooltip = new Overlay({
+    element: this.measureTooltipElement,
+    offset: [0, -15],
+    positioning: 'bottom-center',
+    stopEvent: false,
+    insertFirst: false,
+  });
+  
+  this.map.addOverlay(this.measureTooltip);
+  // console.log("hello chamakchello")
+}
+
+
+createHelpTooltip() { 
+  console.log("createHelpTooltip")
+  if (this.helpTooltipElement) {
+    this.helpTooltipElement.parentNode.removeChild(this.helpTooltipElement);
+  }
+  this.helpTooltipElement = document.createElement('div');
+  this.helpTooltipElement.className = 'ol-tooltip hidden';
+  this.helpTooltip = new Overlay({
+    element: this.helpTooltipElement,
+    offset: [15, 0],
+    positioning: 'center-left',
+  });
+  this.map.addOverlay(this.helpTooltip);
+}
+
+
+
+
+ 
+
+
+
+  
+
+
+  //////////////////Mesure14///////////////////////////////
   saveEventvideo(f: NgForm){
     // console.log(this.selectedRoute);
     // console.log(this.selectedVoie);
