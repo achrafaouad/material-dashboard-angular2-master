@@ -5,13 +5,15 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { LoginComponent } from './components/login/login.component';
+import { LandingPageComponent } from './landing-page/landing-page.component';
 
 
 
 const routes: Routes =[
+  
   {
     path: '',
-    redirectTo: 'login',
+    redirectTo: 'landingPage',
     pathMatch: 'full',
     
 
@@ -19,6 +21,10 @@ const routes: Routes =[
   {
     path: 'login',
     component:LoginComponent
+  },
+  {
+    path: 'landingPage',
+    component:LandingPageComponent
   },
   {
     path: '',

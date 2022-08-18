@@ -29,6 +29,7 @@ import { SynoptiqueComponent } from './synoptique/synoptique.component';
 import { JwtClientService } from './jwt-client.service';
 import { ToastrModule } from 'ngx-toastr';
 import { NotificationService } from './notification.service';
+import { LandingPageComponent } from './landing-page/landing-page.component';
 @NgModule({
     imports: [
         BrowserAnimationsModule,
@@ -53,6 +54,7 @@ import { NotificationService } from './notification.service';
     declarations: [
         AppComponent,
         AdminLayoutComponent,
+        LandingPageComponent,
        
     
     ],

@@ -11,16 +11,36 @@ import { JwtClientService } from 'app/jwt-client.service';
   styleUrls: ['./dd.css']
 })
 export class LoginComponent implements OnInit {
+  title = "CodeSandbox";
+  options = {
+    fpsLimit: 60,
+    particles: {
+      shape: {
+        options: { confetti: { type: ['circle', 'square'] } },
+        type: 'confetti',
+      },
+      color: {
+        value: "#000"
+      },
+      links: {
+        enable: true,
+        color: "#000"
+      },
+      move: {
+        enable: true
+      }
+    }
+  };
   
-
-
   userType=['admin', 'agent'];
-
-  constructor(private jwtClientService:JwtClientService,private http: HttpClient,private _router: Router) { }
+ 
+  constructor(private jwtClientService:JwtClientService,private http: HttpClient,private _router: Router) {
+  }
 
   ngOnInit(): void {
      
   }
+  
   
 
 

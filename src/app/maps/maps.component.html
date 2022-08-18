@@ -1,8 +1,9 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 <app-modal  #hellomodal class="modal-demo1" [maximizable] = "true" [backdrop] = "false">
   <ng-container class="app-modal-header" >Legend</ng-container>
-  <ng-container class="app-modal-body">
-    <table>
+  <ng-container  class="app-modal-body">
+   
+    <table id="containerTable"  >
       <tr>
         <th></th>
         <th></th>
@@ -25,11 +26,47 @@
   
 </app-modal>
 
-<div id="map" class="map" >
+<app-modal  #hellomodal2 class="modal-demo1" [maximizable] = "true" [backdrop] = "false">
+  <ng-container class="app-modal-header" >table attributaire</ng-container>
+  <ng-container  class="app-modal-body " >
+    <table id="containerTable2"  >
+      <tr>
+        <th *ngFor="let element of displayedColumns">{{element}}</th>
+     
+      </tr>
+      <tr *ngFor="let element of features;let i = index" (click)="zoomTOValue(element)">
+        <td  *ngFor="let data of displayedColumns;let j = index">{{element[data]}} </td>
+        
+      </tr>
+     
+      
+     </table> 
+  </ng-container>  
   
+</app-modal>
 
-
-
+<div id="map" class="map" >
+<div style="position: absolute;z-index:-3;" >
+  <table id="containerTable"  >
+    <tr>
+      <th></th>
+      <th></th>
+    </tr>
+    <tr style="margin:50px"*ngFor="let te of legendPoint;let i = index">
+       <td> <div class="box" [style.color]="returnJSon(te).fill" [style.background-color]="returnJSon(te).fill" [style.border]="returnJSon(te).radius" [style.border-radius]="radius" [style.width]="width" [style.height]="height" > </div></td>
+      <td> <div style="color:black">{{returnProvinceById(returnJSon(te).thematique)}} </div></td>
+    </tr>
+    <tr>
+      <td>------------------</td>
+      <td>----------------</td>
+    </tr>
+    <tr style="margin:50px"*ngFor="let te of legendLine;let i = index">
+       <td> <div class="box" [style.color]="returnJSon(te).fill" [style.background-color]="returnJSon(te).fill" [style.border]="returnJSon(te).radius" [style.width]="width" [style.height]="height" > </div></td>
+      <td> <div style="color:black">{{returnProvinceById(returnJSon(te).thematique)}} </div></td>
+    </tr>
+    
+   </table> 
+</div>
   <div class="draw" id="draw" style="left:45%;" >
     <button type="button" id="addRoute" class="myButton" data-toggle="modal" data-target="#exampleModal" style="visibility:hidden;" (click)="hellomodal.show()">+</button>
     <button type="button" id="addPoint" class="myButton" data-toggle="modal" data-target="#PointModal" style="visibility:hidden;">+</button>
@@ -38,6 +75,8 @@
     <button type="button" class="myButton" id="drow_LineEvent" style="backgroundColor:rgba(48, 95, 153,0.63)"> <i class="bi bi-border-width"></i> </button>
     <button type="button"  id="instantEvent" class="myButton" data-toggle="modal" data-target="#voleeTh"style="backgroundColor:rgba(48, 95, 153,0.63)"> <i class="bi bi-balloon-fill"></i> </button>
     <button type="button"  id="hello" class="myButton" style="backgroundColor:rgba(48, 95, 153,0.63)" (click)="hellomodal.show()">L</button>
+   <!-- todo -->
+    <button type="button"  id="table_data" class="myButton" style="visibility:hidden;backgroundColor:rgba(48, 95, 153,0.63)" (click)="hellomodal2.show()" ></button>
     
     <button class="myButton " type="button" id="undo" style= "visibility:hidden; backgroundColor:rgba(250, 176, 5,0.8)">u</button>
     <button class="myButton"type="button"id="submit_par"style=" visibility: hidden, backgroundColor:rgba(255, 37, 0,0.8)">R</button>
@@ -568,6 +607,204 @@
 </div>
 
 
+<div class="modal fade" id="EtatModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="false" >
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">La Route N {{currentId}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <a href={{image}} target="_blank">
+          <div  style=" 
+         background-image: url({{image}});
+        width: 100%;
+        height: 200px;
+        background-size:cover;
+        position:center center;
+        ">
+         </div>
+       </a>
+        
+
+        <div class="container">
+         
+         
+            <h2 style="text-align: center; font:italic bold; font-size: large;"> {{this.eventName}} </h2>
+
+          <table *ngIf="!edited" class="table user-view-table m-0">
+            <tbody>
+              <tr *ngFor="let data of eventParams">
+                <td>{{data.title}}</td>
+                <td>{{data.value}}</td>
+              </tr>
+             
+            </tbody>
+          </table>
+
+          <form *ngIf="edited" (ngSubmit)="saveEventLinear(ff)" #ff="ngForm">
+            <table class="table user-view-table m-0">
+              <tbody>
+                <tr *ngFor="let data of eventParamsEdit; let i = index">
+                 <td><label >{{data.title}} :</label> </td> 
+                 <td>
+
+                  <input type="text" class="form-control" id={{data.title}} aria-describedby="emailHelp" name={{data.title}} ngModel text  [(ngModel)]='eventParamsEdit[i].value'>
+
+                 </td> 
+                
+
+                </tr>
+                <tr>
+                  <td><label >Modifier l'image de votre évenement :</label></td>
+                  <td><input type="file" style="background-color: white; width:100%"  name="image" (change)="onFileSelect($event)" ngModel> </td></tr>
+
+                </tbody>
+                </table>
+
+                <div class="d-flex flex-row-reverse">
+
+                  <div class="p-2"> <button type="submit" mat-raised-button style="margin-left:5px">Sauvgarder</button></div>   
+                  <div class="p-2"> <button type="submit" mat-raised-button style="margin-left:5px" (click)="return()">Annuler</button></div>   
+                  
+                                   
+                 </div>
+          </form>
+
+
+          <div class="d-flex flex-row-reverse">
+          <div class="p-2" *ngIf="!edited" > <button  mat-raised-button color="primary" (click)="modifierPoitEvent()">Modifier </button>  </div> 
+ 
+
+        </div>
+        </div>
+    
+
+<!-- 
+      </mat-tab> -->
+      
+      <!-- <mat-tab label="Edit info">
+        <form (ngSubmit)="onSubmit_upload()" #formdata="ngForm">
+
+          <input type="file"  name="image" (change)="onFileSelect($event)" ngModel>
+          <button type="submit">Upload</button>
+
+         </form>
+      </mat-tab> -->
+    
+    
+<!-- </mat-tab-group> -->
+</div>
+
+
+</div>
+</div>
+</div>
+
+
+<!-- todo -->
+
+<div class="modal fade" id="AccidentModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="false" >
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">La Route N {{currentId}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+ <!-- <mat-tab-group mat-align-tabs="center" > -->
+          <!-- <mat-tab label="l'évenement">  -->
+
+           
+            <a href={{image}} target="_blank">
+              <div  style=" 
+             background-image: url({{image}});
+            width: 100%;
+            height: 200px;
+            background-size:cover;
+            position:center center;
+            ">
+             </div>
+           </a>
+            
+
+            <div class="container">
+             
+             
+                <h2 style="text-align: center; font:italic bold; font-size: large;"> {{this.eventName}} </h2>
+
+              <table *ngIf="!edited" class="table user-view-table m-0">
+                <tbody>
+                  <tr *ngFor="let data of eventParams">
+                    <td>{{data.title}}</td>
+                    <td>{{data.value}}</td>
+                  </tr>
+                 
+                </tbody>
+              </table>
+
+              <form *ngIf="edited" (ngSubmit)="saveEvent(ff)" #ff="ngForm">
+                <table class="table user-view-table m-0">
+                  <tbody>
+                    <tr *ngFor="let data of eventParamsEdit; let i = index">
+                     <td><label >{{data.title}} :</label> </td> 
+                     <td>
+
+                      <input type="text" class="form-control" id={{data.title}} aria-describedby="emailHelp" name={{data.title}} text ngModel [(ngModel)]='eventParamsEdit[i].value'>
+
+                     </td> 
+                    
+
+                    </tr>
+                    <tr>
+                      <td><label >Modifier l'image de votre évenement :</label></td>
+                      <td><input type="file" style="background-color: white; width:100%"  name="image" (change)="onFileSelect($event)" ngModel> </td></tr>
+
+                    </tbody>
+                    </table>
+
+                    <div class="d-flex flex-row-reverse">
+
+                      <div class="p-2"> <button type="submit" mat-raised-button style="margin-left:5px">Sauvgarder</button></div>   
+                      <div class="p-2"> <button type="submit" mat-raised-button style="margin-left:5px" (click)="return()">Annuler</button></div>   
+                      
+                                       
+                     </div>
+              </form>
+
+
+              <div class="d-flex flex-row-reverse">
+              <div class="p-2" *ngIf="!edited" > <button  mat-raised-button color="primary" (click)="modifierPoitEvent()">Modifier </button>  </div> 
+     
+
+            </div>
+            </div>
+        
+
+<!-- 
+          </mat-tab> -->
+          
+          <!-- <mat-tab label="Edit info">
+            <form (ngSubmit)="onSubmit_upload()" #formdata="ngForm">
+
+              <input type="file"  name="image" (change)="onFileSelect($event)" ngModel>
+              <button type="submit">Upload</button>
+    
+             </form>
+          </mat-tab> -->
+        
+        
+  <!-- </mat-tab-group> -->
+  </div>
+
+
+    </div>
+  </div>
+</div>
 
 
 
@@ -575,7 +812,7 @@
 
 
 <!-- Modal -->
-<div class="modal fade" id="EditModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+<div class="modal fade" id="EditModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="false" >
   <div class="modal-dialog modal-md">
     <div class="modal-content">
       <div class="modal-header">
@@ -588,52 +825,51 @@
        
 
             <form (ngSubmit)="onSubmitEdit(formula)" #formula="ngForm">
-              <div class="form-group">
-                <label for="exampleInputEmail1">Route Name</label>
-                <input style="
-                background-color: #c4ffe9;
-                border: solid black 1px;
-                color: black;
-                border-radius: 2px;" type="text" class="form-control" id="eeInputEmail1" aria-describedby="emailHelp" ngModel #route_name="ngModel" name="route_name"  id="pointClassement" text    value={{name}} (change)="nameF($event)"> 
-                <small *ngIf="!route_name.valid" style="color: red;" >Ajouter un Nom</small>
-              </div>
               <div class="container">
+                <div class="row">
+                  <div class="col-12">
+                <div class="form-group">
+                  <label for="exampleInputEmail1">Nom du route</label>
+                  <input class="areaQuery" type="text" class="form-control" id="eeInputEmail1" aria-describedby="emailHelp" ngModel #route_name="ngModel" name="route_name"  id="pointClassement" text    value={{name}} (change)="nameF($event)"> 
+                  <small *ngIf="!route_name.valid" style="color: red;" >Ajouter un Nom</small>
+                </div>
+                </div>
+                </div>
+           
                 <div class="row">
                   <div class="col-6">
                     <div class="form-group">
                       <label for="exampleInputEmail1">point kilometrique Début </label>
-                      <input style="
-                      background-color: #c4ffe9;
-                      border: solid black 1px;
-                      color: black;
-                      border-radius: 2px;" type="text" class="form-control"  aria-describedby="emailHelp" ngModel #pkd="ngModel" name="pkd" id="pointClassement" text  value={{pkdd}} (change)="pkddF($event)"> 
+                      <input class="areaQuery" type="text" class="form-control"  aria-describedby="emailHelp" ngModel #pkd="ngModel" name="pkd" id="pointClassement" text  value={{pkdd}} (change)="pkddF($event)"> 
                       <small *ngIf="!pkd.valid" style="color: red;" >Ajouter un pkd</small>
                     </div>
                     </div>
                     <div class="col-6">
                       <div class="form-group">
                         <label for="exampleInputEmail1">point kilometrique fin </label>
-                        <input style="
-                        background-color: #c4ffe9;
-                        border: solid black 1px;
-                        color: black;
-                        border-radius: 2px;" type="text" class="form-control" aria-describedby="emailHelp" ngModel #pekaF="ngModel" name="pekaF" id="posement" text  value={{pkfd}} (change)="pkfdF($event)"> 
+                        <input class="areaQuery" type="text" class="form-control" aria-describedby="emailHelp" ngModel #pekaF="ngModel" name="pekaF" id="posement" text  value={{pkfd}} (change)="pkfdF($event)"> 
                         <small *ngIf="!pekaF.valid" style="color: red;" >Ajouter un pkf</small>
                       </div>
                       
                   </div>
                 </div>
+
+                <div class="row">
+                  <div class="col-12">
+                    <div id="wrapper" style="  width: 100%;
+                    height: 45px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;">  
+                      <button mat-raised-button color="warn" style="width: 100%;
+                      height: 30px; color:white;" (click)="deleteSection()" type="button"> suprimer la route </button>
+                    </div>
+
+              </div>
+              </div>
               </div>
        
-              <br>
-              <div id="wrapper" style="  width: 100%;
-              height: 45px;
-              display: flex;
-              align-items: center;
-              justify-content: center;">  
-                <button mat-raised-button color="warn" style="width: 100%;
-                height: 30px; color:white;" (click)="deleteSection()" type="button"> suprimer la route </button>
-              </div>
+            
               
             
 
@@ -641,7 +877,7 @@
             <div class="form-group">
           <div class="form-group" >
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button [disabled]="!formula.valid || verifyy()" type="submit" class="btn btn-primary">Save changes</button>
+            <button [disabled]="!formula.valid || verifyy()" mat-raised-button color="primary" type="submit" >Save changes</button>
           </div>
         </div>
         </form>
@@ -1019,21 +1255,21 @@
 
 
 <!-- Modal -->
-<div class="modal fade" id="AccidentModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+<!-- <div class="modal fade" id="AccidentModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="false" >
   <div class="modal-dialog modal-lg">
-    <div class="modal-content">
+    <div class="modal-content"> -->
       <!-- <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">l'evenement ponctuel</h5> -->
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
-        </button>
+        </button> -->
       <!-- </div> -->
-      <div class="modal-body">
+      <!-- <div class="modal-body"> -->
         <!-- <mat-tab-group mat-align-tabs="center" > -->
           <!-- <mat-tab label="l'évenement">  -->
 
            
-            <a href={{image}} target="_blank">
+            <!-- <a href={{image}} target="_blank">
               <div  style=" 
              background-image: url({{image}});
             width: 100%;
@@ -1095,7 +1331,7 @@
      
 
             </div>
-            </div>
+            </div> -->
         
 
 <!-- 
@@ -1112,27 +1348,27 @@
         
         
   <!-- </mat-tab-group> -->
-  </div>
+  <!-- </div>
 
 
     </div>
   </div>
-</div>
+</div> -->
 
-<div class="modal fade" id="EtatModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+<!-- <div class="modal fade" id="EtatModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <!-- <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">l'evenement ponctuel</h5> -->
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
-        </button>
+        </button> -->
       <!-- </div> -->
-      <div class="modal-body">
+      <!-- <div class="modal-body"> -->
         <!-- <mat-tab-group mat-align-tabs="center" > -->
           <!-- <mat-tab label="l'évenement">  -->
 
-           
+<!--            
             <a href={{image}} target="_blank">
               <div  style=" 
              background-image: url({{image}});
@@ -1142,10 +1378,10 @@
             position:center center;
             ">
              </div>
-           </a>
+           </a> --> -->
             
 
-            <div class="container">
+            <!-- <div class="container">
              
              
                 <h2 style="text-align: center; font:italic bold; font-size: large;"> {{this.eventName}} </h2>
@@ -1178,16 +1414,16 @@
                       <td><input type="file" style="background-color: white; width:100%"  name="image" (change)="onFileSelect($event)" ngModel> </td></tr>
 
                     </tbody>
-                    </table>
-
+                    </table> -->
+<!-- 
                     <div class="d-flex flex-row-reverse">
 
                       <div class="p-2"> <button type="submit" mat-raised-button style="margin-left:5px">Sauvgarder</button></div>   
                       <div class="p-2"> <button type="submit" mat-raised-button style="margin-left:5px" (click)="return()">Annuler</button></div>   
                       
                                        
-                     </div>
-              </form>
+                     </div> -->
+              <!-- </form>
 
 
               <div class="d-flex flex-row-reverse">
@@ -1195,7 +1431,7 @@
      
 
             </div>
-            </div>
+            </div> -->
         
 
 <!-- 
@@ -1212,11 +1448,40 @@
         
         
   <!-- </mat-tab-group> -->
-  </div>
+  <!-- </div>
 
 
     </div>
   </div>
+</div> -->
+
+
+
+
+
+<div class="modal fade" id="achraf" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
 </div>
+
+
+
+
+
 
 

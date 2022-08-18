@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnChanges, OnInit, ViewChild } from '@angular/core';
 import Map from "ol/Map";
 import LayerTile from "ol/layer/Tile";
 import { LrsServiceService } from 'app/lrs-service.service';
@@ -77,12 +77,12 @@ export type ChartOptions3 = {
 
 
 
-export class SynoptiqueComponent implements OnInit {
+export class SynoptiqueComponent implements OnInit,OnChanges {
 
   @ViewChild("chart") chart: ChartComponent;
   public chartOptions: Partial<ChartOptions>;
 
-  @ViewChild("chartsyno") chartsyno: ChartComponent;
+  @ViewChild("chartsyno", { static: false }) chartest: ChartComponent;
   public chartOptionsS: Partial<ChartOptions>;
   
 
@@ -144,7 +144,8 @@ mesure: any;
   videoPath: string;
   visibleVideo: boolean;
   voie: any;
-  constructor(private lrsServiceService: LrsServiceService,private spinner: NgxSpinnerService
+  series: any[] = [];
+  constructor(private cdr: ChangeDetectorRef,private lrsServiceService: LrsServiceService,private spinner: NgxSpinnerService
     ) {
     this.getRoutesName();
     this.getThematiques();
@@ -215,7 +216,7 @@ mesure: any;
               y: [
                 30,
                 500
-              ]
+              ],goals:[{name: 'Expected', value: 52, strokeColor: '#775DD0'}]
             },
             {
               x: "Validation",
@@ -223,6 +224,7 @@ mesure: any;
                 70,
                 444
               ]
+              ,goals:[{name: 'Expected', value: 77, strokeColor: '#775DD0'}]
             },
 
             
@@ -805,7 +807,7 @@ console.log(err);
       setTimeout(() => {
         /** spinner ends after 5 seconds */
         this.spinner.hide();
-      }, 5000);
+      }, 200);
       this.data = res;
       this.chartOptionsS.series = []
       this.chartOptionsS.series = <ApexAxisChartSeries> <unknown>res
@@ -980,19 +982,24 @@ console.log(err);
       for(let i =0 ;i<this.chartOptionsS.series.length;i++){
         for(let j =0;j<this.chartOptionsS.series[i].data.length;j++){
           this.chartOptionsS.series[i].data[j]['goals'] = [
-                {
-                  name: 'Expected',
-                  value: 14,
-                  strokeWidth: 2,
-                  strokeDashArray: 2,
-                  strokeColor: '#775DD0'
-                }
+            {
+              name: 'Expected',
+              value: this.mesure,
+              strokeColor: 'red'
+            }
               ]
         }
-        
       }
-      this.chartsyno.updateSeries(        this.chartOptionsS.series, false)
 
+
+      // for(let i =0 ;i<this.chartOptionsS.series.length;i++){
+      //   this.series.push(this.chartOptionsS.series[i])
+        
+      // }
+      // this.chartOptionsS.series = 
+
+
+      
       }, err=>{
         console.log(err);
       })
@@ -1004,6 +1011,10 @@ console.log(err);
   
   pp(ee){
     clearInterval(this.refreshIntervalId);
+  }
+
+  ngOnChanges(){
+  console.log("fuck");
   }
 
 
@@ -1028,6 +1039,13 @@ console.log(err);
     this.vid = <HTMLVideoElement> document.getElementById("myvideo1");
     
      
+  }
+
+
+
+  updatable(){
+    window.ApexCharts.exec("chartsynoed", "updateSeries", 
+      this.chartOptionsS);
   }
   
 

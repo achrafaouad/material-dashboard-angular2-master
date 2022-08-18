@@ -1,5 +1,8 @@
 import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import Map from "ol/Map";
+import * as htmlToImage from 'html-to-image';
+import domtoimage from 'dom-to-image';
+
 import View from "ol/View";
 import LayerTile from "ol/layer/Tile";
 import Geolocation from 'ol/Geolocation';
@@ -58,7 +61,27 @@ import Point from "ol/geom/Point";
 import { NotificationService } from "app/notification.service";
 import { NgxSpinnerService } from "ngx-spinner";
 import { altKeyOnly } from "ol/events/condition";
+declare let html2canvas: any;
 
+export interface PeriodicElement {
+  name: string;
+  position: number;
+  weight: number;
+  symbol: string;
+}
+
+const ELEMENT_DATA: PeriodicElement[] = [
+  {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
+  {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
+  {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'},
+  {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be'},
+  {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'},
+  {position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C'},
+  {position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N'},
+  {position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O'},
+  {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
+  {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
+];
 
 @Component({
   selector: "app-maps",
@@ -69,6 +92,7 @@ export class MapsComponent implements OnInit {
   routeName: string;
   ressores: number;
   colorsd: any;
+  capturedImage;
   paramschecked: any=[];
   dataFlow: any[];
   ver: any;
@@ -77,7 +101,15 @@ export class MapsComponent implements OnInit {
   legendPoint = new Set<string>();
   legendLine = new Set<string>();
   legendPointFIltred: any[] = [];
-
+  imgimg: HTMLImageElement;
+  features: any[] = []
+  features2: any[] = []
+  // displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
+  displayedColumns: string[] = [];
+  dataSource = ELEMENT_DATA;
+  clickedRows = new Set<PeriodicElement>();
+  vectorSource: any;
+  vectorLayer: olVectorLayer<any>;
   constructor(private ngxCsvParser: NgxCsvParser,
     private lrsServiceService: LrsServiceService,
     private httpClient: HttpClient,private fb:FormBuilder,
@@ -254,6 +286,8 @@ export class MapsComponent implements OnInit {
   @ViewChild("labelForm") formLabel: NgForm;
   SrcLinear_events: any;
   etat: HTMLButtonElement;
+  etat2: HTMLButtonElement;
+  etat3: HTMLButtonElement;
   SrcPoint_events: any;
   attributePanel: any;
   geojson: any;
@@ -558,17 +592,31 @@ this.spinner.show();
 
 
 
+    // this.SrcLinear_events = new VectorSource({
+    //   format: new GeoJSON(),
+    //   url:  (extent)=> {
+    //     return (
+    //       "http://localhost:8081/geoserver/i2singineerie/ows?service=WFS&" +  
+    //       "version=1.0.0&request=GetFeature&typename=i2singineerie:LINEAR_EVENT&CQL_FILTER=INTERSECTS(ROUTE_GEOMETRY, collectGeometries(queryCollection('i2singineerie:PROVINCE', 'GEOMETRY', 'ID IN("+
+    //       this.items +")'))) AND EVENT_TYPE_ID IN (" + this.selectedEvent +")&outputFormat=application/json"
+    //     );
+    //   },
+    //   strategy: bboxStrategy,
+    // });
+
     this.SrcLinear_events = new VectorSource({
       format: new GeoJSON(),
       url:  (extent)=> {
         return (
           "http://localhost:8081/geoserver/i2singineerie/ows?service=WFS&" +  
           "version=1.1.0&request=GetFeature&typename=i2singineerie:LINEAR_EVENT&CQL_FILTER=INTERSECTS(ROUTE_GEOMETRY, collectGeometries(queryCollection('i2singineerie:PROVINCE', 'GEOMETRY', 'ID IN("+
-          this.items +")'))) AND EVENT_TYPE_ID IN (" + this.selectedEvent +")&outputFormat=application/json"
+          this.items +")')))&" +
+          "outputFormat=application/json"
         );
       },
       strategy: bboxStrategy,
     });
+
 
 
     this.MAR2 = new VectorLayer({
@@ -618,7 +666,7 @@ this.spinner.show();
 
     this.linear_events = new VectorLayer({
       title: "linear_events",
-      source: this.SrcLinear_events,
+           source: this.SrcLinear_events,
       style: (feature, resolution) => {
         this.ressores
         this.colorsd
@@ -720,13 +768,36 @@ this.spinner.show();
 
   
 
+    // this.SrcPoint_events = new VectorSource({
+    //   format: new GeoJSON(),
+    //   url:  (extent)=> {
+    //     return (
+    //       "http://localhost:8081/geoserver/i2singineerie/ows?service=WFS&" +
+    //       "version=1.0.0&request=GetFeature&typename=i2singineerie:PONCTUEL_EVENTS&CQL_FILTER=INTERSECTS(ROUTE_GEOMETRY, collectGeometries(queryCollection('i2singineerie:PROVINCE', 'GEOMETRY', 'ID IN("+
+    //       this.items +")'))) AND EVENT_TYPE_ID IN (" + this.selectedEvent +")&outputFormat=application/json"
+    //     );
+    //   },
+    //   strategy: bboxStrategy,
+    // });
+    this.vectorSource = new VectorSource();
+    this.vectorLayer = new VectorLayer({
+      source: this.vectorSource,
+      style: new Style({
+          stroke: new Stroke({color: 'red', width: 1})
+      })
+
+  });
+
+  
     this.SrcPoint_events = new VectorSource({
       format: new GeoJSON(),
       url:  (extent)=> {
         return (
           "http://localhost:8081/geoserver/i2singineerie/ows?service=WFS&" +
           "version=1.1.0&request=GetFeature&typename=i2singineerie:PONCTUEL_EVENTS&CQL_FILTER=INTERSECTS(ROUTE_GEOMETRY, collectGeometries(queryCollection('i2singineerie:PROVINCE', 'GEOMETRY', 'ID IN("+
-          this.items +")'))) AND EVENT_TYPE_ID IN (" + this.selectedEvent +")&outputFormat=application/json"
+          this.items +
+          ")')))&" +
+          "outputFormat=application/json"
         );
       },
       strategy: bboxStrategy,
@@ -820,6 +891,8 @@ this.spinner.show();
       },
     } as BaseLayerOptions);
 
+    ///////////////////////////Mesure/////////////////////////////
+    
     ////////////////////////////////////////////////////////
 
     var layerSwitcher = new LayerSwicher({
@@ -844,6 +917,7 @@ this.spinner.show();
     // this.map.addLayer(this.region);
   
     this.map.addLayer(this.province);
+    this.map.addLayer(this.vectorLayer);
 
     this.map.addLayer(linear_events1);
 
@@ -1196,6 +1270,9 @@ this.spinner.show();
     };
 
     $("#attQryRun").click(() => {
+      this.map.removeLayer(this.vectorLayer);
+      this.features2=[]
+      this.features=[]
       this.map.set("isLoading", "YES");
 
       if (featureOverlay) {
@@ -1269,6 +1346,27 @@ this.spinner.show();
         });
 
         this.geojson.getSource().on("addfeature", () => {
+          
+          this.features = this.geojson.getSource().getFeatures();
+          this.features2 = this.geojson.getSource().getFeatures();
+          
+          
+         
+            this.displayedColumns = Object.keys(this.features[0].getProperties());
+
+            for(let j = 0;j<this.displayedColumns.length;j++){
+              if(this.displayedColumns[j] === "geometry"){
+                this.displayedColumns.splice(j, 1)
+              }
+            }
+            for(let j =0;j<this.features.length ;j++){
+              // this.features2[j]=this.features2[j].getProperties();
+              
+              delete this.features[j].getProperties()['geometry'];
+              this.features[j]=this.features[j].getProperties();
+              
+            }
+
           this.map.getView().fit(this.geojson.getSource().getExtent(), {
             duration: 100,
             size: this.map.getSize(),
@@ -1276,14 +1374,32 @@ this.spinner.show();
           });
         });
         this.map.addLayer(this.geojson);
+//todo
+
+
+
+
+
+console.log(this.features.length)
+console.log(this.features)
+console.log(this.displayedColumns)
+
+//todo
+
+        console.log(this.features);
+        
+        // todo
+        var table_button = document.getElementById("table_data")
+        table_button.click();
+        console.log('hahowa tclicka');
+
+        
         layer.children("option").remove();
         attribute.children("option").remove();
         operator.children("option").remove();
         // review
         // this.newpopulateQueryTable(url);
-        setTimeout(function () {
-          this.newaddRowHandlers(url);
-        }, 300);
+
         this.map.set("isLoading", "NO");
       }
     });
@@ -1336,7 +1452,7 @@ this.spinner.show();
 
 
 
-
+    //tttotototo
 
     
 
@@ -1386,16 +1502,7 @@ this.spinner.show();
 
 
 
-    // Print.addEventListener("click", async () => {
-    //   const response = await this.doScreenshot();
-    //   this.createPDFDocument(response);
-    //   this.showToasterInfo('createPDFDocument ', 'Opération en cours');
-    //   this.spinnerShow();
-    //   this.spinnerHide();
-    // });
-
-  
-    /////////////////////////
+   
 
     document.getElementById("submit_par").addEventListener("click", () => {
       this.map.removeInteraction(this.draw);
@@ -1429,8 +1536,7 @@ this.spinner.show();
         (res) => {
         this.eventTypes = res;
         this.showToasterSuccess('loading Events Successfully', 'Opération bien efectuée');
-        this.spinnerShow();
-        this.spinnerHide();
+
 
       });
     });
@@ -1478,6 +1584,7 @@ this.spinner.show();
       if (this.editContol) {
         this.map.on("singleclick", (evt: any) => {
           if (this.editContol) {
+            console.log("Edit");
             this.edit = document.createElement("button");
             this.edit.setAttribute("data-toggle", "modal");
             this.edit.setAttribute("data-target", "#EditModel");
@@ -1518,7 +1625,8 @@ this.spinner.show();
                   this.currentId = feature.getProperties()["ROUTE_ID"];
                   // console.log("this.currentId",this.currentId)
                   this.returnparamsName(this.pointDATA);
-                  this.edit.click();
+                  console.log("clicked")
+                  // this.edit.click();
                 }
 
                 if (Layer.get("title") == "linear_events") {
@@ -1544,7 +1652,7 @@ this.spinner.show();
 
                   this.returnparamsName(this.lineData);
 
-                  this.edit.click();
+                  // this.edit.click();
                 }
 
                 if (Layer.get("title") == "Lrsroutes") {
@@ -1577,14 +1685,15 @@ this.spinner.show();
 
         this.map.on("singleclick", (evt: any) => {
           if (this.editContol) {
-            this.etat = document.createElement("button");
-            this.etat.setAttribute("data-toggle", "modal");
-            this.etat.setAttribute("data-target", "#EtatModel");
-            this.etat.setAttribute("id", "EtatModal");
-            this.etat.style.visibility = "hidden";
+            
+            this.etat2 = document.createElement("button");
+            this.etat2.setAttribute("data-toggle", "modal");
+            this.etat2.setAttribute("data-target", "#EtatModel");
+            this.etat2.setAttribute("id", "EtatModal");
+            this.etat2.style.visibility = "hidden";
             var etatInfoElement = document.createElement("div");
             etatInfoElement.className = "featureInfoDiv";
-            etatInfoElement.appendChild(this.etat);
+            etatInfoElement.appendChild(this.etat2);
 
             var etatInfoElementControl211 = new Control({
               element: etatInfoElement,
@@ -1595,18 +1704,20 @@ this.spinner.show();
                 if (Layer.get("title") == "linear_events") {
                   // this.name = feature.getProperties()['ROUTE_NAME'];
                   // this.currentId = feature.getProperties()['ROUTE_ID'];
-                  this.etat.click();
+                  console.log("EtatModel clicked");
+                  this.etat2.click();
                 }
               });
             });
           } else {
             //todo
-            this.etat.remove();
+            this.etat2.remove();
           }
         });
 
         this.map.on("singleclick", (evt: any) => {
           if (this.editContol) {
+            
             this.accident = document.createElement("button");
             this.accident.setAttribute("data-toggle", "modal");
             this.accident.setAttribute("data-target", "#AccidentModel");
@@ -1625,6 +1736,7 @@ this.spinner.show();
                 if (Layer.get("title") == "PONCTUEL_EVENTS") {
                   // this.name = feature.getProperties()['ROUTE_NAME'];
                   // this.currentId = feature.getProperties()['ROUTE_ID'];
+                  console.log("AccidentModel clicked");
                   this.accident.click();
                 }
               });
@@ -1671,18 +1783,68 @@ this.spinner.show();
     }
   }
 
-  async doDonwload(fileName) {
-    const response = await this.doScreenshot();
-    const element = document.createElement("a");
-    element.setAttribute("href", response.img);
-    element.setAttribute("download", fileName);
-    element.style.display = "none";
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
+ 
+  // createPDFDocument(data) {
+  //   const pdf = new jspdf.jsPDF("p", "mm", "a4");
+  //   pdf.setFont("times");
+  //   pdf.setFontSize(16);
+
+  //   const title = this.val11;
+  //   const comment = this.val12;
+  //   const pageWidth = pdf.internal.pageSize.getWidth();
+  //   pdf.text(title, pageWidth / 2 - title.length, 20);
+  //   pdf.text(title, pageWidth, 20);
+  //   pdf.setFontSize(10);
+  //   pdf.setFont("italic");
+  //   // pdf.text(10, 28, "Location: Córdoba, Andalucia, España");
+  //   pdf.addImage(data.img, "JPEG", 10, 30, data.w, data.h);
+
+  //   pdf.text(comment, 10, data.h +40);
+  //   // pdf.text(comment, pageWidth, 20);
+
+  //   pdf.save("map-screenshot.pdf");
+  // }
+
+
+
+  zoomTOValue(val){
+      console.log(val.geometry.getCoordinates())
+      let test = {
+        "type": "Feature",
+        "properties": {},
+        "geometry": {
+          "type": "LineString",
+          "coordinates":val.geometry.getCoordinates()
+        }
+      }
+
+      console.log('--------------------------------')
+      console.log(test)
+
+      console.log('--------------------------------')
+     
+      this.map.removeLayer(this.vectorLayer);
+
+        
+          console.log("halawah")
+       
+          this.vectorSource.addFeatures(this.format.readFeatures(test,{ featureProjection: "EPSG:4326" }));
+          this.map.getView().fit(this.vectorSource.getExtent(), {
+            duration: 100,
+            size: this.map.getSize(),
+            maxZoom: 21,
+          });
+          this.map.addLayer(this.vectorLayer);
+    
+        
+        
+      
   }
 
-  createPDFDocument(data) {
+  async createPDFDocument(data) {
+    console.log("ha document d zeb")
+    console.log("ha document d zeb"  , this.val11)
+    console.log("ha document d zeb"  , this.val12)
     const pdf = new jspdf.jsPDF("p", "mm", "a4");
     pdf.setFont("times");
     pdf.setFontSize(16);
@@ -1696,12 +1858,42 @@ this.spinner.show();
     pdf.setFont("italic");
     // pdf.text(10, 28, "Location: Córdoba, Andalucia, España");
     pdf.addImage(data.img, "JPEG", 10, 30, data.w, data.h);
-
+    // var srcc = document.getElementById("containerTable")
+   
     pdf.text(comment, 10, data.h +40);
-    // pdf.text(comment, pageWidth, 20);
 
-    pdf.save("map-screenshot.pdf");
+    var node:any = document.getElementById("containerTable2");
+  
+        html2canvas(node).then(canvas => {
+     
+        /// document.body.appendChild(canvas);
+        this.capturedImage = canvas.toDataURL();
+        console.log("canvas.toDataURL() -->" + this.capturedImage);
+        console.log(this.capturedImage);
+        pdf.addImage(this.capturedImage, "JPEG", 10, data.h +70, 40, 60);
+        pdf.save('DOC.pdf');
+        });
+
+        
+      
+ 
+
+  
+  
+    
+
+    
+     
+    
+
+        
+    
+
+   
   }
+
+  
+
 
   routeType(value) {
     if (value == "nouvelle route") {
@@ -1728,15 +1920,12 @@ this.spinner.show();
 
 
           this.showToasterSuccess('Opération bien effectué', 'Section a été ajouté');
-          this.spinnerShow();
-this.spinnerHide();
 
           this.MAR2.getSource().refresh();
         },
         (err: HttpErrorResponse) => {
           this.showToasterWarning('something goes wrong', 'check that you did that properly');
-          this.spinnerShow();
-this.spinnerHide();
+
 
         }
       );
@@ -1765,8 +1954,7 @@ this.spinnerHide();
         },
         (err: HttpErrorResponse) => {
           this.showToasterWarning('something goes wrong', 'check that you did that properly');
-          this.spinnerShow();
-this.spinnerHide();
+       
 
         }
       );
@@ -1813,7 +2001,8 @@ this.spinnerHide();
     .post<any>("http://localhost:8091/LrsEvent/uploadFileNewEvent", formData)
     .subscribe(
       (res) => {
-       
+        this.accident.getSource().refresh();   
+        this.linear_events.getSource().refresh(); 
           this.spinner.show(); 
        
 
@@ -1823,10 +2012,9 @@ this.spinnerHide();
           }, 5000);
 
         this.showToasterSuccess('Opération bien effectué', 'mise a jour a été effectué');
-        this.spinnerShow();
-this.spinnerHide();
-        this.accident.getSource().refresh();   
-        this.linear_events.getSource().refresh();   
+     
+        
+
          document.getElementById("closingShit").click();
         this.stream = null;
         this.point1444 = false;
@@ -2557,7 +2745,7 @@ Upload(data, eventType) {
     this.t2Name = "";
     this.t3Name = "";
 
-    console.log(value);
+    // console.log(value);
     if (value) {
       this.lrsServiceService.getEventParams(value).subscribe(
         (res) => {
@@ -3280,11 +3468,11 @@ setTimeout(()=>{
 
 
   saveEventvideo(f: NgForm){
-    console.log(this.selectedRoute);
-    console.log(this.selectedVoie);
-    console.log(this.videoName);
-    console.log(this.pkd);
-    console.log(this.pkf);
+    // console.log(this.selectedRoute);
+    // console.log(this.selectedVoie);
+    // console.log(this.videoName);
+    // console.log(this.pkd);
+    // console.log(this.pkf);
     const formData = new FormData();
 
     formData.append("file", this.currentFileImage);
@@ -3308,7 +3496,7 @@ setTimeout(()=>{
               this.spinner.hide();
             }, 5000);
 
-        console.log(res);
+        // console.log(res);
         this.showToasterSuccess('Opération bien effectué', 'video a été ajouté');
        
         },
@@ -3566,8 +3754,8 @@ submitRoute(){
 }
 
 submitRef(){
-  console.log(this.verification)
-  console.log(this.csvRecords)
+  // console.log(this.verification)
+  // console.log(this.csvRecords)
 
   if(!this.verification){
     this.validate = true;
@@ -3589,8 +3777,6 @@ submitRef(){
         }
        }
       }
-
- 
 
          if(this.validate == true){
           this.lrsServiceService.addRef(this.csvRecords).subscribe(res=>{
@@ -3649,13 +3835,6 @@ showToasterWarning(titre,message){
   this.notifyService.showWarning(titre, message)
 }
 
-spinnerShow(){
-// this.spinner.show(this.spinnerName);
-}
-spinnerHide(){
-  // setTimeout(() =>this.spinner.hide(this.spinnerName),  5000 )
-
-}
 
 
 returnparamsNames(thematique_id ,db_stock ){
@@ -3671,21 +3850,20 @@ returnparamsNames(thematique_id ,db_stock ){
 }
 
 titre(val){
-  console.log(val)
-  console.log(this.val11)
+  // console.log(val)
+  // console.log(this.val11)
 }
 
 body(val){
-  console.log(val) 
-  console.log(this.val12)
+  // console.log(val) 
+  // console.log(this.val12)
 }
  
 async imprimer(){
-      const response = await this.doScreenshot();
-      this.createPDFDocument(response);
-      this.showToasterInfo('createPDFDocument ', 'Opération en cours');
-      this.spinnerShow();
-      this.spinnerHide();
+  const response = await this.doScreenshot();
+  this.createPDFDocument(response);
+  this.showToasterInfo('createPDFDocument ', 'Opération en cours');
+
 }
 
 checkedEvents(id){
@@ -3753,13 +3931,13 @@ refresh(){
 
 
 returnJSon(te){
-  console.log(te)
+  // console.log(te)
   return JSON.parse(te)
 
 }
 
 returnProvinceById(id){
-  console.log(this.events)
+  // console.log(this.events)
   for(let t = 0 ; t<this.events.length;t++){
     if(this.events[t].id === id){
       return this.events[t].name
@@ -3768,3 +3946,5 @@ returnProvinceById(id){
 }
 
 }
+
+

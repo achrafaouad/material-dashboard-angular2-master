@@ -25,7 +25,6 @@ import { LrsServiceService } from 'app/lrs-service.service';
 import { AgentProfilComponent } from 'app/agent-profil/agent-profil.component';
 import { AgentsComponent } from 'app/agents/agents.component';
 import {MatTabsModule} from '@angular/material/tabs';
-import {MatTableModule} from '@angular/material/table';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatStepperModule} from '@angular/material/stepper';
@@ -36,7 +35,6 @@ import { AgGridModule } from 'ag-grid-angular';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { SynoptiqueComponent } from 'app/synoptique/synoptique.component';
 import { NgApexchartsModule } from "ng-apexcharts";
-
 import {MatIconModule} from '@angular/material/icon';
 import {WebcamModule} from 'ngx-webcam';
 import { ModalModule } from 'ng-modal-lib';
@@ -45,8 +43,10 @@ import { AgentProfilEditComponent } from 'app/agent-profil-edit/agent-profil-edi
 import { NgxSpinnerModule } from "ngx-spinner";
 import { NotificationService } from 'app/notification.service';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import {MatTableModule} from '@angular/material/table';
+
 @NgModule({
-  imports: [
+  imports: [  
     CommonModule,
     RouterModule.forChild(AdminLayoutRoutes),
     FormsModule,
@@ -74,7 +74,8 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     WebcamModule,
     ModalModule,
     NgxSpinnerModule,
-    DragDropModule
+    DragDropModule,
+    MatTableModule
   ], 
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   declarations: [
