@@ -1998,7 +1998,7 @@ console.log(this.displayedColumns)
    
     pdf.text(comment, 10, data.h +40);
 
-    var node:any = document.getElementById("containerTable2");
+    var node:any = document.getElementById("containerTable144");
   
         html2canvas(node).then(canvas => {
      

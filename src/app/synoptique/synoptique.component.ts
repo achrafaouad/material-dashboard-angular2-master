@@ -113,8 +113,8 @@ lines = new LineStyle(
   "0.7853981633974483",
   true,
   "12px",
-  "10",
-  "10",
+  "40",
+  "18",
   "2",
   "#f30707",
   "#d9d9d9",
@@ -145,6 +145,7 @@ mesure: any;
   visibleVideo: boolean;
   voie: any;
   series: any[] = [];
+  ddfrichty: boolean = true;
   constructor(private cdr: ChangeDetectorRef,private lrsServiceService: LrsServiceService,private spinner: NgxSpinnerService
     ) {
     this.getRoutesName();
@@ -958,12 +959,12 @@ console.log(err);
       // this.vitess = (this.pkfV - this.pkdV) / (this.vid.duration);
       this.vitess = (this.pkfV -this.pkdV) / (this.vid.duration);
       console.log("this.vitess",this.vitess)
-      this.mesure = this.vitess * this.vid.currentTime
+      this.mesure = this.pkdV + this.vitess * this.vid.currentTime
       console.log("this.mesure",this.mesure)
       this.object12 ={
         pkEvent: this.mesure,
         voie:this.voie,
-        route_name:"Route1",
+        route_name:this.selectedRoute,
       }
       this.lrsServiceService.getPositionfeature(this.object12).subscribe((res)=>{
            this.mediumLowPointsrc.clear();
@@ -975,30 +976,27 @@ console.log(err);
       this.mediumLowPointsrc.on('addfeature', () =>{
         this.mapPrevLine.getView().fit(
             this.mediumLowPointsrc.getExtent(),
-            { duration: 300, size: this.mapPrevLine.getSize(), maxZoom: 18 }
+            { duration: 300, size: this.mapPrevLine.getSize(), maxZoom: 16 }
         );
       });
 
+      //hna fin kayn lblan
+
       for(let i =0 ;i<this.chartOptionsS.series.length;i++){
         for(let j =0;j<this.chartOptionsS.series[i].data.length;j++){
+       
           this.chartOptionsS.series[i].data[j]['goals'] = [
+
             {
               name: 'Expected',
               value: this.mesure,
               strokeColor: 'red'
             }
               ]
+              
         }
       }
-
-
-      // for(let i =0 ;i<this.chartOptionsS.series.length;i++){
-      //   this.series.push(this.chartOptionsS.series[i])
-        
-      // }
-      // this.chartOptionsS.series = 
-
-
+      this.chartOptionsS.series = [...this.chartOptionsS.series];
       
       }, err=>{
         console.log(err);
@@ -1017,6 +1015,7 @@ console.log(err);
   console.log("fuck");
   }
 
+  
 
   getMyvideo(v){
     console.log(v);

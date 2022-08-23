@@ -81,6 +81,11 @@ export class IconsComponent implements OnInit {
   dota: any[];
   kmldata: any;
   jsonData: any;
+  alrigth: boolean = true;
+  mediumLowAnnsrcevent1: any;
+  mediumLowAnnsrcevent2: any;
+  mediumLowAnn1: olVectorLayer<any>;
+  mediumLowAnn2: olVectorLayer<any>;
  
   constructor(private lrsServiceService: LrsServiceService,private notifyService : NotificationService) {
 
@@ -106,6 +111,32 @@ Animal = new Style({
     color: "#ff0000",
   }),
 })
+Animal1 = new Style({
+  stroke: new Stroke({
+    color: 'black',
+
+    width: 1,
+
+     lineDash: [4, 8]
+  }),
+
+  fill: new Fill({
+    color: "#34dcee",
+  }),
+})
+Animal2 = new Style({
+  stroke: new Stroke({
+    color: 'black',
+
+    width: 1,
+
+     lineDash: [4, 8]
+  }),
+
+  fill: new Fill({
+    color: "#34dcee",
+  }),
+})
 public defaultColDef: ColDef = {
   resizable: true,
 };
@@ -113,6 +144,27 @@ public defaultColDef: ColDef = {
 
 
   ngOnInit() {
+
+    this.mediumLowAnnsrcevent1 = new VectorSource();
+    this.mediumLowAnnsrcevent2 = new VectorSource();
+
+    this.mediumLowAnnsrcevent1 = new VectorSource();
+
+    this.mediumLowAnn1 = new olVectorLayer({
+  
+      source: this.mediumLowAnnsrcevent1,
+
+      style: this.Animal1 ,
+    });
+    this.mediumLowAnnsrcevent2 = new VectorSource();
+
+    this.mediumLowAnn2 = new olVectorLayer({
+  
+      source: this.mediumLowAnnsrcevent2,
+
+      style: this.Animal2 ,
+    });
+
 
     this.mediumLowAnnsrc = new VectorSource();
 
@@ -153,6 +205,21 @@ public defaultColDef: ColDef = {
     }, (err:HttpErrorResponse)=>{
       this.showToasterWarning('something goes wrong', err.message)
     })
+
+    this.mediumLowPointsrc.on('addfeature', () =>{
+      this.mapPrevLine.getView().fit(
+          this.mediumLowPointsrc.getExtent(),
+          { duration: 1000, size: this.mapPrevLine.getSize(), maxZoom: 18 }
+      );
+    });
+
+    this.mediumLowAnnsrc.on('addfeature', () =>{
+      this.mapPrevLine.getView().fit(
+          this.mediumLowAnnsrc.getExtent(),
+          { duration: 1000, size: this.mapPrevLine.getSize(), maxZoom: 18 }
+      );
+    });
+    
   }
 
   onchange22(val){
@@ -436,7 +503,7 @@ return true
           
           this.columnDefs= [
             { field: "ID" , sortable:true,filter:true , headerName:"Id"},
-            { field: "Name" , sortable:true,filter:true , headerName:"Thematique"},
+            { field: "NAME" , sortable:true,filter:true , headerName:"Thematique"},
             { field: "ROUTE_ID" , sortable:true,filter:true , headerName:"id de la route"},
             { field: "ROUTE_NAME" , sortable:true,filter:true , headerName:"Nom de la route"},
             { field: "PKEVENT" , sortable:true,filter:true , headerName:"PK d'évenement"},
@@ -555,6 +622,8 @@ return true
           this.th2 = this.currentthematiqueId2;
         }
           this.lrsServiceService.queryLinearAndPonctual({thematique1:this.th1,thematique2:this.th2}).subscribe(res=>{
+            console.log(this.th1)
+            console.log(this.th2)
             this.data = res;
             this.showToasterSuccess('Opération bien effectué', 'selection a été effectué');
 
@@ -631,9 +700,15 @@ return true
   }
 
   val1(val){
+    console.log("like")
+    console.log(this.operation)
     console.log(val)
     if(this.operation != "BETWEEN"){
     if(this.selectedAttribute.includes("c") || this.selectedAttribute =='route_name'){
+      if(this.requette.includes("like")){
+
+        this.requette = this.requette +" " + `'${this.val11}%'` 
+      }else
       this.requette = this.requette +" " + `'${this.val11}'`
     }
     else{
@@ -641,7 +716,9 @@ return true
     }
     
   }
+  
   console.log(this.requette);
+  this.showToasterInfo(this.requette,"La requette executé");
   }
 
   val2(val){
@@ -653,9 +730,11 @@ return true
   }
 
   reinitialiser(){
-
+    this.alrigth = true;
     this.mediumLowAnnsrc.clear();
     this.mediumLowPointsrc.clear();
+    this.mediumLowAnnsrcevent1.clear();
+    this.mediumLowAnnsrcevent2.clear();
     this.columnDefs=[];
     this.rowData=[]
     this.requette = "select * from ";
@@ -730,9 +809,13 @@ return true
 
 
   previewLineData(){
+    this.alrigth = false;
     this.dota=[];
     this.mediumLowAnnsrc.clear();
     this.mediumLowPointsrc.clear();
+    this.mediumLowAnnsrcevent1.clear();
+    this.mediumLowAnnsrcevent2.clear();
+    
     
     if(this.data){
       
@@ -755,8 +838,11 @@ return true
             visible: true,
             source: new OSM(),
           } ));
+          this.mapPrevLine.addLayer(this.mediumLowAnn1);
+          this.mapPrevLine.addLayer(this.mediumLowAnn2);
           this.mapPrevLine.addLayer(this.mediumLowAnn);
           this.mapPrevLine.addLayer(this.mediumLowPoint);
+          
         },1000)
         this.verificationCard =true;
       }
@@ -782,12 +868,12 @@ return true
           console.log(this.jsonData)
           
           
-            this.mediumLowPointsrc.on('addfeature', () =>{
-              this.mapPrevLine.getView().fit(
-                  this.mediumLowPointsrc.getExtent(),
-                  { duration: 1000, size: this.mapPrevLine.getSize(), maxZoom: 24 }
-              );
-            });
+            // this.mediumLowPointsrc.on('addfeature', () =>{
+            //   this.mapPrevLine.getView().fit(
+            //       this.mediumLowPointsrc.getExtent(),
+            //       { duration: 1000, size: this.mapPrevLine.getSize(), maxZoom: 24 }
+            //   );
+            // });
           
           
            },1200)
@@ -816,12 +902,12 @@ return true
           
           
           
-            this.mediumLowAnnsrc.on('addfeature', () =>{
-              this.mapPrevLine.getView().fit(
-                  this.mediumLowAnnsrc.getExtent(),
-                  { duration: 1000, size: this.mapPrevLine.getSize(), maxZoom: 24 }
-              );
-            });
+            // this.mediumLowAnnsrc.on('addfeature', () =>{
+            //   this.mapPrevLine.getView().fit(
+            //       this.mediumLowAnnsrc.getExtent(),
+            //       { duration: 1000, size: this.mapPrevLine.getSize(), maxZoom: 24 }
+            //   );
+            // });
           
           
            },1200)
@@ -837,11 +923,17 @@ return true
  setTimeout(()=>{
   for(let i=0;i<this.data.length;i++){
     console.log(this.data[i])
-    console.log(this.data[i])
-    console.log(this.data[i])
+    // console.log(this.data[i])
+    // console.log(this.data[i])
 
     this.mediumLowAnnsrc.addFeatures(
       this.format.readFeatures(JSON.parse(this.data[i]['INTERSECTION']), { featureProjection: "EPSG:4326" })
+    );
+    this.mediumLowAnnsrcevent1.addFeatures(
+      this.format.readFeatures(JSON.parse(this.data[i]['ROUTE_GEOMETRY']), { featureProjection: "EPSG:4326" })
+    );
+    this.mediumLowAnnsrcevent2.addFeatures(
+      this.format.readFeatures(JSON.parse(this.data[i]['ROUTE_GEOMETRY_1']), { featureProjection: "EPSG:4326" })
     );
 
   }
@@ -854,12 +946,12 @@ return true
 
 
 
-  this.mediumLowAnnsrc.on('addfeature', () =>{
-    this.mapPrevLine.getView().fit(
-        this.mediumLowAnnsrc.getExtent(),
-        { duration: 1000, size: this.mapPrevLine.getSize(), maxZoom: 24 }
-    );
-  });
+  // this.mediumLowAnnsrc.on('addfeature', () =>{
+  //   this.mapPrevLine.getView().fit(
+  //       this.mediumLowAnnsrc.getExtent(),
+  //       { duration: 1000, size: this.mapPrevLine.getSize(), maxZoom: 24 }
+  //   );
+  // });
 
 
  },1200)
@@ -891,12 +983,12 @@ return true
           console.log(this.jsonData)
         
         
-          this.mediumLowPointsrc.on('addfeature', () =>{
-            this.mapPrevLine.getView().fit(
-                this.mediumLowPointsrc.getExtent(),
-                { duration: 2000, size: this.mapPrevLine.getSize(), maxZoom: 24 }
-            );
-          });
+          // this.mediumLowPointsrc.on('addfeature', () =>{
+          //   this.mapPrevLine.getView().fit(
+          //       this.mediumLowPointsrc.getExtent(),
+          //       { duration: 2000, size: this.mapPrevLine.getSize(), maxZoom: 24 }
+          //   );
+          // });
         
         
          },1200)
@@ -941,12 +1033,12 @@ return true
 
 
   
-    this.mediumLowAnnsrc.on('addfeature', () =>{
-      this.mapPrevLine.getView().fit(
-          this.mediumLowAnnsrc.getExtent(),
-          { duration: 1000, size: this.mapPrevLine.getSize(), maxZoom: 24 }
-      );
-    });
+    // this.mediumLowAnnsrc.on('addfeature', () =>{
+    //   this.mapPrevLine.getView().fit(
+    //       this.mediumLowAnnsrc.getExtent(),
+    //       { duration: 1000, size: this.mapPrevLine.getSize(), maxZoom: 24 }
+    //   );
+    // });
   
   
    },1200)
@@ -976,7 +1068,7 @@ return true
 
       this.KMLDataExport().subscribe((res) => {
         this.dyanmicDownloadByHtmlTag({
-          fileName: 'My Report',
+          fileName: 'My Report.kml',
           text: JSON.stringify(res)
         });
       });
@@ -987,7 +1079,7 @@ return true
       await this.previewLineData()
       this.jsonDataEport().subscribe((res) => {
         this.dyanmicDownloadByHtmlTag({
-          fileName: 'My Report.json',
+          fileName: 'My Report.geojson',
           text: JSON.stringify(res)
         });
       });

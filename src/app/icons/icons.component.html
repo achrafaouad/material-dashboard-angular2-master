@@ -9,7 +9,7 @@
             </div>
            
   
-            <div class="card-body">
+            <div class="card-body" >
                 <mat-card>
                     <div style="text-align: center;">
                         <h2 >Requetteur</h2>
@@ -101,14 +101,7 @@
 
       <div class="col-sm">
         
-        <h5>Operation</h5>
         
-        <mat-form-field appearance="fill">
-          <mat-label>choisie un opérateur</mat-label>
-          <mat-select [(value)]="operateur" (selectionChange)="Opp($event.value)">
-            <mat-option value={{op}} *ngFor="let op of operateurs">{{op}}</mat-option>
-          </mat-select>
-        </mat-form-field>
      
 
 
@@ -127,16 +120,29 @@
             </tr>
 
         </table>
-        <hr>  
+        <hr>
+        
+        <label> Operation: </label>
+        <mat-form-field appearance="fill">
+          <mat-label>choisie un opérateur</mat-label>
+          <mat-select [(value)]="operateur" (selectionChange)="Opp($event.value)">
+            <mat-option value={{op}} *ngFor="let op of operateurs">{{op}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+          
         <label for="requetteType">Requette :</label>
         <mat-radio-group aria-label="Select an option" id="requetteType" [(ngModel)]="selectRequettype">
           <mat-radio-button value="1">Simple</mat-radio-button>
           <mat-radio-button value="2">Avancé</mat-radio-button>
         </mat-radio-group>
-        <button  mat-raised-button color="primary" data-target="#PrevLineModal" data-toggle="modal" (click)="previewLineData()">Prevoir les données</button> 
-        <button  mat-raised-button color="primary" (click)="dynamicDownloadTxt()">KML</button> 
-        <button  mat-raised-button color="primary" (click)="dynamicDownloadJson()">GeoJSON</button>
-
+        <div class="d-flex justify-content-center">
+          <button style="margin-left: 2.5px;" mat-raised-button color="primary" data-target="#PrevLineModal" data-toggle="modal" (click)="previewLineData()">Prevoir les données</button> 
+          <button style="margin-left: 2.5px;" mat-raised-button color="primary" (click)="dynamicDownloadTxt()" [disabled]="alrigth ? 'disabled' : null">KML</button> 
+          <button mat-raised-button color="primary" (click)="dynamicDownloadJson()" [disabled]="alrigth ? 'disabled' : null">GeoJSON</button>
+  
+        </div>
+        
  
    
       </div>  

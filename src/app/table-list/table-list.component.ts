@@ -40,6 +40,7 @@ import { PointStyle } from 'app/Models/PointStyle';
 import { of } from 'rxjs';
 import { NotificationService } from 'app/notification.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { Router } from '@angular/router';
 
 
 
@@ -156,7 +157,7 @@ export class TableListComponent implements OnInit {
   mediumLowPointsrc: any;
   mediumLowPoint: olVectorLayer<any>;
 
-  constructor(private lrsServiceService:LrsServiceService,private _formBuilder: FormBuilder,private ngxCsvParser: NgxCsvParser,public dialog: MatDialog,private fb:FormBuilder,    private notifyService : NotificationService, private spinner: NgxSpinnerService
+  constructor(private lrsServiceService:LrsServiceService,private _formBuilder: FormBuilder,private ngxCsvParser: NgxCsvParser,public dialog: MatDialog,private fb:FormBuilder,    private notifyService : NotificationService, private spinner: NgxSpinnerService,private _router: Router
     ) {
     this.getEtatLabelStyle();
     this.getAccidentLabelStyle();
@@ -280,8 +281,19 @@ export class TableListComponent implements OnInit {
 
      
     
-
-      
+      this.mediumLowAnnsrc.on('addfeature', () =>{
+        this.mapPrevLine.getView().fit(
+            this.mediumLowAnnsrc.getExtent(),
+            { duration: 1000, size: this.mapPrevLine.getSize(), maxZoom: 24 }
+        );
+    });
+  
+    this.mediumLowPointsrc.on('addfeature', () =>{
+      this.mapPrevPoint.getView().fit(
+          this.mediumLowPointsrc.getExtent(),
+          { duration: 1000, size: this.mapPrevPoint.getSize(), maxZoom: 24 }
+      );
+  });
 
 
       
@@ -431,6 +443,7 @@ export class TableListComponent implements OnInit {
           this.csvRecords = result;
 
           this.headerTable = Object.keys(this.csvRecords[0])
+          console.log(this.headerTable)
           this.verification = true;
         
           if(this.headerTable.includes("route_name")&& this.headerTable.includes("pkEvent") && this.headerTable.includes("voie")){
@@ -1062,13 +1075,15 @@ getAccidentLabelStyle(){
           /** spinner ends after 5 seconds */
           this.spinner.hide();
         }, 5000);
-
+        this._router.navigate(['maps'])
         this.showToasterSuccess('Opération bien effectué', 'Section a été ajouté');
 
        //
        this.onUpdateStyleColors();
         console.log(res)
-      }, (err:HttpErrorResponse)=>{this.showToasterWarning('something goes wrong', err.message)})
+      }, (err:HttpErrorResponse)=>{
+        console.log(err)
+        this.showToasterWarning( err.error.message,'something goes wrong')})
     }
 
     if(this.fontStyleControl.value == 'non' || !this.fontStyleControl.value){
@@ -1101,8 +1116,8 @@ getAccidentLabelStyle(){
 
                    //
                    this.onUpdateStyleColors();
-                    console.log(res)
-                  }, (err:HttpErrorResponse)=>{this.showToasterWarning('something goes wrong', err.message);})
+                   this._router.navigate(['maps'])
+                  }, (err:HttpErrorResponse)=>{this.showToasterWarning( err.error.message,'something goes wrong')})
 
 
                 },(err:HttpErrorResponse)=>{console.log(err)})
@@ -1187,9 +1202,9 @@ setTimeout(() => {
 }, 5000);
       //todo
       this.onUpdateStyleColorsP();
-       console.log(res)
+      this._router.navigate(['maps'])
      }, (err:HttpErrorResponse)=>{
-      this.showToasterWarning('something goes wrong', err.message);
+      this.showToasterWarning( err.error.message,'something goes wrong')
 
     })
    }
@@ -1230,8 +1245,10 @@ setTimeout(() => {
                   }, 5000);
                  //todo
                  this.onUpdateStyleColorsP();
-                  console.log(res)
-                }, (err:HttpErrorResponse)=>{this.showToasterWarning('something goes wrong', err.message);this.showToasterWarning('something goes wrong', err.message);})
+                 this._router.navigate(['maps'])
+                }, (err:HttpErrorResponse)=>{
+                  this.showToasterWarning( err.error.message,'something goes wrong')
+                })
 
 
                },(err:HttpErrorResponse)=>{console.log(err)})
@@ -1299,16 +1316,16 @@ setTimeout(() => {
          this.format.readFeatures(JSON.parse(item), { featureProjection: "EPSG:4326" })
        );
 
-      
+       
     
      }) 
 
-     this.mediumLowAnnsrc.on('addfeature', () =>{
-      this.mapPrevLine.getView().fit(
-          this.mediumLowAnnsrc.getExtent(),
-          { duration: 200, size: this.mapPrevLine.getSize(), maxZoom: 24 }
-      );
-  });
+  //    this.mediumLowAnnsrc.on('addfeature', () =>{
+  //     this.mapPrevLine.getView().fit(
+  //         this.mediumLowAnnsrc.getExtent(),
+  //         { duration: 200, size: this.mapPrevLine.getSize(), maxZoom: 24 }
+  //     );
+  // });
 
 
 
@@ -1365,12 +1382,7 @@ setTimeout(() => {
 
       
 
-        this.mediumLowPointsrc.on('addfeature', () =>{
-          this.mapPrevPoint.getView().fit(
-              this.mediumLowPointsrc.getExtent(),
-              { duration: 1000, size: this.mapPrevPoint.getSize(), maxZoom: 24 }
-          );
-      });
+       
        
        
 
@@ -1395,8 +1407,12 @@ setTimeout(() => {
   
   }
   }
-   ff:string = "route_name,pkd,pkf,voie" + "\n" + " majd,0,700,1"
-   ff2:string = "route_name,pkEvent,voie" + "\n" + "Route,10,1"
+   ff:string = 
+   `route_name,pkd,pkf,voie
+   majd,0,700,1`
+   ff2:string = 
+   `route_name,pkEvent,voie
+    Route,10,1`
   jsonDataEport() {
     return of(
       this.ff

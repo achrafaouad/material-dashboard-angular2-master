@@ -42,8 +42,8 @@
   position: absolute;
   left: 50%;
   width: fit-content;
-  height: fit-content;
-  margin-top: 45%;
+  height: fit-content; 
+   margin-top: 45%;
   text-align: center;
    transform: translateX(-50%);
    border: 1px solid grey;
@@ -54,6 +54,12 @@
   font-size: 12px;
   font-weight: bolder;
  
+}
+
+@media only screen and (max-width: 700px) {
+  .ol-mouse-position {
+    margin-top: 99%;
+  }
 }
 
 .tile-manager {
@@ -643,8 +649,10 @@
     --Very-dark-black-blue: hsl(240, 10%, 16%);
     --gray:#ddd;
 
-    --linear1 : linear-gradient(to right,hsl(13, 100%, 72%), hsl(353, 100%, 62%));
+    --linear1 : url("https://blog.ptvgroup.com/wp-content/uploads/2021/04/Smart-roads.jpg");
     --linear2 : linear-gradient(to right, hsl(237, 17%, 21%), hsl(237, 23%, 32%));
+
+    /* background-color: greenyellow; */
 }
 
 
@@ -667,12 +675,20 @@ header section for mobile resolution
 
 ==============*/
 header{
+  /* background-image: url('./src/app/landing-page/images/2355728.jpg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center; */
+
+  /*  */
 background-image: var(--linear1);
 background-position: 100% 200%;
-background-size: cover;
+background-attachment: fixed;
+background-position: center; 
+/* background-size: cover; */
 background-repeat: no-repeat;
 color:#fff;
-border-radius:0 0 0 5.3rem; 
+border-radius:0 0 5.3rem 5.3rem; 
 padding: 55px 10px 140px 24px;
 width: 100%;
 /* background-color: #000; */
@@ -893,7 +909,15 @@ z-index: 2;
 #second #second-pattern{
     position: relative;
     bottom:210px;
-    background-color:var(--Very-dark-black-blue) ;
+    /* background-color:var(--Very-dark-black-blue) ; */
+    background-image:url("./imageachraf.jpg") ;
+    height: 100%;
+
+    /* Center and scale the image nicely */
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
     width: 100%;
     border-radius: 0px 100px 0px 100px;
     overflow: hidden;

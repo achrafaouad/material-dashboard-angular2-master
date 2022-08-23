@@ -301,6 +301,7 @@ data1: Object [] = [];
   datas: Object[]= [];
   incriment = 0;
   selected: any;
+  verify: boolean = false;
   constructor(private _formBuilder: FormBuilder,private lrsServiceService: LrsServiceService,private notifyService : NotificationService) { 
     this.getProvinces();
     this.getThematiques();
@@ -337,6 +338,14 @@ data1: Object [] = [];
     this.secondFormGroup = this._formBuilder.group({
       secondCtrl: ['', Validators.required],
     });
+
+
+    this.mediumLowAnnsrc.on('addfeature', () =>{
+      this.mapPrevLine.getView().fit(
+          this.mediumLowAnnsrc.getExtent(),
+          { duration: 200, size: this.mapPrevLine.getSize(), maxZoom: 24 }
+      );
+  });
   }
 
   title_bgcolorF(val){
@@ -425,19 +434,8 @@ data1: Object [] = [];
   }
 
   onchangeFond(value){
-    // console.log(value)
-    this.base = value
-  if(this.mapPrevLine){
-  
-    this.mapPrevLine.getLayers().getArray()[0] = new LayerTile({
-      visible: true,
-        source: new OSM({
-          url: value
-        }),
-      } )
-  }
-  else this.base = value
-
+    this.verify = true;
+      this.base = value
   }
 
 
@@ -485,9 +483,20 @@ data1: Object [] = [];
             }),
           });
 
-          this.mapPrevLine.addLayer(new LayerTile({
+          if(this.verify){
+            this.mapPrevLine.addLayer(new LayerTile({
+              visible: true,
+                source: new OSM({
+                  url: this.base
+                }),
+              } ))
+          }
+          else{
+            this.mapPrevLine.addLayer(new LayerTile({
          
             } ))
+          }
+          
 
           
           this.mapPrevLine.addLayer(this.mediumLowAnn);
@@ -517,12 +526,7 @@ data1: Object [] = [];
     
      }) 
 
-     this.mediumLowAnnsrc.on('addfeature', () =>{
-      this.mapPrevLine.getView().fit(
-          this.mediumLowAnnsrc.getExtent(),
-          { duration: 200, size: this.mapPrevLine.getSize(), maxZoom: 24 }
-      );
-  });
+    
 
 
 
@@ -825,7 +829,7 @@ async prepareAndPrint() {
   
   this.length = 0;
   console.log("printed")
-  console.log(this.data1 )
+  console.log(this.data1)
 
 
   this.sendData['attributes'].title =  this.title;
@@ -900,7 +904,6 @@ async prepareAndPrint() {
       }
     })
 
-
   }
 
   
@@ -928,14 +931,17 @@ async prepareAndPrint() {
               if(this.selectedTypeData == "ponctuel"){
                 if(this.themtiqueTree){
                    console.log('achraf aouad');
+                   console.log('achraf aouad');
+                   console.log('achraf aouad');
                    this.sendData.attributes.table.columns= ["id","évenement","PK_event","Route_id","Route","voie"];
+                   
                    for(let i= 0;i<this.datas.length;i++){
                    for(let j= 0;j<this.datas[i]['data'].length;j++){
                    this.sendData['attributes'].map.layers[1].geojson.features.push(
                       {
                       "name":"achraf",
                       "type": "Feature",
-                      "properties": { "_type":`${this.datas[i]["id"]}` , "_name":`${this.datas[i]["id"]}`},
+                      "properties": { "_type":`${this.datas[i]["id"]}` , "_name":`${this.datas[i]["data"][j]['id']}`},
                       "geometry": this.datas[i]["data"][j]["ROUTE_GEOMETRY"]
                         }
             
@@ -944,11 +950,11 @@ async prepareAndPrint() {
                     
 // -------------------------
           this.dataTable.push([this.datas[i]["data"][j]['id'],this.datas[i]["data"][j]['event_name'],((this.datas[i]["data"][j]['pkEvent'])/1000).toFixed(3).toString(),this.datas[i]["data"][j]['route_id'].toString(),this.datas[i]["data"][j]['route_name'],this.datas[i]["data"][j]['voie']])
-
+          
         
-          if(this.datas[i]["id"] == 1) {this.pointRadiusPointEvent1 = this.pointRadiusPointEvent1,this.colorPointEvent1='red'};
-          if(this.datas[i]["id"] == 2) {this.pointRadiusPointEvent1 = this.pointRadiusPointEvent1 * 2,this.colorPointEvent1='green'};
-          if(this.datas[i]["id"] == 3) {this.pointRadiusPointEvent1 = this.pointRadiusPointEvent1 * 3,this.colorPointEvent1='blue'};
+          if(this.datas[i]["id"] == 1) {this.pointRadiusPointEvent1 = 1;this.colorPointEvent1='red'};
+          if(this.datas[i]["id"] == 2) {this.pointRadiusPointEvent1 = 2;this.colorPointEvent1='green'};
+          if(this.datas[i]["id"] == 3) {this.pointRadiusPointEvent1 = 3;this.colorPointEvent1='blue'};
 
           this.sendData['attributes'].map.layers[1].style[`[_type = ${this.datas[i]["id"]}]`] = {
             // values defined in symbolizer will override defaults
@@ -1031,15 +1037,18 @@ async prepareAndPrint() {
                 }
                 
       }else if(this.selectedTypeData == "lineaire"){
+
         if(this.themtiqueTree){
-          console.log("zboba")
+          console.log('achraf aouad');
+          console.log('achraf aouad');
+          console.log('achraf aouad');
+          console.error(this.datas)
           this.rapport = 'lineaire';
           this.sendData.attributes.table.columns= ["id","évenement","Pkd","Pkf","Route_id","Route","voie"]
-          console.log(this.datas.length);
-          console.log(this.datas.length);
+          
           for(let i= 0;i<this.datas.length;i++){
-            for(let j= 0;j<this.datas[i]['data'].length;j++){
-
+            for(let j= 0;j<this.datas[i]['data'].length;j++){ 
+              console.log("heho " , this.datas[i]["id"])
             this.sendData['attributes'].map.layers[1].geojson.features.push(
               {
               "name":"achraf",
@@ -1050,9 +1059,9 @@ async prepareAndPrint() {
             )
 
             this.dataTable.push([this.datas[i]["data"][j]['id'],this.datas[i]["data"][j]['event_name'],((this.datas[i]["data"][j]['pkd'])/1000).toFixed(3).toString(),((this.datas[i]["data"][j]['pkf'])/1000).toFixed(3).toString(),this.datas[i]["data"][j]['route_id'],this.datas[i]["data"][j]['route_name'],this.datas[i]["data"][j]['voie']])
-            if(this.datas[i]["id"] == 1) {this.strokeWidthPol1 = this.strokeWidthPol1 , this.strock_colorPpl1 = 'red'}  ;
-            if(this.datas[i]["id"] == 2) {this.strokeWidthPol1 = this.strokeWidthPol1 * 1.2 , this.strock_colorPpl1 = 'blue'};
-            if(this.datas[i]["id"] == 3) {this.strokeWidthPol1 = this.strokeWidthPol1 * 1.3, this.strock_colorPpl1 = 'green'};
+            if(this.datas[i]["id"] == 1) {this.strokeWidthPol1 = 1 , this.strock_colorPpl1 = 'red'}  ;
+            if(this.datas[i]["id"] == 2) {this.strokeWidthPol1 = 2 , this.strock_colorPpl1 = 'blue'};
+            if(this.datas[i]["id"] == 3) {this.strokeWidthPol1 = 3, this.strock_colorPpl1 = 'green'};
             this.sendData['attributes'].map.layers[1].style[`[_type = ${this.datas[i]["id"]}]`] = {
               // values defined in symbolizer will override defaults
               symbolizers: [
@@ -1187,7 +1196,7 @@ async prepareAndPrint() {
                console.log(this.sendData)
       }else if(this.selectedTypeData == "lineaire"){
         if(this.themtiqueTree){
-          console.log("zboba")
+
           this.rapport = 'lineaire';
           this.sendData.attributes.table.columns= ["id","évenement","Pkd","Pkf","Route_id","Route","voie"]
           console.log(this.datas.length);
@@ -1295,7 +1304,8 @@ async prepareAndPrint() {
    if(this.firstEvent == true && this.secondEvent == true){
 
  
-          console.log("ponctuel")
+          console.log("ponctuel events")
+          console.log(this.data1)
           if(this.selectedTypeData == this.selectedTypeData2){
             if(this.selectedTypeData == "ponctuel"){
               this.rapport = 'pointPoint';
@@ -1726,8 +1736,9 @@ console.log(this.data1)
               }
   
           )
+          //do u do u
           // this.dataTable.push([this.data1[i]['id'],this.data1[i]['event_name'],((this.data1[i]['pkd'])/1000).toFixed(3).toString(),((this.data1[i]['pkf'])/1000).toFixed(3).toString(),this.data1[i]['route_id'],this.data1[i]['route_name'],this.data1[i]['voie']])
-          this.dataTable.push([this.dataLine1[i]["id"],this.dataLine1[i]['event_type'].name.toString(),((this.dataLine1[i]['pkd'])/1000).toFixed(3).toString(),((this.dataLine1[i]['pkf'])/1000).toFixed(3).toString(),this.dataLine1[i]['route'].route_id.toString(),this.dataLine1[i]['route_name'],this.dataLine1[i]['voie']])
+          this.dataTable.push([this.dataLine1[i]["id"],this.dataLine1[i]['event_type'].name.toString(),((this.dataLine1[i]['pkd'])/1000).toFixed(3).toString(),((this.dataLine1[i]['pkf'])/1000).toFixed(3).toString(),this.dataLine1[i]['lrs_routes'].route_id,this.dataLine1[i]['route_name'],this.dataLine1[i]['voie']])
 
         
           this.sendData['attributes'].map.layers[1].style["[_type = 'join-miter']"] = {
@@ -2363,7 +2374,8 @@ if(this.filtre){
     console.log(this.filtre ,this.selectedTypeData,this.selectedTypeData2 )
     if(this.selectedTypeData == this.selectedTypeData2){
       if(this.selectedTypeData == "ponctuel"){
-  
+      console.log("this.data1")
+      console.log(this.data1)
     await fetch("http://localhost:8015/print-servlet-3.28.1/print/resource_bundle3/report.pdf",{
     method:'POST',
     headers:{'Content-Type':"application/json"},
@@ -2676,10 +2688,13 @@ ApplyFilte(){
     }
   }
   if(this.firstEvent == true && this.secondEvent == true){
- 
+
+    console.error("error")
+    console.log(this.object)
   this.object = {thematique1:this.currentthematiqueId,thematique2:this.currentthematiqueId2,pkEvent:this.val11}
 
-  this.data1=[]
+    this.data1=[]
+  //achraf aouad
   
 
   console.log("this.filtre",this.filtre)
@@ -2689,6 +2704,7 @@ ApplyFilte(){
       this.colonnes =  [{name:'id', value:1},{name:'évenement', value:2},{name:"PK_event", value:3},{name:"Route_id", value:4},{name:"nom de la route", value:5},{name:"voie", value:6}];
 
   this.lrsServiceService.MyIntersectionPOintToPoint(this.object).subscribe(res=>{
+    
      console.log(res)
      for(let i= 0;i<res.length;i++){
        res[i]["ROUTE_GEOMETRY"] = { "type": "Point", "coordinates": new GeoJSON({ featureProjection: 'EPSG:3857' }).readFeature(JSON.parse(res[i]['ROUTE_GEOMETRY'])).getGeometry()['flatCoordinates']}
@@ -2943,11 +2959,11 @@ getValues(){
 applaySingleFiltre(){
 if(!this.themtiqueTree){
   if(this.filtre == true){
-    this.data1=[]
-    this.data2=[]
+   
   
   if(this.firstEvent==true && this.secondEvent ==false || this.firstEvent==false && this.secondEvent ==true ){
-
+    this.data1=[]
+    this.data2=[]
     if(this.firstEvent==true && this.secondEvent ==false){
       
       for(let j= 0;j<this.events.length;j++){
@@ -2987,7 +3003,7 @@ console.log(this.object123)
 
       }
       else if(this.selectedTypeData == "lineaire"){
-        console.log("zomah")
+        console.log("zomah1")
         this.selectedTypeData144 =  "lineaire"
         this.selectedTh144 =  this.selectedTh
       this.colonnes =  [{name:'id', value:1},{name:'évenement', value:2},{name:"PKD", value:3},{name:"PKF", value:4},{name:"Route_id", value:5},{name:"nom de la route", value:6},{name:"voie", value:7}];

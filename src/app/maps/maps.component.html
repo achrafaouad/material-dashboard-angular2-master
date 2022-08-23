@@ -28,8 +28,8 @@
 
 <app-modal  #hellomodal2 class="modal-demo1" [maximizable] = "true" [backdrop] = "false">
   <ng-container class="app-modal-header" >table attributaire</ng-container>
-  <ng-container  class="app-modal-body " >
-    <table id="containerTable2"  >
+  <ng-container  class="app-modal-body" >
+    <table id="containerTable"  >
       <tr>
         <th *ngFor="let element of displayedColumns">{{element}}</th>
      
@@ -46,8 +46,8 @@
 </app-modal>
 
 <div id="map" class="map" >
-<div style="position: absolute;z-index:-3;" >
-  <table id="containerTable"  >
+<div style="position: absolute;z-index:-3;margin-top: 300px;margin-left: 50%;" >
+  <table id="containerTable144"  >
     <tr>
       <th></th>
       <th></th>
@@ -67,19 +67,19 @@
     
    </table> 
 </div>
-  <div class="draw" id="draw" style="left:45%;" >
-    <button type="button" id="addRoute" class="myButton" data-toggle="modal" data-target="#exampleModal" style="visibility:hidden;" (click)="hellomodal.show()">+</button>
-    <button type="button" id="addPoint" class="myButton" data-toggle="modal" data-target="#PointModal" style="visibility:hidden;">+</button>
-    <button type="button" class="myButton" id="drow_Line" style="backgroundColor:rgba(48, 95, 153,0.63)"><i class="bi bi-signpost-split"></i></button>
-    <button type="button" class="myButton" id="drow_Point" style="backgroundColor:rgba(48, 95, 153,0.63)"><i class="bi bi-bullseye"></i></button>
-    <button type="button" class="myButton" id="drow_LineEvent" style="backgroundColor:rgba(48, 95, 153,0.63)"> <i class="bi bi-border-width"></i> </button>
-    <button type="button"  id="instantEvent" class="myButton" data-toggle="modal" data-target="#voleeTh"style="backgroundColor:rgba(48, 95, 153,0.63)"> <i class="bi bi-balloon-fill"></i> </button>
-    <button type="button"  id="hello" class="myButton" style="backgroundColor:rgba(48, 95, 153,0.63)" (click)="hellomodal.show()">L</button>
+  <div class="draw" id="draw" style="padding-left:28%;padding-right: 28%;" >
+    <button type="button" id="addRoute" class="myButton" data-toggle="modal" data-target="#exampleModal" style="margin:10px;visibility:hidden;" (click)="hellomodal.show()">+</button>
+    <button type="button"id="addPoint" class="myButton" data-toggle="modal" data-target="#PointModal" style="margin:10px;visibility:hidden;">+</button>
+    <button type="button" class="myButton" id="drow_Line" style="margin:10px;backgroundColor:rgba(48, 95, 153,0.63)"><i class="bi bi-signpost-split"></i></button>
+    <button type="button" class="myButton" id="drow_Point" style="margin:10px;backgroundColor:rgba(48, 95, 153,0.63)"><i class="bi bi-bullseye"></i></button>
+    <button type="button" class="myButton" id="drow_LineEvent" style="margin:10px;backgroundColor:rgba(48, 95, 153,0.63)"> <i class="bi bi-border-width"></i> </button>
+    <button type="button"  id="instantEvent" class="myButton" data-toggle="modal" data-target="#voleeTh"style="margin:10px;backgroundColor:rgba(48, 95, 153,0.63)"> <i class="bi bi-balloon-fill"></i> </button>
+    <button type="button"  id="hello" class="myButton" style="margin:10px;backgroundColor:rgba(48, 95, 153,0.63)" (click)="hellomodal.show()">L</button>
    <!-- todo -->
-    <button type="button"  id="table_data" class="myButton" style="visibility:hidden;backgroundColor:rgba(48, 95, 153,0.63)" (click)="hellomodal2.show()" ></button>
+    <button type="button"  id="table_data" class="myButton" style="margin:10px;visibility:hidden;backgroundColor:rgba(48, 95, 153,0.63)" (click)="hellomodal2.show()" ></button>
     
-    <button class="myButton " type="button" id="undo" style= "visibility:hidden; backgroundColor:rgba(250, 176, 5,0.8)">u</button>
-    <button class="myButton"type="button"id="submit_par"style=" visibility: hidden, backgroundColor:rgba(255, 37, 0,0.8)">R</button>
+    <button class="myButton " type="button" id="undo" style= "margin:10px;visibility:hidden; backgroundColor:rgba(250, 176, 5,0.8)">u</button>
+    <button class="myButton"type="button"id="submit_par"style="margin:10px; visibility: hidden, backgroundColor:rgba(255, 37, 0,0.8)">R</button>
   </div>
   <div class="editDiv"> 
     <button type="button" class="myButton" id="editButton" ><i class="bi bi-info-circle-fill"></i></button>
