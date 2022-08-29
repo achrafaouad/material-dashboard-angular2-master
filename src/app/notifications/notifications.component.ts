@@ -435,7 +435,15 @@ data1: Object [] = [];
 
   onchangeFond(value){
     this.verify = true;
-      this.base = value
+    this.base = value
+    if(this.mapPrevLine){
+    this.mapPrevLine.getLayers().getArray()[0] = new LayerTile({
+      visible: true,
+        source: new OSM({
+          url: value
+        }),
+      })
+    }
   }
 
 

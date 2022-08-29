@@ -649,7 +649,7 @@
     --Very-dark-black-blue: hsl(240, 10%, 16%);
     --gray:#ddd;
 
-    --linear1 : url("https://blog.ptvgroup.com/wp-content/uploads/2021/04/Smart-roads.jpg");
+    --linear1 : url("https://www.designmaroc.com/wp-content/uploads/2017/04/Pont-%C3%A0-haubans.jpg");
     --linear2 : linear-gradient(to right, hsl(237, 17%, 21%), hsl(237, 23%, 32%));
 
     /* background-color: greenyellow; */
@@ -688,8 +688,8 @@ background-position: center;
 /* background-size: cover; */
 background-repeat: no-repeat;
 color:#fff;
-border-radius:0 0 5.3rem 5.3rem; 
-padding: 55px 10px 140px 24px;
+border-radius:0 0 0 0; 
+/* padding: 55px 10px 140px 24px; */
 width: 100%;
 /* background-color: #000; */
 }
@@ -1402,5 +1402,10 @@ color: var(--grayish-blue)
   position: relative;
   display: block;
   margin: 10px auto auto 10px;
+}
+
+
+.card-header{
+  background-color:"#D4EE5E"
 }
 

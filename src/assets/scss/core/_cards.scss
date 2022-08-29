@@ -111,6 +111,7 @@
         }
 
         &.card-header-image {
+          background-color: #e91e63;
             position: relative;
             padding: 0;
             z-index: 1;
@@ -175,7 +176,7 @@
     &.bg-info,
     &.card-rotate.bg-info .front,
     &.card-rotate.bg-info .back{
-      background: linear-gradient(60deg, $cyan-400, $cyan-600);
+      background: linear-gradient(60deg, $purple-400, $cyan-600);
     }
     .card-header-success .card-icon,
     .card-header-success .card-text,
@@ -199,7 +200,9 @@
     &.bg-danger,
     &.card-rotate.bg-danger .front,
     &.card-rotate.bg-danger .back{
-      background: linear-gradient(60deg, $cyan-400, $cyan-900);
+      //laarbi 3awed had le9ta
+      background: transparentize(#343838,0.1);
+      // background: linear-gradient(60deg, $cyan-400, $cyan-900);
     }
 
     .card-header-rose .card-icon,

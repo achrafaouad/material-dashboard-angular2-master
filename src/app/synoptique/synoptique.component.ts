@@ -430,7 +430,9 @@ mesure: any;
  
     
   }
+
   async onchange(evv){
+    console.warn(this.type)
     this.selectedRoute = evv
     if(this.type == "analyse"){
       await this.updateAdvanced();
@@ -445,6 +447,10 @@ mesure: any;
          voie:this.selectedVoie
      }
  
+     console.log("hello wolrd")
+     console.log(this.object1)
+     console.log("hello wolrd")
+
      this.lrsServiceService.getVideosList(this.object1).subscribe(
        res=>this.videos = res,err=>console.log(err)
      );
@@ -493,7 +499,9 @@ mesure: any;
 
   update(){
     if(this.type == "advanced"){
+       if(this.pkdV && this.pkfV){
 
+       
       this.lrsServiceService.createSynoptique({pkd:this.pkdV,pkf:this.pkfV,routeName:this.selectedRoute,voie:this.selectedVoie}).subscribe((res)=>{
         console.error("3adia")
         console.error(res)
@@ -506,6 +514,7 @@ mesure: any;
       
       
       ,(err)=>{console.log(err)})
+    }
     }else{
     this.lrsServiceService.createSynoptique({pkd:this.value1,pkf:this.value2,routeName:this.selectedRoute,voie:this.selectedVoie}).subscribe((res)=>{
       this.spinner.show(); 
@@ -812,43 +821,73 @@ console.log(err);
       this.data = res;
       this.chartOptionsS.series = []
       this.chartOptionsS.series = <ApexAxisChartSeries> <unknown>res
+
+      console.log("88888888888888888888888888")
+      this.mediumLowPointsrc.clear();
+      
+     
+        
+        if(!this.verificationCard){
+          console.log("88888888888888888888888888")
+            this.mapPrevLine = new Map({
+              target: "mapPrevLine",
+              layers: [ ],
+              
+              view: new View({
+                center: [-5, 33],
+                zoom: 8,
+                projection: "EPSG:4326",
+              }),
+            });
+  
+            this.mapPrevLine.addLayer(new LayerTile({
+              visible: true,
+              source: new OSM(),
+            } ));
+            this.mapPrevLine.addLayer(this.mediumLowPoint);
+         
+          this.verificationCard =true;
+        
+  
+      
+  }
+
+
     }
     
     
     ,(err)=>{console.log(err)})
 
 
-    console.log("88888888888888888888888888")
-    this.mediumLowPointsrc.clear();
+//     console.log("88888888888888888888888888")
+//     this.mediumLowPointsrc.clear();
     
    
       
-      if(!this.verificationCard){
-        console.log("88888888888888888888888888")
-          this.mapPrevLine = new Map({
-            target: "mapPrevLine",
-            layers: [  ],
-            controls: [
+//       if(!this.verificationCard){
+//         console.log("88888888888888888888888888")
+//           this.mapPrevLine = new Map({
+//             target: "mapPrevLine",
+//             layers: [ ],
             
-            ],
-            view: new View({
-              center: [-5, 33],
-              zoom: 8,
-              projection: "EPSG:4326",
-            }),
-          });
+//             view: new View({
+//               center: [-5, 33],
+//               zoom: 8,
+//               projection: "EPSG:4326",
+//             }),
+//           });
 
-          this.mapPrevLine.addLayer(new LayerTile({
-            visible: true,
-            source: new OSM(),
-          } ));
-          this.mapPrevLine.addLayer(this.mediumLowPoint);
+//           this.mapPrevLine.addLayer(new LayerTile({
+//             visible: true,
+//             source: new OSM(),
+//           } ));
+//           this.mapPrevLine.addLayer(this.mediumLowPoint);
        
-        this.verificationCard =true;
+//         this.verificationCard =true;
       
 
     
-}
+// }
 
 
 
@@ -976,7 +1015,7 @@ console.log(err);
       this.mediumLowPointsrc.on('addfeature', () =>{
         this.mapPrevLine.getView().fit(
             this.mediumLowPointsrc.getExtent(),
-            { duration: 300, size: this.mapPrevLine.getSize(), maxZoom: 16 }
+            { duration: 300, size: this.mapPrevLine.getSize(), maxZoom: 15 }
         );
       });
 

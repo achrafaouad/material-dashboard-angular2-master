@@ -54,35 +54,29 @@ import { LinearColor } from "app/Models/LinearColor";
 import { PointStyle } from "app/Models/PointStyle";
 import { Observable, Subject } from "rxjs";
 import { WebcamImage } from "ngx-webcam";
-import Feature from "ol/Feature";
-import Point from "ol/geom/Point";
-import {
-  chartOptions,
-  parseOptions,
-  chartExample1,
-  chartExample2
-} from "../variables/charts";
 
 import {
   ChartComponent,
   ApexAxisChartSeries,
   ApexChart,
   ApexXAxis,
-  ApexDataLabels,
-  ApexTooltip,
-  ApexStroke
+  ApexStroke,
+  ApexTitleSubtitle
 } from "ng-apexcharts";
-import View from "ol/View";
-import { ZoomToExtent } from 'ol/control';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
   xaxis: ApexXAxis;
   stroke: ApexStroke;
-  tooltip: ApexTooltip;
-  dataLabels: ApexDataLabels;
+  labels: number[];
+  title: ApexTitleSubtitle;
 };
+
+import View from "ol/View";
+import { ZoomToExtent } from 'ol/control';
+
+
 
 @Component({
   selector: 'app-dashboard',
@@ -90,57 +84,174 @@ export type ChartOptions = {
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  @ViewChild("chart-wrapper") chart: ChartComponent;
-  public chartOptions: Partial<ChartOptions>;
-
+  thematiques: Object[];
+  legendLine = new Set<string>();
+  legendPoint = new Set<string>();
+  legendPointFIltred: any[] = [];
   map: Map;
   view: View;
   mapPrevLine: Map;
+  mediumLowPointsrc: any;
+  mediumLowPoint: olVectorLayer<any>;
+  SourceMAR: any;
+  SrcLinear_events: any;
+  province: any;
+  MAR2: any;
+  linear_events: any;
+  ressores: any;
+  colorsd: any;
+  SrcPoint_events: any;
+  accident: any;
+  color = "red"
+  boeder = "solid black 10px"
+  radius = "50%"
+  width = "25px"
+  height = "25px"
+  pointStyle = new PointStyle(10, "#f30707", "#d9d9d9", 5);
+  Routes: LayerGroup;
   
-  constructor() { 
+  @ViewChild("chart") chart: ChartComponent;
+  public chartOptions: Partial<ChartOptions>;
+  @ViewChild("chart2") chart2: ChartComponent;
+  public chartOptions2: Partial<ChartOptions>;
+  lineEvent: any;
+  ponctuels: any;
+  agents: any;
+  kiloRoute: any;
+  events: any;
+
+  constructor(private lrsServiceService: LrsServiceService,) { 
+    this.getEventTtype();
+    this.getgraphLinear();
+    this.getgraphponctuel();
+    this.getinfo();
+    this.getEvent();
+
     this.chartOptions = {
       series: [
         {
-          name: "series1",
-          data: [31, 40, 28, 51, 42, 109, 100]
+          name: "Peter",
+          data: [5, 5, 10, 8, 7, 5, 4, null, null, null, 10, 10,]
         },
         {
-          name: "series2",
-          data: [11, 32, 45, 32, 34, 52, 41]
+          name: "Johnny",
+          data: [
+            10,
+            15,
+            null,
+            12,
+            null,
+            10,
+            12,
+            15,
+            null,
+            null,
+            12,
+            null,
+           
+          ]
+        },
+        {
+          name: "David",
+          data: [
+            null,
+            null,
+            null,
+            null,
+            3,
+            4,
+            1,
+            3,
+            4,
+            6,
+            7,
+            9,
+           
+          ]
         }
       ],
       chart: {
         height: 350,
-        type: "area"
-      },
-      dataLabels: {
-        enabled: false
+        type: "line",
+        zoom: {
+          enabled: false
+        },
+        animations: {
+          enabled: false
+        }
       },
       stroke: {
-        curve: "smooth"
+        curve: "straight"
       },
-      xaxis: {
-        type: "datetime",
-        categories: [
-          "2018-09-19T00:00:00.000Z",
-          "2018-09-19T01:30:00.000Z",
-          "2018-09-19T02:30:00.000Z",
-          "2018-09-19T03:30:00.000Z",
-          "2018-09-19T04:30:00.000Z",
-          "2018-09-19T05:30:00.000Z",
-          "2018-09-19T06:30:00.000Z"
-        ]
-      },
-      tooltip: {
-        x: {
-          format: "dd/MM/yy HH:mm"
-        }
+      labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+      title: {
+        text: "Evenements Lineaire"
       }
     };
 
+    this.chartOptions2 = {
+      series: [
+        {
+          name: "Peter",
+          data: [5, 5, 10, 8, 7, 5, 4, null, null, null, 10, 10,]
+        },
+        {
+          name: "Johnny",
+          data: [
+            10,
+            15,
+            null,
+            12,
+            null,
+            10,
+            12,
+            15,
+            null,
+            null,
+            12,
+            null,
+           
+          ]
+        },
+        {
+          name: "David",
+          data: [
+            null,
+            null,
+            null,
+            null,
+            3,
+            4,
+            1,
+            3,
+            4,
+            6,
+            7,
+            9,
+           
+          ]
+        }
+      ],
+      chart: {
+        height: 350,
+        type: "line",
+        zoom: {
+          enabled: false
+        },
+        animations: {
+          enabled: false
+        }
+      },
+      stroke: {
+        curve: "straight"
+      },
+      labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+      title: {
+        text: "Evenements Ponctuel"
+      }
+    };
 
-
-  }
+    }
 
   public datasets: any;
   public data: any;
@@ -149,85 +260,13 @@ export class DashboardComponent implements OnInit {
   public clicked1: boolean = false;
 
   ngOnInit() {
-
-    this.datasets = [
-      [0, 20, 10, 30, 15, 40, 20, 60, 60],
-      [0, 20, 5, 25, 10, 30, 15, 40, 40]
-    ];
-    this.data = this.datasets[0];
-
-
-   var chartOrders = document.getElementById('chart-orders');
-
-    parseOptions(Chart, chartOptions());
-
-
-    var ordersChart = new Chart(chartOrders, {
-      type: 'bar',
-      options: chartExample2.options,
-      data: chartExample2.data
-    });
-    
-    var options = {
-      series: [{
-      name: 'series1',
-      data: [31, 40, 28, 51, 42, 109, 100]
-    }, {
-      name: 'series2',
-      data: [11, 32, 45, 32, 34, 52, 41]
-    }],
-      chart: {
-      height: 350,
-      type: 'area'
-    },
-    dataLabels: {
-      enabled: false
-    },
-    stroke: {
-      curve: 'smooth'
-    },
-    xaxis: {
-      type: 'datetime',
-      categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z"]
-    },
-    tooltip: {
-      x: {
-        format: 'dd/MM/yy HH:mm'
-      },
-    },
-    };
-
- 
-
-
-    var chartSales = document.getElementById('chart-sales');
-
-    this.salesChart = new Chart(chartSales, {
-			type: 'line',
-			options: chartExample1.options,
-			data: chartExample1.data
-		});
-
-
-
     this.view=   new View({
-      center:[-770481.4772813218, 4029184.359656903],
+      center:[-6.8233653,34.0139846],
       zoom: 10,
-      // projection: "EPSG:3857",
+      projection: "EPSG:4326",
     });
 
-    
-   
-
-  }
-
-
-  public updateOptions() {
-    this.salesChart.data.datasets[0].data = this.data;
-    this.salesChart.update();
-  }
-
-  ngAfterViewInit() {
+    // edit option
     console.log("hello world")
     this.mapPrevLine = new Map({
       target: "mapPrevLine",
@@ -238,27 +277,356 @@ export class DashboardComponent implements OnInit {
         new ScaleLine({ bar: true }),
           new ZoomToExtent({
             extent: [
-              813079.7791264898, 5929220.284081122, 848966.9639063801,
-              5936863.986909639,
+              -6.7534427,34.1018165,-6.4705178,33.9716707
             ],
           }),
       ],
       view:this.view
     });
+   
+      this.mapPrevLine.addLayer(new TileLayer({
+        source: new XYZ({
+          url: 'http://mt0.google.com/vt/lyrs=y&hl=en&x={x}&y={y}&z={z}'
+        })
+      }));
+
+// working
+this.SourceMAR = new VectorSource({
+  format: new GeoJSON(),
+  
+  url:  (extent) => {
+    return ("http://localhost:8081/geoserver/i2singineerie/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=i2singineerie:LRS_ROUTES&outputFormat=application/json");
+  },
+  strategy: bboxStrategy,
+  
+});
+
+this.SrcLinear_events = new VectorSource({
+  format: new GeoJSON(),
+  url:  (extent)=> {
+    return (
+      "http://localhost:8081/geoserver/i2singineerie/ows?service=WFS&" +  
+      "version=1.1.0&request=GetFeature&typename=i2singineerie:LINEAR_EVENT&outputFormat=application/json"
+    );
+  },
+  strategy: bboxStrategy,
+});
+
+
+this.MAR2 = new VectorLayer({
+  title: "Lrsroutes",
+  source: this.SourceMAR,
+  style: (feature, resolution) => {
+    return new Style({
+      stroke: new Stroke({
+        color: "#4d4d4d",
+        width: 2,
+      }),
+      
+    });
+  },
+} as BaseLayerOptions);
+
+
+this.province = new TileLayer({
+  title: "Province",
+  source: new TileWMS({
+    url: "http://localhost:8081/geoserver/i2singineerie/wms",
+    params: { LAYERS: "i2singineerie:PROVINCE", TILED: true },
+    serverType: "geoserver",
+    crossOrigin: 'anonymous',
+    // Countries have transparency, so do not fade tiles:
+    transition: 0,
+  }),
+} as BaseLayerOptions);
+
+this.linear_events = new VectorLayer({
+  title: "linear_events",
+       source: this.SrcLinear_events,
+  style: (feature, resolution) => {
+    this.ressores
+    this.colorsd
+
+    
+
+    // console.error(resolution)
+    var event_type_id = feature.get("EVENT_TYPE_ID");
+
+    if (event_type_id) {
+      for (let i = 0; i < this.thematiques.length; i++) {
+        // console.warn(this.thematiques[i]['id'] , event_type_id)
+        
+
+        if (this.thematiques[i]["id"] == event_type_id) {
+
+          if(this.thematiques[i]["style"]){
+            if(0.002362464157453313>resolution && resolution >0.00008575184020914552){
+              this.ressores = 6;
+              this.colorsd = <ColorLike>(JSON.parse(this.thematiques[i]["style"]).remplissageC)
+              
+            }
+            if(0.002362464157453313<resolution){
+              this.ressores = 8
+              this.colorsd = <ColorLike>(JSON.parse(this.thematiques[i]["style"]).remplissageC)
+             
+            }
+            if(0.00008575184020914552>resolution){
+              this.ressores = JSON.parse(this.thematiques[i]["style"]).strock
+              this.colorsd = <ColorLike>(JSON.parse(this.thematiques[i]["style"]).colorBor)
+              
+            }
+           
+              this.legendLine.add(JSON.stringify({
+                fill:JSON.parse(this.thematiques[i]["style"]).remplissageC,
+                radius:"5px solid " + this.colorsd,
+                thematique:event_type_id
+              }))
+ 
+          return new Style({
+            fill: new Fill({
+              color: <ColorLike>(
+                JSON.parse(this.thematiques[i]["style"]).remplissageC
+              ),
+            }),
+
+            stroke: new Stroke({
+              color: this.colorsd ,
+              width:this.ressores,
+            })
+          });
+
+
+        } else if(!this.thematiques[i]["style"]){
+          return new Style({
+            fill: new Fill({ color: "#eeeeee" }),
+
+            stroke: new Stroke({
+              color: "#eeeeee",
+              width: 2,
+            })
+          });
+
+        }
+        }
+      }
+    } else
+      return new Style({
+        fill: new Fill({ color: "#eeeeee" }),
+
+        stroke: new Stroke({
+          color: "#eeeeee",
+          width: 2,
+        }),
+       
+      });
+  },
+} as BaseLayerOptions);
+
+this.SrcPoint_events = new VectorSource({
+  format: new GeoJSON(),
+  url:  (extent)=> {
+    return (
+      "http://localhost:8081/geoserver/i2singineerie/ows?service=WFS&" +
+      "version=1.1.0&request=GetFeature&typename=i2singineerie:PONCTUEL_EVENTS&outputFormat=application/json"
+    );
+  },
+  strategy: bboxStrategy,
+});
+
+this.accident = new VectorLayer({
+  title: "PONCTUEL_EVENTS",
+  source: this.SrcPoint_events,
+  style: (feature, resolution) => {
+    var event_type_id = feature.get("EVENT_TYPE_ID");
+
+    if (event_type_id) {
+      for (let i = 0; i < this.thematiques.length; i++) {
+        // console.log(this.thematiques[i]["id"], event_type_id);
+
+        if (this.thematiques[i]["id"] == event_type_id) {
+          if (this.thematiques[i]["pointStyle"]) {
+           
+            this.legendPoint.add(
+              JSON.stringify({
+              fill:JSON.parse(this.thematiques[i]["pointStyle"]).color,
+              radius:"5px solid " + JSON.parse(this.thematiques[i]["pointStyle"]).Ocolor,
+              thematique:event_type_id
+            }))                
+
+            return new Style({
+              image: new CircleStyle({
+                radius: JSON.parse(this.thematiques[i]["pointStyle"])
+                  .radius,
+                fill: new Fill({
+                  color: <ColorLike>(
+                    JSON.parse(this.thematiques[i]["pointStyle"]).color
+                  ),
+                }),
+                stroke: new Stroke({
+                  color: <ColorLike>(
+                    JSON.parse(this.thematiques[i]["pointStyle"]).Ocolor
+                  ),
+                  width: JSON.parse(this.thematiques[i]["pointStyle"])
+                    .strokWidht,
+                }),
+              })
+            });
+          } else if (!this.thematiques[i]["pointStyle"]) {
+            return new Style({
+              image: new CircleStyle({
+                radius: this.pointStyle.radius,
+                fill: new Fill({ color: <ColorLike>"#eeeeee" }),
+                stroke: new Stroke({
+                  color: <ColorLike>"#eeeeee",
+                  width: 3,
+                }),
+              })
+            });
+          }
+        }
+      }
+    }
+
+    return new Style({
+      image: new CircleStyle({
+        radius: this.pointStyle.radius,
+        fill: new Fill({ color: <ColorLike>"#eeeeee" }),
+        stroke: new Stroke({ color: <ColorLike>"#eeeeee", width: 3 }),
+      }),
+      
+    });
+  },
+} as BaseLayerOptions);
+
+this.Routes = new LayerGroup({
+  title: "Les Routes",
+  layers: [this.MAR2, this.linear_events, this.accident],
+} as GroupLayerOptions);
+
+
+var linear_events1 = new LayerGroup({
+  title: "condition de la route",
+  layers: [this.linear_events],
+} as GroupLayerOptions);
+var accidents1 = new LayerGroup({
+  title: "les accidents",
+  layers: [this.accident],
+} as GroupLayerOptions);
+this.mapPrevLine.addLayer(this.province);
+// this.map.addLayer(this.vectorLayer);
+
+this.mapPrevLine.addLayer(linear_events1);
+
+this.mapPrevLine.addLayer(accidents1);
+this.mapPrevLine.addLayer(this.Routes);
+
     
 
 
-    this.mapPrevLine.on('singleclick',(evt: any) => {
-console.log(evt.coordinate)
 
-    })
+  } 
 
-   
-      this.mapPrevLine.addLayer(new LayerTile({
-        visible: true,
-        source: new OSM(),
-      } ));
-    
-   
+getgraphLinear(){
+  this.lrsServiceService.getgraphLinear().subscribe(
+    (res) => {
+      var cc = 0;
+      var rees = [];
+      for(let i = 0;i<res.length;i++){
+        cc = 0;
+        for(let j = 0;j<res[i]['data'].length;j++){
+           console.log(res[i],res[i]['data'][j])
+          if(res[i]['data'][j] == null){
+            cc ++;
+          }
+        }
+        // console.log('c',cc)
+        if (cc != 12){
+          rees.push(res[i])
+        }
+
+      }
+      this.chartOptions.series = <ApexAxisChartSeries> <unknown>rees
+
+    },
+    (err: HttpErrorResponse) => {
+    }
+  );
+
+}
+getgraphponctuel(){
+  this.lrsServiceService.getgraphponctuel().subscribe(
+    (res) => {
+      var cc = 0;
+      var rees = [];
+      for(let i = 0;i<res.length;i++){
+        cc = 0;
+        for(let j = 0;j<res[i]['data'].length;j++){
+           console.log(res[i],res[i]['data'][j])
+          if(res[i]['data'][j] == null){
+            cc ++;
+          }
+        }
+        // console.log('c',cc)
+        if (cc != 12){
+          rees.push(res[i])
+        }
+
+      }
+      this.chartOptions2.series = <ApexAxisChartSeries> <unknown>rees
+
+    },
+    (err: HttpErrorResponse) => {
+    }
+  );
+
+}
+
+getinfo(){
+  this.lrsServiceService.getinfo().subscribe(
+    (res) => {
+      this.lineEvent =  Math.floor(res['kiloLinear']);
+      this.ponctuels = res['nbPoint'];
+      this.kiloRoute = Math.floor(res['kiloRoute']);
+    },
+    (err: HttpErrorResponse) => {
+    }
+    );
+}
+
+returnJSon(te){
+  // console.log(te)
+  return JSON.parse(te)
+
+}
+returnProvinceById(id){
+  // console.log(this.events)
+  for(let t = 0 ; t<this.events.length;t++){
+    if(this.events[t].id === id){
+      return this.events[t].name
+    }
   }
+}
+
+
+getEvent(){
+  this.lrsServiceService.getEventypes().subscribe(
+    (res) => {
+      this.events = res;},
+      
+      (err: HttpErrorResponse) => {
+      }
+      )}
+  
+
+  getEventTtype() {
+    this.lrsServiceService.getEventypes().subscribe(
+      (res) => {
+        this.thematiques = res;
+        // console.warn(this.thematiques);
+      },
+      (err: HttpErrorResponse) => {
+      }
+    );
+  }
+
 }

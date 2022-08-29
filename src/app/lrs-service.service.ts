@@ -210,6 +210,22 @@ public getRouteNames():Observable<Array<Object>>{
    console.log("getRouteNames",this.options1)
   return this.httpClient.get<Array<Object>>(`${this.apiUrl}/LrsEvent/getRouteNames`,this.options1);
 }
+
+public getgraphLinear():Observable<Array<Object>>{
+   
+  return this.httpClient.get<Array<Object>>(`${this.apiUrl}/LrsEvent/createGraph`,this.options1);
+}
+public getgraphponctuel():Observable<Array<Object>>{
+   
+  return this.httpClient.get<Array<Object>>(`${this.apiUrl}/LrsEvent/getgraphponctuel`,this.options1);
+}
+
+public getinfo():Observable<Object>{
+   
+  return this.httpClient.get<Object>(`${this.apiUrl}/LrsEvent/getinfo`,this.options1);
+}
+
+
 public getEventypepByID(id:number):Observable<Object>{
   return this.httpClient.post<Object>(`${this.apiUrl}/LrsEvent/getEventypepByID`,id,this.options1);
 }
