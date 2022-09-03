@@ -1,0 +1,148 @@
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
+
+<div class="main-content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header card-header-danger">
+              <h4 class="card-title">Synoptique</h4>
+              <p class="card-category">Analyser la présentation graphique générée par notre application</p>
+            </div>
+           
+  
+            <div class="card-body">
+            
+                
+             
+<div class="container">
+    <div class="row">
+        
+        <div class="col-md">
+            <label> Route  </label>
+            <mat-form-field appearance="fill">
+              <mat-label>Choisie la route</mat-label>
+              <mat-select [(value)]="selectedRoute" (selectionChange)="onchange($event.value)">
+                
+                <mat-option *ngFor="let the of routes" value={{the}} >{{the}}</mat-option>
+             
+              </mat-select>
+            </mat-form-field>
+
+        </div>
+        <div class="col-md">
+      
+          <label> Evénemenent  </label>
+            <mat-form-field appearance="fill">
+              <mat-label>Evénemenent</mat-label>
+              <mat-select [(value)]="selectedEvent1" (selectionChange)="selectedEventF1($event.value)">
+                <mat-option
+                              *ngFor="let the of thematique"
+                              value="{{ the }}"
+                              >{{ the }}</mat-option
+                            >
+              </mat-select>
+            </mat-form-field>
+        
+        </div>
+        <div class="col-md">
+            <label> Sens  </label>
+            <mat-form-field appearance="fill">  
+              <mat-label>Sens</mat-label>
+              <mat-select [(value)]="selectedVoie" (selectionChange)="onchangeVoie($event.value)">
+                
+                <mat-option  value=1 >1</mat-option>
+                <mat-option  value=2 >2</mat-option>
+             
+              </mat-select>
+            </mat-form-field>
+
+        </div>
+        
+
+        </div>
+        <div class="row">
+          <div class="col-md">
+            <label> pkd  </label>
+            <mat-form-field appearance="fill">
+              <mat-label>pkd</mat-label>
+              <mat-select [(value)]="value1" (selectionChange)="valueRequette1($event.value)">
+                <mat-option value={{op}} *ngFor="let op of valueTOs1">{{op}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-md" *ngIf="isAnalyse()">
+            <label> Attribut</label>
+            <mat-form-field appearance="fill">
+              <mat-label>Attribut</mat-label>
+              <mat-select [(value)]="selectedAttribut1" (selectionChange)="selectedAttribute1F($event.value)">
+                <mat-option
+                              *ngFor="let the of Attributes1"
+                              value="{{ the.champ_db_stock }}"
+                              >{{ the.champs_event }}</mat-option
+                            >
+              </mat-select>
+            </mat-form-field>
+          </div>  
+          
+          <div class="col-md" *ngIf="!advancedIshere()">
+            <label> video  </label>
+            <mat-form-field appearance="fill">
+              <mat-label>video</mat-label>
+              <mat-select [(value)]="selectedEvent" (selectionChange)="getMyvideo($event.value)">
+                <mat-option
+                       *ngFor="let v of videos"
+                              value="{{ v.name }}"
+                              >{{ v.name }}</mat-option
+                            >
+              </mat-select>
+            </mat-form-field>
+          </div>  
+          <div class="col-md">
+            <label> pkf  </label>
+            <mat-form-field appearance="fill">
+              <mat-label>pkf</mat-label>
+              <mat-select [(value)]="value2" (selectionChange)="valueRequette2($event.value)">
+                <mat-option value={{op}} *ngFor="let op of valueTOs2">{{op}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div> 
+        </div>
+    </div>
+</div>
+<div>
+    
+</div>
+
+<div id="chart" *ngIf="advancedIshere()">
+  <apx-chart
+    [series]="chartOptions.series"
+    [chart]="chartOptions.chart"
+    [fill]="chartOptions.fill"
+    [legend]="chartOptions.legend"
+    [plotOptions]="chartOptions.plotOptions"
+    [xaxis]="chartOptions.xaxis"
+  ></apx-chart>
+</div>
+
+
+
+
+<button *ngIf="!advancedIshere()" mat-raised-button color="primary"  (click)="map.show()" (click)="graph.show()"
+(click)="video.show()"
+  (click)="previewLineData()">Analyser</button>
+
+
+
+            </div>
+
+
+
+
+
+            </div>
+            </div>
+            </div>
+            </div>
+           
+

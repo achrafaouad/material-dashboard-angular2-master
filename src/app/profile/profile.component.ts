@@ -1,4 +1,3 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -9,35 +8,32 @@ import { compareAsc, format } from 'date-fns'
   templateUrl: './typography.component.html',
   styleUrls: ['./typography.component.css']
 })
-export class TypographyComponent implements OnInit { 
-  users:any[];
+export class ProfileComponent implements OnInit { 
+  profiles:any[];
   province: any;
   provinces: string[];
   provinceTosave: any;
   role: any;
   object: any;
-  profiles:any =[];
-  selectedProfil
   constructor(private lrsServiceService:LrsServiceService,private router: Router,private route: ActivatedRoute) { 
     this.getProvinces();
-    this.getProfiles();
   }
 
   ngOnInit() {
     // this.users = this.lrsServiceService.getAllUsers();
-    this.getusers();
+    this.getprofiles();
   }
 
-  getusers(){
-    this.lrsServiceService.getUsers().subscribe(res=>{
+  getprofiles(){
+    this.lrsServiceService.getprofiles().subscribe(res=>{
 
 
       for(let i = 0;i<res.length;i++){
-        res[i]['lastConnect'] = format(new Date(res[i]['lastConnect']), 'yyyy-MM-dd');
-        res[i]['birthday'] = format(new Date(res[i]['birthday']), 'yyyy-MM-dd');
+        if(res[i]['dateAjout'])
+        res[i]['dateAjout'] = format(new Date(res[i]['dateAjout']), 'yyyy-MM-dd');
       }
-      this.users = res;
-      this.lrsServiceService.users = res;
+      this.profiles = res;
+      this.lrsServiceService.profiles = this.profiles;
 
        console.log(res)
     
@@ -59,10 +55,10 @@ export class TypographyComponent implements OnInit {
     if(this.role == 'simple_user') 
     this.object['roles'] = [{id: 1, name: 'simple_user'}]
     else this.object['roles'] = [{id: 2, name: 'Role_Admin'}]
-    this.object['profil'] = this.selectedProfil
+    this.object['province'] = this.provinceTosave
 
 this.lrsServiceService.saveUser(this.object).subscribe(res=>{
-  this.getusers();
+  this.getprofiles();
 },err=>console.log(err))
   }
 
@@ -71,17 +67,22 @@ this.lrsServiceService.saveUser(this.object).subscribe(res=>{
     
   }
   onchangeP(value){
-    // console.log(value)
-    
-    for(let i =0;i<this.profiles.length;i++){
-      if(this.profiles[i].id == value){
-        this.selectedProfil  = this.profiles[i]
-      }
-    }
+    // console.log(value) 
+    this.province  = value.toString();
+
+    console.log(this.province);
     
 
-    console.log(this.selectedProfil);
-  
+
+      this.lrsServiceService.getProvinceByName(this.province).subscribe(
+        (res)=>{
+          console.warn(res)
+          this.provinceTosave = res;
+          // console.log(res);
+        }
+        ,err=>{
+          console.log(err);
+      })
   }
 
 
@@ -93,10 +94,9 @@ this.lrsServiceService.saveUser(this.object).subscribe(res=>{
     })
   }
 
-  getProfiles(){
-    this.lrsServiceService.getprofiles().subscribe(res=>{
-      this.profiles = res;
-    },(err:HttpErrorResponse)=>{console.log(err)})
+
+  addprofile(){
+    this.router.navigate(['/addprofile'])
   }
   
 

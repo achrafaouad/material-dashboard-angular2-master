@@ -1,0 +1,124 @@
+<div class="main-content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header card-header-danger">
+              <h4 class="card-title">Ajouter un nouveau Profile</h4>
+              <p class="card-category">Ici vous pouvez ajouter un nouveau profile</p>
+            </div>
+           
+            <mat-stepper [linear]="false" #stepper>
+              <mat-step >
+                <form>
+                  <ng-template matStepLabel>Nom et description</ng-template>
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-3">
+
+                      </div>
+                      <div class="col-6">
+                        <mat-form-field appearance="fill">
+                          <mat-label>Name</mat-label>
+                          
+                                <input  matInput placeholder="Last name, First name" formControlName="firstCtrl"(change)="changeName($event)" required>
+      
+                        </mat-form-field>
+                      </div>
+                      <div class="col-3">
+
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-3">
+
+                      </div>
+                      <div class="col-6">
+                        <mat-form-field appearance="fill">
+                          <mat-label>Description</mat-label>
+                          
+                                <input  matInput placeholder="Description" formControlName="firstCtrl" (change)="changeDescription($event)" required>
+      
+                        </mat-form-field>
+                      </div>
+                      <div class="col-3">
+
+                      </div>
+                    </div>
+                  </div>
+                 
+                  <div>
+                    <button mat-button matStepperNext>suivant</button>
+                  </div>
+                </form>
+              </mat-step>
+              <mat-step  label="accès au données">
+                <form >
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-3">
+
+                      </div>
+                      <div class="col-6">
+                        <div class="card">
+                          <div class="card-body">
+                            <div class="container">
+                              <div class="row" *ngFor="let pro of provinces">
+                                <div class="col-10">
+                                  {{pro}}
+                                </div>
+                                <div class="col-2">
+                                  <mat-slide-toggle color="primary" (change)="addedProvince(pro)">
+                                  </mat-slide-toggle>
+                                </div>  
+                              </div>
+                            </div>
+                            </div>
+                            </div>
+                      </div>
+                      <div class="col-3">
+
+                      </div>
+                    </div>
+                  </div>
+                 
+                  <div>
+                    <div class="col-lg-3"></div>
+                    <button mat-button matStepperPrevious>avant</button>
+                    <button mat-button matStepperNext>suivant</button>
+                  </div>
+                </form>
+              </mat-step>
+              <mat-step>
+                <ng-template matStepLabel>IHM</ng-template>
+                <div class="card-body">
+                  <p style="text-align:center">Functionalities</p>
+                  <hr>
+
+                  <div class="container">
+                    <div class="row" *ngFor="let pro of fonctionality">
+                      <div class="col-8">
+                        {{pro}}
+                      </div>
+                      <div class="col-4">
+                        <mat-slide-toggle color="primary"  (change)="addedihm(pro)">
+                        </mat-slide-toggle>
+                      </div>
+                    </div>
+                    <br>
+                    
+                    
+                   
+                    
+                  </div>
+                  </div>
+                <div>
+                  <button mat-button matStepperPrevious>avant</button>
+                  <button mat-button (click)="submit()">Confirmer</button>
+                </div>
+              </mat-step>
+            </mat-stepper>
+      </div>
+      </div>
+      </div>
+      </div>

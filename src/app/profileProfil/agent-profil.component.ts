@@ -21,10 +21,10 @@ import {ZoomToExtent, defaults as defaultControls} from 'ol/control';
   styleUrls: ['./agent-profil.component.scss']
 })
 
-export class AgentProfilComponent implements OnInit {
+export class ProfilProfilComponent implements OnInit {
   id:Number;
   mapPrevLine: Map;
-  user: any;
+  // user: any;
   format = new GeoJSON();
   dataLinePrev: String[] = [];
   mediumLowAnnsrc: any;
@@ -40,6 +40,7 @@ export class AgentProfilComponent implements OnInit {
 
   })
   view: View;
+  profile: any;
   
   constructor( private lrsServiceService :LrsServiceService, private route:ActivatedRoute,private router: Router) { }
 
@@ -92,13 +93,13 @@ export class AgentProfilComponent implements OnInit {
     this.route.params.subscribe((params:Params)=>{ 
       this.id= +params['id'];
       console.log(this.id);
-      this.user = this.lrsServiceService.getUserByid(this.id);
+      this.profile = this.lrsServiceService.getprofilesbyID(this.id);
       // this.agent = this.lrsServiceService.getuserById(this.id);
     
       this.dataLinePrev = [];
       
-     if(this.user.profil.provinces.length>0){
-      this.lrsServiceService.getProvincesJson(this.user.profil.provinces).subscribe((res)=>{
+     if(this.profile.provinces.length>0){
+      this.lrsServiceService.getProvincesJson(this.profile.provinces).subscribe((res)=>{
        
         this.dataLinePrev= res;
        
@@ -125,12 +126,7 @@ export class AgentProfilComponent implements OnInit {
   
   }
 
-  hasprofile(){
-    if(this.user.profil){
-      return true
-    }
-    return false
-  }
+
 
   navigateToAccount(){ 
     console.log("hello")

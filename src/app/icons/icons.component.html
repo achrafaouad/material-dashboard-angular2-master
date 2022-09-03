@@ -105,6 +105,17 @@
      
 
 
+        
+        
+        
+        <label> Operation: </label>
+        <mat-form-field appearance="fill">
+          <mat-label>choisie un opérateur</mat-label>
+          <mat-select [(value)]="operateur" (selectionChange)="Opp($event.value)">
+            <mat-option value={{op}} *ngFor="let op of operateurs">{{op}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <hr>
         <table>
           <thead>
             <th></th>
@@ -120,16 +131,6 @@
             </tr>
 
         </table>
-        <hr>
-        
-        <label> Operation: </label>
-        <mat-form-field appearance="fill">
-          <mat-label>choisie un opérateur</mat-label>
-          <mat-select [(value)]="operateur" (selectionChange)="Opp($event.value)">
-            <mat-option value={{op}} *ngFor="let op of operateurs">{{op}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-
           
         <label for="requetteType">Requette :</label>
         <mat-radio-group aria-label="Select an option" id="requetteType" [(ngModel)]="selectRequettype">

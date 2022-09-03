@@ -1,0 +1,96 @@
+
+
+        
+
+      .side-bar .menu{
+        width: 100%;
+        
+        }
+        
+        .sidebar-wrapper{
+            background-color:rgba(255,255,255,0.1);
+            color:white;
+        }
+        .side-bar .menu .itemSidebare{
+            width: 100%;
+            position: relative;
+            cursor:pointer
+            }
+        
+            .side-bar .menu .itemSidebare a{
+                color:black;
+                font-size: 13px;
+                text-decoration: none;
+                display: block;
+                padding:5px 30px; 
+                line-height: 60px;
+                } 
+        
+        
+                .side-bar .menu .itemSidebare a:hover{
+               
+                    background: #31bbcf;
+                    transition:0.3s ease;
+                    
+                    
+                    } 
+        
+                .side-bar .menu .itemSidebare i{
+                    margin-left: 15px;
+                    
+                    } 
+                    
+                .side-bar .menu .itemSidebare a .dropdown1{
+                    position:absolute;
+                    right:15px;
+                    transition: 0.3 ease;
+                    } 
+                .side-bar .menu .itemSidebare a .dropdown2{
+                    position:absolute;
+                    right:15px;
+                    transition: 0.3 ease;
+                    } 
+                .side-bar .menu .itemSidebare a .dropdown3{
+                    position:absolute;
+                    right:15px;
+                    transition: 0.3 ease;
+                    } 
+                .side-bar .menu .itemSidebare a .dropdown0{
+                    position:absolute;
+                    right:15px;
+                    transition: 0.3 ease;
+                    } 
+                .sub-item{
+                 background:  rgb(0,0,0,0.1);
+                 border-top-right-radius: 20px;
+                 border-bottom-right-radius: 20px;
+                 margin: 0 10px 5px 0;
+                    } 
+                .side-bar .menu .itemSidebare .submenu2 a{
+                 padding-left: 80px;
+                    }
+
+                .rotate{
+                    transform:rotate(90deg)
+                }
+                .side-bar .menu .itemSidebare .submenu1 a{
+                 padding-left: 80px;
+                    }
+
+                .rotate{
+                    transform:rotate(90deg)
+                }
+                .side-bar .menu .itemSidebare .submenu3 a{
+                 padding-left: 80px;
+                    }
+
+                .rotate{
+                    transform:rotate(90deg)
+                }
+                .side-bar .menu .itemSidebare .submenu0 a{
+                 padding-left: 80px;
+                    }
+
+                .rotate{
+                    transform:rotate(90deg)
+                }

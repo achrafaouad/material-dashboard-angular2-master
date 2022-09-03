@@ -6,6 +6,7 @@ import { AdminLayoutRoutes } from './admin-layout.routing';
 import { DashboardComponent } from '../../dashboard/dashboard.component';
 import { UserProfileComponent } from '../../user-profile/user-profile.component';
 import { TableListComponent } from '../../table-list/table-list.component';
+import { TableListComponentPonctuel } from '../../table-list-ponctuel/table-list-ponctuel.component';
 import  DialogContentExampleDialog from '../../table-list/DialogContentExampleDialog';
 
 import { TypographyComponent } from '../../typography/typography.component';
@@ -34,6 +35,8 @@ import {MatCardModule} from '@angular/material/card';
 import { AgGridModule } from 'ag-grid-angular';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { SynoptiqueComponent } from 'app/synoptique/synoptique.component';
+import { SynoptiqueAnalyseComponent } from 'app/synoptiqueAnalyse/synoptique_analyse.component';
+import { SynoptiqueMultiComponent } from 'app/synoptiqueMultiRessource/synoptique_multi.component';
 import { NgApexchartsModule } from "ng-apexcharts";
 import {MatIconModule} from '@angular/material/icon';
 import {WebcamModule} from 'ngx-webcam';
@@ -44,6 +47,9 @@ import { NgxSpinnerModule } from "ngx-spinner";
 import { NotificationService } from 'app/notification.service';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {MatTableModule} from '@angular/material/table';
+import { ProfileComponent } from 'app/profile/profile.component';
+import { NewProfile } from 'app/createProfile/NewProfile.component';
+import { ProfilProfilComponent } from 'app/profileProfil/agent-profil.component';
 
 @NgModule({
   imports: [  
@@ -82,6 +88,7 @@ import {MatTableModule} from '@angular/material/table';
     DashboardComponent,
     UserProfileComponent,
     TableListComponent,
+    TableListComponentPonctuel,
     AgentProfilComponent,
     TypographyComponent,
     IconsComponent,
@@ -91,8 +98,12 @@ import {MatTableModule} from '@angular/material/table';
     AgentsComponent,
     DialogContentExampleDialog,
     SynoptiqueComponent,
-    AgentProfilEditComponent
-
+    SynoptiqueAnalyseComponent,
+    SynoptiqueMultiComponent,
+    AgentProfilEditComponent,
+    ProfileComponent,
+    NewProfile,
+    ProfilProfilComponent
   ],
   providers: [LrsServiceService,JwtClientService,NotificationService]
 })

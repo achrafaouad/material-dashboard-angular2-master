@@ -18,62 +18,24 @@
         </div>
         <div class="card mt-3">
             <div class="card-body">
-              <p style="text-align:center">Functionalities</p>
+              <p style="text-align:center">Profil</p>
               <hr>
-              <div class="container">
-                <div class="row">
-                  <div class="col-8">
-                  Impression des cartes
-                  </div>
-                  <div class="col-4">
-                    <mat-slide-toggle color="primary">
-                    </mat-slide-toggle>
-                  </div>
-                </div>
-                <br>
-                <div class="row">
-                  <div class="col-8">
-                    Requête spatial/attributaire
-                  </div>
-                  <div class="col-4">
-                    <mat-slide-toggle color="primary">
-                    </mat-slide-toggle>
-                  </div>
+            
+              <mat-form-field appearance="fill">
+                <mat-label>Choisie le profil</mat-label>
+                <mat-select [(value)]="profiled" (selectionChange)="onchange($event.value)">
                   
-                </div>
-                <br>
-                <div class="row">
-                  <div class="col-8">
-                    Analyse du synoptique
-                  </div>
-                  <div class="col-4">
-                    <mat-slide-toggle color="primary">
-                    </mat-slide-toggle>
-                  </div>
-                </div>
-              </div>
+                  <mat-option *ngFor="let the of proflies" value={{the.id}} >{{the.name}}</mat-option>
+               
+                </mat-select>
+              </mat-form-field>
+            
               </div>
               </div>
       </div>
-      <div class="col-lg-4">
-        <div class="card">
-          <div class="card-body">
-            <div class="container">
-              <div class="row" *ngFor="let pro of provinces">
-                <div class="col-10">
-                  {{pro}}
-                </div>
-                <div class="col-2">
-                  <mat-slide-toggle color="primary" [checked]="checkedOrNot(pro)" (change)="addedProvince(pro)">
-                  </mat-slide-toggle>
-                </div>  
-              </div>
-            </div>
-            </div>
-            </div>
-            </div>
       
-      <div class="col-lg-4">
+      
+      <div class="col-lg-8">
         <div class="card">
           <div class="card-body">
             <form (ngSubmit)="onSubmit(f)" #f="ngForm" > 

@@ -18,10 +18,17 @@ export class LrsServiceService {
    volee = false;
    
   public users:any[] =[];
+  public profiles:any[] =[];
 
   public getUserByid(data){
     for(let i = 0;i<this.users.length;i++){
       if(this.users[i].id == data) {return this.users[i];}
+
+    }
+  }
+  public getprofilesbyID(data){
+    for(let i = 0;i<this.profiles.length;i++){
+      if(this.profiles[i].id == data) {return this.profiles[i];}
 
     }
   }
@@ -73,6 +80,10 @@ public getUsers():Observable<Array<Object>>{
   return this.httpClient.get<Array<Object>>(`${this.apiUrl}/LrsEvent/getUsers`,this.options1);
 }
 
+public getprofiles():Observable<Array<Object>>{
+  return this.httpClient.get<Array<Object>>(`${this.apiUrl}/LrsEvent/getprofiles`,this.options1);
+}
+
 
 public changePKByAtt(data):Observable<void>{
   return this.httpClient.post<void>(`${this.apiUrl}/LrsEvent/changePKByAtt`,data,this.options1);
@@ -90,6 +101,9 @@ public deleteByID(data):Observable<void>{
 
 public deleteByAtt(data):Observable<void>{
   return this.httpClient.post<void>(`${this.apiUrl}/LrsEvent/deleteByAtt`,data,this.options1);
+}
+public addProfil(data):Observable<void>{
+  return this.httpClient.post<void>(`${this.apiUrl}/LrsEvent/addprofil`,data,this.options1);
 }
 
 public addExistantEventoRoutes(data:any):Observable<void>{
@@ -135,6 +149,10 @@ public addParams(data):Observable<void>{
 public addSection(data):Observable<void>{
   return this.httpClient.post<void>(`${this.apiUrl}/LrsEvent/sectionAdd`,data,this.options1);
 }
+public profileByid(data):Observable<Object>{
+  return this.httpClient.post<Object>(`${this.apiUrl}/LrsEvent/profileByid`,data,this.options1);
+}
+
 public addSectioncsv(data):Observable<void>{
   return this.httpClient.post<void>(`${this.apiUrl}/LrsEvent/addSectioncsv`,data,this.options1);
 }
@@ -150,6 +168,10 @@ public addNewSection(data):Observable<void>{
 
 public addPointFromMap(data):Observable<void>{
   return this.httpClient.post<void>(`${this.apiUrl}/LrsEvent/addNewPointEvent`,data,this.options1);
+}
+
+public getByCoordEvent(data):Observable<number>{
+  return this.httpClient.post<number>(`${this.apiUrl}/LrsEvent/getByCoordEvent`,data,this.options1);
 }
 
 public addNewLineEventFromMap(data):Observable<void>{
@@ -198,6 +220,12 @@ public getAllEventParams():Observable<Array<Object>>{
 public createSynoptique(data):Observable<Array<Object>>{
   return this.httpClient.post<Array<Object>>(`${this.apiUrl}/LrsEvent/createSynoptique`,data,this.options1);
 }
+public createSynoptique2(data):Observable<Array<Object>>{
+  return this.httpClient.post<Array<Object>>(`${this.apiUrl}/LrsEvent/createSynoptique2`,data,this.options1);
+}
+public createSynoptique2Analyse(data):Observable<Array<Object>>{
+  return this.httpClient.post<Array<Object>>(`${this.apiUrl}/LrsEvent/createSynoptique2Analyse`,data,this.options1);
+}
 public createAdvancedSynoptique(data):Observable<Array<Object>>{
   return this.httpClient.post<Array<Object>>(`${this.apiUrl}/LrsEvent/createAdvancedSynoptique`,data,this.options1);
 }
@@ -232,8 +260,8 @@ public getEventypepByID(id:number):Observable<Object>{
 
 
 
-public getreference():Observable<string>{
-  return this.httpClient.get<string>(`${this.apiUrl}/LrsEvent/getreference`,this.options1);
+public getreference():Observable<boolean>{
+  return this.httpClient.get<boolean>(`${this.apiUrl}/LrsEvent/getreference`,this.options1);
 }
 
 

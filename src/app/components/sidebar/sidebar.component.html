@@ -1,4 +1,4 @@
-<div class="logo">
+<!-- <div class="logo">
     
         <div >
             <img src="https://www.i2singenierie.ma/wp-content/themes/I2sIngenierie/assets/img/logo.png"  width="200px"/>
@@ -62,4 +62,75 @@
             </a>
         </li>
     </ul>
+</div> -->
+
+
+<div class="logo">
+    
+            <img width="200px" src="https://www.i2singenierie.ma/wp-content/themes/I2sIngenierie/assets/img/logo.png"/>
+        
 </div>
+<div class="sidebar-wrapper">
+  <div *ngIf="isMobileMenu()">
+    
+  </div>
+    <!-- <ul class="nav">
+        <li routerLinkActive="active" *ngFor="let menuItem of menuItems" class="{{menuItem.class}} nav-item">
+            <a class="nav-link" [routerLink]="[menuItem.path]">
+                <i class="material-icons">{{menuItem.icon}}</i>
+                <p>{{menuItem.title}}</p>
+            </a>
+        </li>
+    </ul> -->
+    <div class="side-bar"> 
+    <div class="menu">
+    <div class="itemSidebare">
+
+        <div class="itemSidebare"><a href="#/dashboard"><i class="bi bi-pc-display-horizontal"></i>Table de board</a></div>
+        <div class="itemSidebare"><a href="#/user-profile"><i class="bi bi-person-fill"></i>Profil</a></div>
+        <div class="itemSidebare"><a href="#/maps"><i class="bi bi-map-fill"></i>Carte</a></div>
+        <div *ngIf="Profil()">
+        <a class="sub-btn0"><i class="bi bi-inbox-fill"></i>Administration <i class="bi bi-caret-right dropdown0" ></i></a>
+        <div class="submenu0">
+            <a href="#/typography" class="sub-item">Utilisateurs</a>
+            <a href="#/profile" class="sub-item">profils</a>
+            <a href="#/addprofile" class="sub-item">Ajouter un profil</a>
+        </div>
+    </div>
+        <div *ngIf="verifyProfil('chargement des données')">
+        <a class="sub-btn1"><i class="bi bi-inbox-fill"></i>Chargement <i class="bi bi-caret-right dropdown1" ></i></a>
+        <div class="submenu1">
+            <a href="#/table-list" class="sub-item">Evenements Lineaire</a>
+            <a href="#/table-list-ponctuel" class="sub-item">Evenements Ponctuel</a>
+            <a href="#/maps" class="sub-item">Manuel</a>
+            <a href="#/maps" class="sub-item">Instantané</a>
+        </div>
+        </div>
+
+        <div *ngIf="verifyProfil('Impression des cartes')">
+            <a class="sub-btn2"><i class="bi bi-printer-fill"></i>Impression <i class="bi bi-caret-right dropdown2" ></i></a>
+            <div class="submenu2">
+                <a href="#/maps" class="sub-item">Carte Instantanée</a>
+                <a href="#/notifications" class="sub-item">Carte avancée</a>
+            </div>
+        </div>
+        
+        <div *ngIf="verifyProfil('Analyse du synoptique')">
+        <a class="sub-btn3"><i class="bi bi-calendar4-range"></i>Synoptique <i class="bi bi-caret-right dropdown3" ></i></a>
+        <div class="submenu3">
+            <a href="#/synoptique" class="sub-item">simple</a>
+            <a href="#/synoptiqueAnalyseComponent" class="sub-item">Analyse</a>
+            <a href="#/synoptiqueMultiComponent" class="sub-item">Multi-sources</a>
+        </div>
+        </div>
+        
+    <div *ngIf="verifyProfil('Requête spatial/attributaire')">
+    <div class="itemSidebare"><a href="#/icons"><i class="bi bi-search"></i>Requêtes</a></div>
+    <!-- <div class="itemSidebare"><a href="#"><i class="bi bi-signpost-split-fill"></i>Référentiel</a></div> -->
+    <div class="itemSidebare"><a href="#"><i class="bi bi-arrow-bar-left"></i>Déconnection</a></div>
+    
+</div>
+</div>
+</div>
+</div>
+

@@ -14,231 +14,223 @@
           <div class="card-body">
 
             <mat-tab-group mat-align-tabs="center"  (selectedTabChange)="onTabChange($event)">
-              <mat-tab label="Evenements Lineairs">
+              
+              <mat-tab label="Evenements ponctuels" aria-label="myMapTab"> 
 
-
+                
                <br>
 
-                <mat-stepper orientation="vertical" [linear]="isLinear" #stepper>
-                  <mat-step [stepControl]="firstFormGroup">
-                    <form [formGroup]="firstFormGroup">
-                      <!-- <ng-template matStepLabel>Fill out your name</ng-template>
-                      <mat-form-field appearance="fill">
-                        <mat-label>Name</mat-label>
-                        <input matInput placeholder="Last name, First name" formControlName="firstCtrl" required >
-                      </mat-form-field> -->
-     
-        <div class="container">
-          <div class="row">
-            <div class="col-sm">
-              <h2>importer vos données sous format csv</h2>
-            </div>
+               <mat-stepper orientation="vertical" [linear]="isLinear" #stepper>
+                 <mat-step [stepControl]="firstFormGroup">
+                   <form [formGroup]="firstFormGroup">
+                     <!-- <ng-template matStepLabel>Fill out your name</ng-template>
+                     <mat-form-field appearance="fill">
+                       <mat-label>Name</mat-label>
+                       <input matInput placeholder="Last name, First name" formControlName="firstCtrl" required >
+                     </mat-form-field> -->
 
-            <div class="col-sm" style="rigth:10PX">
-              <button  mat-raised-button color="primary" (click)="dynamicDownloadJson()">CSV</button>
-            </div>
-          </div>
-          
-        </div>
-        
-   
+                     <div class="container">
+                      <div class="row">
+                        <div class="col-sm">
+                          <h2>importer vos données sous format csv</h2>
+                        </div>
+            
+                        <div class="col-sm" style="rigth:10PX">
+                          <button  mat-raised-button color="primary"  (click)="dynamicDownloadJson1()">CSV</button>
+                        </div>
+                      </div>
                       
+                    </div>
 <div class="csv-file-chooser-section"  [ngStyle]="{'color': verification  ? 'red' : 'blue'}">
 
-  <input type="file" #fileImportInput name="File Upload" id="csvFileUpload" (change)="fileChangeListener($event) "
-    accept=".csv"  formControlName="firstCtrl"  required/>
+ <input type="file" #fileImportInputP name="File Upload" id="csvFileUploadP" (change)="fileChangeListenerP($event) "
+   accept=".csv"  formControlName="firstCtrlP"  required/>
 
-    <p *ngIf="verification" style="color:red">
-      verifier si les columns de base nom de la route, pkd , existent 
-      </p>
+   <p *ngIf="verification" style="color:red">
+     verifier si les columns de base nom de la route, le PKEVENT , et la voie  existent 
+     </p>
 </div>
 
 <div style="align-items: center;" >
 
 
-  <button mat-button (click)="openDialog()">prévoir vos données</button>
-       
-  
+ <button mat-button (click)="openDialog()">prévoir vos données</button>
+      
+ 
 </div>
 
 
 
 
-                      <div>
-                        <button mat-button matStepperNext (click)="print()">Next</button>
-                      </div>
-                    </form>
-                  </mat-step>
-                  <mat-step [stepControl]="secondFormGroup">
-                    <form [formGroup]="secondFormGroup">
-                      <ng-template matStepLabel>Configuration</ng-template>
-                     <!--  -->
+                     <div>
+                       <button mat-button matStepperNext (click)="print()">Next</button>
+                     </div>
+                   </form>
+                 </mat-step>
+                 <mat-step [stepControl]="secondFormGroup">
+                   <form [formGroup]="secondFormGroup">
+                     <ng-template matStepLabel>Configuration</ng-template>
+                    <!--  -->
 
-                     <br>
-                     <div class="container">  
-    
-                      <h1> Configurer votre Evenements avec la base de données </h1>  
-                        
-                      <form [formGroup]="productForm" (ngSubmit)="onSubmit()">  
-                          
+                    <br>
+                    <div class="container">  
+   
+                     <h1> Configurer votre Evenements avec la base de données </h1>  
+                       
+                     <form [formGroup]="productFormP" (ngSubmit)="onSubmit()">  
                          
-                          <div class="container">
-                            <div class="row">
-                              <div class="col-5">
-                                <p> 
-                                  <label for="name">Evenement</label>  
-                                  <input type="text" id="name" name="name" formControlName="name" class="form-control" [(ngModel)]="thmeatiqueName">  
-                                </p> 
-                              </div>
-                              <div class="col-4">
-                                <section>
-                                  <span>thematique existant ?...</span>
-                                  <mat-button-toggle-group [formControl]="fontStyleControl" aria-label="Font Style">
-                                    <mat-button-toggle value="oui" >Oui</mat-button-toggle>
-                                    <mat-button-toggle value="non">Non</mat-button-toggle>
-                                  </mat-button-toggle-group>
-                                </section>
-                              </div>
-                              <div class="col-3">
-                                <button mat-raised-button color="primary" [disabled]="verificaionImportTh()" (click)="loadConfigration()" >importer la thematique</button>
-                              </div>
-                            </div>
-                             
-                          </div>
                         
-                        
-                        <table class="table table-bordered" formArrayName="quantities">  
-                          <tr>  
-                            <th colspan="2">Ajouter votre attributs:</th>  
-                            <th width="150px"><button type="button" (click)="addQuantity()" mat-raised-button color="primary">Add More</button></th>  
-                          </tr>  
-                          <tr *ngFor="let quantity of quantities().controls; let i=index" [formGroupName]="i">  
-                            <td>  
-                                Atrribut de la table  :  
-                    
-                                <select class="form-control" formControlName="attributes_table" id="exampleFormControlSelect1">
-                                  <option *ngFor="let head of headerTable" [value]="head">{{head}}</option>
-                                
-                                </select>   
-                            </td>  
-                            <td>  
-                                Attribut de la base de données:  
-                                
-                                  <select class="form-control" formControlName="attributes_toSaveOnDataBase" id="exampleFormControlSelect1">
-                                    <option>route_name</option>
-                                    <option>pkd</option>
-                                    <option>pkf</option>
-                                    <option>voie</option>
-                                    <option>c1</option>
-                                    <option>c2</option>
-                                    <option>c3</option>
-                                    <option>d1</option>
-                                    <option>d2</option>
-                                    <option>d3</option>
-                                    <option>t1</option>
-                                    <option>t2</option>
-                                    <option>t3</option>
-                                  </select> 
-                            </td>  
-
-                            <td>  
-                                <button (click)="removeQuantity(i)" mat-raised-button >Remove</button>  
-                            </td>  
-                          </tr>  
-                        </table>  
-                         
-                        <p  *ngIf="verifyAttributes();else notVerified"  style="color:green">Données bien verifié</p>
-                        <ng-template #notVerified><p   style="color:red">  Données a verifier</p></ng-template>
-                        <p  *ngIf="dataLength &&  fontStyleControlV() " style="color:red">thematique inexistant</p>
-                          
-                      </form>  
-                          
-                      <br/>  
-                     
-                    </div>
-                   
-                     <!--  -->
-                      <div>
-                        <button mat-button matStepperPrevious>Back</button>
-                        <button mat-button matStepperNext (click)="print2()">Next</button>
-                      </div>
-                    </form>
-                  </mat-step>
-                  <mat-step>
-                    <ng-template matStepLabel>Style</ng-template>
-                    <div>
-
-                      <div class="container" >
-                        <div class="row">
-
-             
-                        <div class="col-6">
-
-                          
+                         <div class="container">
+                           <div class="row">
+                             <div class="col-5">
+                               <p> 
+                                 <label for="name">Evenement</label>  
+                                 <input type="text" id="name2" name="name" formControlName="name" class="form-control" [(ngModel)]="thmeatiqueNameP">  
+                               </p> 
+                             </div>
+                             <div class="col-4">
+                               <section>
+                                 <span>thematique existant ?...</span>
+                                 <mat-button-toggle-group [formControl]="fontStyleControlP" aria-label="Font Style">
+                                   <mat-button-toggle value="oui" >Oui</mat-button-toggle>
+                                   <mat-button-toggle value="non">Non</mat-button-toggle>
+                                 </mat-button-toggle-group>
+                               </section>
+                             </div>
+                             <div class="col-3">
+                               <button mat-raised-button color="primary" [disabled]="verificaionImportThP()" (click)="loadConfigrationP()" >importer la thematique</button>
+                             </div>
+                           </div>
                             
-                          <div class="container1">
-                            <div class="vertical-center">
-                              <button id="editModal" mat-raised-button color="primary" data-target="#EditModel" data-toggle="modal">Modifier le style</button>
-
-                            </div>
-                          </div>
-                
-                          
-                         
-
-                          </div>
-
-                          <div class="col-6" style="height: 300px;" > 
-                            <div class="map1" id="map1"  style="height: 300px;"></div>
-
-                          </div>
-                         
-
-
-                          </div>
-                          </div>
-
-
-
-
-
-                    </div>
+                         </div>
+                       
+                       
+                       <table class="table table-bordered" formArrayName="quantities">  
+                         <tr>  
+                           <th colspan="2">Ajouter votre attributs:</th>  
+                           <th width="150px"><button type="button" (click)="addQuantityP()" mat-raised-button color="primary">Add More</button></th>  
+                         </tr>  
+                         <tr *ngFor="let quantity of quantitiesP().controls; let i=index" [formGroupName]="i">  
+                           <td>  
+                               Atrribut de la table  :  
                    
-                    <div>
-                      <button mat-button matStepperPrevious>Back</button>
-                      <button mat-button matStepperNext (click)="print2()">Next</button>                    </div>
-                  </mat-step>
+                               <select class="form-control" formControlName="attributes_table" id="exampleFormControlSelect114444">
+                                 <option *ngFor="let head of headerTable" [value]="head">{{head}}</option>
+                               
+                               </select>   
+                           </td>  
+                           <td>  
+                               Attribut de la base de données:  
+                               
+                                 <select class="form-control" formControlName="attributes_toSaveOnDataBase" id="exampleFormControlSelect1">
+                                   <option>route_name</option>
+                                   <option>pkEvent</option>
+                                   <option>voie</option>
+                                   <option>c1</option>
+                                   <option>c2</option>
+                                   <option>c3</option>
+                                   <option>d1</option>
+                                   <option>d2</option>
+                                   <option>d3</option>
+                                   <option>t1</option>
+                                   <option>t2</option>
+                                   <option>t3</option>
+                                 </select> 
+                           </td>  
 
-                <mat-step>
-                  <ng-template matStepLabel>reference et sauvgarde</ng-template>
-                  <br>
+                           <td>  
+                               <button (click)="removeQuantityP(i)" mat-raised-button >Remove</button>  
+                           </td>  
+                         </tr>  
+                       </table>  
+                        
+                       <p  *ngIf="verifyAttributesP();else notVerified"  style="color:green">Données bien verifié</p>
+                       <ng-template #notVerified><p   style="color:red">  Données a verifier</p></ng-template>
+                       <p  *ngIf="dataLength &&  fontStyleControlV() " style="color:red">thematique inexistant</p>
+                         
+                     </form>  
+                         
+                     <br/>  
+                    
+                   </div>
+                  
+                    <!--  -->
+                     <div>
+                       <button mat-button matStepperPrevious>Back</button>
+                       <button mat-button matStepperNext (click)="print2()">Next</button>
+                     </div>
+                   </form>
+                 </mat-step>
+                 <mat-step>
+                   <ng-template matStepLabel>Style</ng-template>
+                   <div>
 
-                    <label> choix de reference</label>
-  
-                    <input type="number" id="reference" placeholder="reference" class="form-control" ngModel  name="reference"   [(ngModel)]="reference" formControlName="thirdCtrl" required  />
+                     <div class="container" >
+                       <div class="row">
+
+            
+                       <div class="col-6">
+
+                         
+                           
+                         <div class="container1">
+                           <div class="vertical-center">
+                             <button id="editModal14" mat-raised-button color="primary" data-target="#AccidentModel" data-toggle="modal">Modifier le style</button>
+
+                           </div>
+                         </div>
+               
+                         
+                        
+
+                         </div>
+
+                         <div class="col-6" style="height: 300px;" > 
+                           <div class="map2" id="map2"  style="height: 300px;"></div>
+
+                         </div>
+                        
+
+
+                         </div>
+                         </div>
+
+
+
+
+
+                   </div>
+                  
+                   <div>
+                     <button mat-button matStepperPrevious>Back</button>
+                     <button mat-button matStepperNext (click)="print2()">Next</button>                    </div>
+                 </mat-step>
+
+               <mat-step>
+                 <ng-template matStepLabel>reference et sauvgarde</ng-template>
+                 <br>
+
+                   <label> choix de reference</label>
+ 
+                   <input type="number" id="reference2" placeholder="reference" class="form-control" ngModel  name="reference"   [(ngModel)]="reference" formControlName="thirdCtrl" required  />
 <br>
 <br>
-
-<div class="containerB">
-  <div class="vertical-centerB">
-    <button  mat-raised-button style="margin:5px"  (click)="onSubmitAddLayer()">Sauvgarder</button>  
-    <button  mat-raised-button color="primary" data-target="#PrevLineModal" data-toggle="modal" (click)="previewLineData()">Prevoir les données</button>  
-    <button  mat-raised-button style="margin:5px" color="warn">Annuler</button>  
-
-  </div>
-
-</div>
-
-
-                </mat-step>
-                </mat-stepper>
+                 <div class="containerB">
+                  <div class="vertical-centerB">
+                    <button  mat-raised-button style="margin:5px"  (click)="onSubmitAddPointLayer()">Sauvgarder</button>  
+                    <button  mat-raised-button color="primary" data-target="#PrevPointModal" data-toggle="modal" (click)="previewPointData()">Prevoir les données</button>  
+                    <button  mat-raised-button style="margin:5px" color="warn">Annuler</button>  
                 
+                  </div>
+                
+                </div>
 
-<!-- ---------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+               </mat-step>
+               </mat-stepper>
+               
 
-
-              </mat-tab>
-             
+               
+             </mat-tab>
 
             </mat-tab-group>
             

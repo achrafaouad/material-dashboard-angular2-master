@@ -41,8 +41,6 @@ export type ChartOptions = {
   legend: ApexLegend;
   xaxis: ApexXAxis;
   plotOptions: ApexPlotOptions;
-  colors: string[];
-  tooltip: ApexTooltip;
 };
 export type ChartOptionsS = {
   series: ApexAxisChartSeries;
@@ -51,28 +49,24 @@ export type ChartOptionsS = {
   legend: ApexLegend;
   xaxis: ApexXAxis;
   plotOptions: ApexPlotOptions;
+  colors: string[];
+  tooltip: ApexTooltip;
 };
 
-export type ChartOptions1 = {
-  series: ApexNonAxisChartSeries;
-  chart: ApexChart;
-  responsive: ApexResponsive[];
-  labels: any;
-};
 export type ChartOptions2 = {
   series: ApexNonAxisChartSeries;
   chart: ApexChart;
   responsive: ApexResponsive[];
   labels: any;
 };
+
 export type ChartOptions3 = {
-  series: ApexNonAxisChartSeries;
+  series: ApexAxisChartSeries;
   chart: ApexChart;
-  responsive: ApexResponsive[];
-  labels: any;
+  dataLabels: ApexDataLabels;
+  plotOptions: ApexPlotOptions;
+  xaxis: ApexXAxis;
 };
-
-
 
 
 
@@ -86,19 +80,16 @@ export type ChartOptions3 = {
 
 
 
-export class SynoptiqueComponent implements OnInit,OnChanges {
+export class SynoptiqueMultiComponent implements OnInit,OnChanges {
 
   @ViewChild("chart") chart: ChartComponent;
   public chartOptions: Partial<ChartOptions>;
 
   @ViewChild("chartsyno", { static: false }) chartest: ChartComponent;
-  public chartOptionsS: Partial<ChartOptions>;
+  public chartOptionsS: Partial<ChartOptionsS>;
   
 
-  type?: string = "simple";
-
-  @ViewChild("chart1") chart1: ChartComponent;
-  public chartOptions1: Partial<ChartOptions2>;
+  type?: string = "advanced"; 
 
   @ViewChild("chart2") chart2: ChartComponent;
   public chartOptions2: Partial<ChartOptions2>;
@@ -107,15 +98,14 @@ export class SynoptiqueComponent implements OnInit,OnChanges {
   public chartOptions3: Partial<ChartOptions3>;
 
 
-  selectedAttribut1
-  selectedAttribut2
-  selectedAttribut3
-
 
   mediumLowPoint: olVectorLayer<any>;
 year = []
 openSansAdded: boolean = false;
 routes
+selectedEvent1
+Attributes1: any[] = [];
+selectedAttribute1
 format = new GeoJSON();
 pkd
 lines = new LineStyle(
@@ -162,67 +152,20 @@ mesure: any;
   voie: any;
   series: any[] = [];
   ddfrichty: boolean = true;
-  selectedEvent1: any;
   selectedEvent2: any;
-  selectedEvent3: any;
-  selectedAttribute1: any;
-  selectedAttribute2: any;
-  selectedAttribute3: any;
-  Attributes1: any[] = [];
-  Attributes2: any[] = [];
-  Attributes3: any[] = [];
-  dataforLife: any[] = [];
+  verification: boolean = false;
   constructor(private cdr: ChangeDetectorRef,private lrsServiceService: LrsServiceService,private spinner: NgxSpinnerService
     ) {
     this.getRoutesName();
     this.getThematiques();
 
-    this.chartOptions1 = {
-      series: [44, 55, 13, 43, 22],
-      chart: {
-        type: "donut"
-      },
-      labels: ["Team A", "Team B", "Team C", "Team D", "Team E"],
-      responsive: [
-        {
-          breakpoint: 480,
-          options: {
-            chart: {
-              width: 200
-            },
-            legend: {
-              position: "bottom"
-            }
-          }
-        }
-      ]
-    };
     this.chartOptions2 = {
-      series: [44, 55, 13, 43, 22],
+      series: [100],
       chart: {
-        type: "donut"
+        width: 380,
+        type: "pie"
       },
-      labels: ["Team A", "Team B", "Team C", "Team D", "Team E"],
-      responsive: [
-        {
-          breakpoint: 480,
-          options: {
-            chart: {
-              width: 200
-            },
-            legend: {
-              position: "bottom"
-            }
-          }
-        }
-      ]
-    };
-    this.chartOptions3 = {
-      series: [44, 55, 13, 43, 22],
-      chart: {
-        type: "donut"
-      },
-      labels: ["Team A", "Team B", "Team C", "Team D", "Team E"],
+      labels: ["achraf"],
       responsive: [
         {
           breakpoint: 480,
@@ -242,9 +185,116 @@ mesure: any;
     
 
 
+    this.chartOptions3 = {
+      series: [
+        {
+          name: "basic",
+          data: [400]
+        }
+      ],
+      chart: {
+        type: "bar",
+        height: 350
+      },
+      plotOptions: {
+        bar: {
+          horizontal: true
+        }
+      },
+      dataLabels: {
+        enabled: false
+      },
+      xaxis: {
+        categories: [
+          "South Korea"
+        ]
+      }
+    };
+
+
 
 
     this.chartOptions = {
+      series: [
+        {
+          name: "Validation",
+          data: [
+            
+            {
+              x: "Validation",
+              y: [
+                30,
+                500
+              ],goals:[{name: 'Expected', value: 52, strokeColor: '#775DD0'}]
+            },
+            {
+              x: "Validation",
+              y: [
+                70,
+                444
+              ]
+              ,goals:[{name: 'Expected', value: 77, strokeColor: '#775DD0'}]
+            },
+
+            
+          ]
+        },
+        {
+          name: "Design",
+          data: [
+            {
+              x: "Design",
+              y: [
+                10,
+                40
+              ]
+            },
+            {
+              x: "Design",
+              y: [
+                70,
+                144
+              ]
+            },
+            
+          ]
+        }
+       
+      ],
+      chart: {
+        height: 450,
+        
+        type: "rangeBar"
+      },
+      plotOptions: {
+        bar: {
+          horizontal: true,
+          barHeight: "80%"
+        }
+      },
+      xaxis: {
+        type: "numeric"
+      },
+      fill: {
+        type: "gradient",
+        gradient: {
+          shade: "light",
+          type: "vertical",
+          shadeIntensity: 0.25,
+          gradientToColors: undefined,
+          inverseColors: true,
+          opacityFrom: 1,
+          opacityTo: 1,
+          stops: [50, 0, 100, 100]
+        }
+      },
+      legend: {
+        position: "right",
+        horizontalAlign: "left"
+      }
+    };
+
+    this.chartOptionsS = {
       series: [
         // George Washington
         {
@@ -462,93 +512,7 @@ mesure: any;
         position: "right"
       }
     };
-    this.chartOptionsS = {
-      series: [
-        {
-          name: "Validation",
-          data: [
-            
-            {
-              x: "Validation",
-              y: [
-                30,
-                500
-              ]
-              ,goals: [
-                {
-                  name: 'Expected',
-                  value: 14,
-                  strokeWidth: 2,
-                  strokeDashArray: 2,
-                  strokeColor: '#775DD0'
-                }
-              ]
-            },
-            {
-              x: "Validation",
-              y: [
-                70,
-                444
-              ]
-            },
-
-            
-          ]
-        },
-        {
-          name: "Design",
-          data: [
-            {
-              x: "Design",
-              y: [
-                10,
-                40
-              ]
-            },
-            {
-              x: "Design",
-              y: [
-                70,
-                144
-              ]
-            },
-            
-          ]
-        }
-       
-      ],
-      chart: {
-        height: 450,
-        type: "rangeBar"
-      },
-      plotOptions: {
-        bar: {
-          horizontal: true,
-          barHeight: "80%"
-        }
-      },
-      xaxis: {
-        type: "numeric"
-      },
-      fill: {
-        type: "gradient",
-        gradient: {
-          shade: "light",
-          type: "vertical",
-          shadeIntensity: 0.25,
-          gradientToColors: undefined,
-          inverseColors: true,
-          opacityFrom: 1,
-          opacityTo: 1,
-          stops: [50, 0, 100, 100]
-        }
-      },
-      legend: {
-        position: "right",
-        horizontalAlign: "left"
-      }
-    };
-   }
+  }
 
    selectedRoute
    selectedAnnee
@@ -558,6 +522,12 @@ mesure: any;
    valueTOs1=[]
    valueTOs2=[]
 
+   selectedAttribut2
+  selectedEvent3: any;
+  selectedAttribute2: any;
+  selectedAttribute3: any;
+  Attributes2: any[] = [];
+  Attributes3: any[] = [];
 
   
 
@@ -595,12 +565,15 @@ mesure: any;
 
   async onchangeyr(evv){
     this.selectedAnnee = evv;
-   
-      await  this.update();
-
-      // this.updatePieChart();
+    if(this.type == "analyse"){
+      await this.updateAdvanced();
+      this.updatePieChart();
       this.getDAtapkdpkf();
-     
+     }else{
+      await  this.update();
+      this.updatePieChart();
+      this.getDAtapkdpkf();
+     }
  
     
   }
@@ -608,13 +581,34 @@ mesure: any;
   async onchange(evv){
     console.warn(this.type)
     this.selectedRoute = evv
-    
+    if(this.type == "analyse"){
+      await this.updateAdvanced();
+      this.updatePieChart();
+      this.getDAtapkdpkf();
+     }else if(this.type == "advanced"){
+      console.log("achraf");
+      console.log(this.type);
+ 
+     this.object1 = {
+         route_name:this.selectedRoute,
+         voie:this.selectedVoie
+     }
+ 
+     console.log("hello wolrd")
+     console.log(this.object1)
+     console.log("hello wolrd")
+
+     this.lrsServiceService.getVideosList(this.object1).subscribe(
+       res=>this.videos = res,err=>console.log(err)
+     );
+     this.update();
+     }
      
-    
+     else{
       await  this.update();
-      // this.updatePieChart();
+      this.updatePieChart();
     this.getDAtapkdpkf();
-     
+     }
     
     
     
@@ -623,51 +617,65 @@ mesure: any;
 
     this.selectedVoie = evv
     
-    await  this.update();
-    // this.updatePieChart();
-  
+
+   if(this.type == "analyse"){
+    await this.updateAdvanced();
+    this.updatePieChart();
     this.getDAtapkdpkf();
-   
+   }else if(this.type == "advanced"){
+     console.log("achraf");
+     console.log(this.type);
+
+    this.object1 = {
+        route_name:this.selectedRoute,
+        voie:evv
+    }
+
+    this.lrsServiceService.getVideosList(this.object1).subscribe(
+      res=>{this.videos = res; console.log(res)}  ,err=>console.log(err)
+    );
+    this.update();
+   }
+   else{
+    await  this.update();
+    this.updatePieChart();
+    this.getDAtapkdpkf();
+   }
     
   }
 
   update(){
-    console.log("achraf")
-    this.lrsServiceService.createSynoptique2({pkd:this.value1,pkf:this.value2,routeName:this.selectedRoute,voie:this.selectedVoie,event1:this.selectedEvent1,event2:this.selectedEvent2,event3:this.selectedEvent3,attrribute1:this.selectedAttribut1,attrribute2:this.selectedAttribut2,attrribute3:this.selectedAttribut3}).subscribe((res)=>{
-      // this.spinner.show(); 
-       console.log(res);
+    if(this.type == "advanced"){
+       if(this.pkdV && this.pkfV){
 
-      // setTimeout(() => {
-      //   /** spinner ends after 5 seconds */
-      //   this.spinner.hide();
-      // }, 5000);
-      var names = []
-      var nouvelleData=[]
-      var element ={}
-      for(let i = 0;i<res.length;i++){
-        element ={}
-
-        if(!names.includes(res[i]["name"])){
-          element['name'] = res[i]["name"]
-          element['data'] = []
-
-          for(let k = 0;k<res.length;k++){
-            if(res[k]["name"] == res[i]["name"])
-            element['data'].push(res[k]['data'][0])
-          }
-          nouvelleData.push(element)
-          names.push(res[i]["name"])
-        }
+       
+      this.lrsServiceService.createSynoptique({pkd:this.pkdV,pkf:this.pkfV,routeName:this.selectedRoute,voie:this.selectedVoie}).subscribe((res)=>{
+        console.error("3adia")
+        console.error(res)
+  
+        this.data = res;
+        this.chartOptionsS.series = []
+        this.chartOptionsS.series = <ApexAxisChartSeries> <unknown>res
+       
       }
-      console.log(nouvelleData)
-      console.log(names)
-      this.data = nouvelleData;
-      this.hello();
-      this.update1();
-      this.update2();
-      this.update3();
+      
+      
+      ,(err)=>{console.log(err)})
+    }
+    }else{
+    this.lrsServiceService.createSynoptique({pkd:this.value1,pkf:this.value2,routeName:this.selectedRoute,voie:this.selectedVoie}).subscribe((res)=>{
+      this.spinner.show(); 
+       
+
+      setTimeout(() => {
+        /** spinner ends after 5 seconds */
+        this.spinner.hide();
+      }, 5000);
+
+      this.data = res;
       this.chartOptions.series = []
-      this.chartOptions.series = <ApexAxisChartSeries> <unknown>nouvelleData
+      this.chartOptions.series = <ApexAxisChartSeries> <unknown>res
+    
     }
     
     
@@ -685,10 +693,42 @@ mesure: any;
     ,(err)=>{console.log(err)})
 
 
-  
+  }
   }
 
+  updateAdvanced(){
+    this.lrsServiceService.createAdvancedSynoptique({pkd:this.value1,pkf:this.value2,routeName:this.selectedRoute,voie:this.selectedVoie,event:this.selectedEvent}).subscribe((res)=>{
+      console.error("3adia")
+      console.error(res)
+      this.spinner.show(); 
+       
 
+      setTimeout(() => {
+        /** spinner ends after 5 seconds */
+        this.spinner.hide();
+      }, 5000);
+      this.data = res;
+      this.chartOptions.series = []
+      this.chartOptions.series = <ApexAxisChartSeries> <unknown>res
+    }
+    
+    
+    ,(err)=>{console.log(err)})
+
+    this.lrsServiceService.createSynoptiqueLast10({year:this.selectedAnnee,routeName:this.selectedRoute,voie:this.selectedVoie}).subscribe((res)=>{
+     
+      this.data10 = res;
+      console.error("tania")
+      console.error(res)
+     
+    }
+    
+    
+    ,(err)=>{console.log(err)})
+
+
+
+  }
 
   getRoutesName(){
     this.lrsServiceService.getRouteNames().subscribe(
@@ -699,158 +739,130 @@ mesure: any;
       ,err=>{console.log(err)})
   }
 
-
   selectedAttribute1F(val){
     this.selectedAttribute1 = val
     console.log(val)
   }
-  selectedAttribute2F(val){
-    this.selectedAttribute2 = val
-    console.log(val)
-  }
-  selectedAttribute3F(val){
-    this.selectedAttribute3 = val
-    console.log(val)
-  }
 
-
-
-  hello(){
-    this.dataforLife = []
-    for(let i = 0;i<this.data.length;i++){
-      for(let j = 0;j<this.data[i].data.length;j++){
-        this.dataforLife.push({name:this.data[i].data[j].x,value:this.data[i].data[j].y[1]-this.data[i].data[j].y[0],class:this.data[i].name});
-      }
-    }
-
-
-
-
-    console.log("this.dataforLife");
-    console.log(this.dataforLife);
-
-  }
-
-  update2(){
-    
-    var labels = []
-    var labelsMatch = []
-    var values = []
-    var total = 0;
-    var currentName = ''
-
-    for(let i = 0;i<this.dataforLife.length;i++){
-      total = 0;
-      console.log(this.selectedEvent2)
-      if(this.dataforLife[i].name == this.selectedEvent2){
-        console.log(i)
-        console.log(this.selectedEvent2)
-        if(!labelsMatch.includes(this.dataforLife[i].class)){
-          currentName = this.dataforLife[i].class
-          for(let j = 0;j<this.dataforLife.length;j++){
-            if(this.dataforLife[j].class == currentName){
-              total = total + this.dataforLife[j].value
-            }
-          }
-          labelsMatch.push(currentName)
-          labels.push(currentName)
-          values.push(total);
-        }
-   
-      }
-    
-
-    }
-
-    this.chartOptions2.series = values
-    this.chartOptions2.labels = labels
-    this.chartOptions2.series = [... this.chartOptions2.series];
-    this.chartOptions2.labels = [... this.chartOptions2.labels];
-    console.log(labels);
-    console.log(values);
-  }
-  update1(){
-    
-    var labels = []
-    var labelsMatch = []
-    var values = []
-    var total = 0;
-    var currentName = ''
-
-    for(let i = 0;i<this.dataforLife.length;i++){
-      total = 0;
-      console.log(this.selectedEvent1)
-      if(this.dataforLife[i].name == this.selectedEvent1){
-        console.log(i)
-        console.log(this.selectedEvent1)
-        if(!labelsMatch.includes(this.dataforLife[i].class)){
-          currentName = this.dataforLife[i].class
-          for(let j = 0;j<this.dataforLife.length;j++){
-            if(this.dataforLife[j].class == currentName){
-              total = total + this.dataforLife[j].value
-            }
-          }
-          labelsMatch.push(currentName)
-          labels.push(currentName)
-          values.push(total);
-        }
-   
-      }
-    
-
-    }
-
-    this.chartOptions1.series = values
-    this.chartOptions1.labels = labels
-    this.chartOptions1.series = [... this.chartOptions1.series];
-    this.chartOptions1.labels = [... this.chartOptions1.labels];
-    console.log(labels);
-    console.log(values);
-  }
-  update3(){
-    
-    var labels = []
-    var labelsMatch = []
-    var values = []
-    var total = 0;
-    var currentName = ''
-
-    for(let i = 0;i<this.dataforLife.length;i++){
-      total = 0;
-      console.log(this.selectedEvent3)
-      if(this.dataforLife[i].name == this.selectedEvent3){
-        console.log(i)
-        console.log(this.selectedEvent1)
-        if(!labelsMatch.includes(this.dataforLife[i].class)){
-          currentName = this.dataforLife[i].class
-          for(let j = 0;j<this.dataforLife.length;j++){
-            if(this.dataforLife[j].class == currentName){
-              total = total + this.dataforLife[j].value
-            }
-          }
-          labelsMatch.push(currentName)
-          labels.push(currentName)
-          values.push(total);
-        }
-   
-      }
-    
-
-    }
-
-    this.chartOptions3.series = values
-    this.chartOptions3.labels = labels
-    this.chartOptions3.series = [... this.chartOptions2.series];
-    this.chartOptions3.labels = [... this.chartOptions2.labels];
-    console.log(labels);
-    console.log(values);
-  }
-
+  updatePieChart(){
+    setTimeout(()=>{
+      this.labels = []
+      this.values = []
   
+      var total = 0;
+      var currentName = ''
+      console.log(this.data);
+     if(this.data){
+  
+     
+      for(let i = 0;i<this.data.length;i++){
+        total = 0
+       
+        currentName = this.data[i].name;
+        for(let j = 0;j<this.data[i].data.length;j++){
+  
+          if(this.data[i].data[j].y){
+          if(this.data[i].data[j].y[1]){
+             console.log(this.data[i].data[j].y[0])
+             console.log(this.data[i].data[j].y[1])
+            total=total + (this.data[i].data[j].y[1]-this.data[i].data[j].y[0])
+          }
+          }
+        
+        }
+  
+        this.labels.push(currentName);
+        this.values.push(total);
+      }
+      this.chartOptions2.labels = this.labels
+      this.chartOptions2.series = this.values
+      this.chartOptions3.series[0].data = [22 ,222 ,22 ]
+      console.log(this.chartOptions3.series = [{
+        name: "basic",
+        data: this.values
+      }]);
+      this.chartOptions3.xaxis = {
+        categories:this.labels
+      }
+    
+      console.log(this.values)
+  
+  
+    }
+
+    },1000)
+
+    setTimeout(()=>{
+      this.labels = []
+      this.values = []
+  
+      var total = 0;
+      var currentName = ''
+      console.log(this.data);
+     if(this.data10){
+  
+     
+      for(let i = 0;i<this.data10.length;i++){
+        total = 0
+    
+        currentName = this.data10[i].name;
+        for(let j = 0;j<this.data10[i].data.length;j++){
+  
+          if(this.data10[i].data[j].y){
+          if(this.data10[i].data[j].y[1]){
+             console.log(this.data10[i].data[j].y[0])
+             console.log(this.data10[i].data[j].y[1])
+            total=total + (this.data10[i].data[j].y[1]-this.data10[i].data[j].y[0])
+          }
+          }
+        }
+  
+        this.labels.push(currentName);
+        this.values.push(total);
+      }
+     
+      this.chartOptions3.series = [{
+        name: "basic",
+        data: this.values
+      }];
+
+   
+      this.chartOptions3.xaxis = {
+        categories:this.labels
+      }
+  
+  
+    }
+
+    },1200)
+
+    
+    // for(var a of this.data){
+    //   total = 0;
+    //   console.log(a.name)
+    //   console.log(a.data)
+    //   for(var i of a.data)
+
+    // }
+    
+  }
   val1(val){
     console.log(val)
     this.pkd = val
   }
+
+
+
+  selectedEventF1(val){
+    this.selectedEvent1 = val;
+    console.log(val)
+    this.lrsServiceService.getEventParams(val).subscribe(res=>{
+     console.log(res)
+     this.Attributes1 = res
+   },err=>{console.log(err)}
+    )
+ }
+
 
 
   getDAtapkdpkf(){
@@ -898,19 +910,23 @@ console.log(err);
 
   async valueRequette1(val){
     this.value1 = val;
-    // this.updatePieChart();
-    
+    this.updatePieChart();
+    if(this.type == "analyse"){
+      await this.updateAdvanced();
+     }else{
       await  this.update();
-     
+     }
    
   }
 
   async valueRequette2(val){
     this.value2 = val;
-    // this.updatePieChart();
-
+    this.updatePieChart();
+    if(this.type == "analyse"){
+      await this.updateAdvanced();
+     }else{
       await  this.update();
-     
+     };
   }
 
 
@@ -932,35 +948,10 @@ console.log(err);
       )
     })
   }
-  
 
-  selectedEventF1(val){
-     this.selectedEvent1 = val;
-     console.log(val)
-     this.lrsServiceService.getEventParams(val).subscribe(res=>{
-      console.log(res)
-      this.Attributes1 = res
-    },err=>{console.log(err)}
-     )
-  }
-  selectedEventF2(val){
-     this.selectedEvent2 = val;
-     console.log(this.selectedEvent);
-     this.lrsServiceService.getEventParams(val).subscribe(res=>{
-      console.log(res)
-      this.Attributes2 = res
-    },err=>{console.log(err)}
-     )
-  }
-  selectedEventF3(val){
-     this.selectedEvent3 = val;
-     console.log(this.selectedEvent);
-     this.lrsServiceService.getEventParams(val).subscribe(res=>{
-      console.log(res)
-      this.Attributes3 = res
-    },err=>{console.log(err)}
-     )
-
+  selectedEventF(val){
+     this.selectedEvent = val;
+     console.log(this.selectedEvent)
   }
 
   valueEvent(val){
@@ -981,7 +972,7 @@ console.log(err);
   previewLineData(){
 
 
-    this.lrsServiceService.createSynoptique({pkd:this.pkdV,pkf:this.pkfV,routeName:this.selectedRoute,voie:this.selectedVoie}).subscribe((res)=>{
+    this.lrsServiceService.createSynoptique2({pkd:this.pkdV,pkf:this.pkfV,routeName:this.selectedRoute,voie:this.selectedVoie,event1:this.selectedEvent1,event2:this.selectedEvent2,attrribute1:this.selectedAttribute1,attrribute2:this.selectedAttribute2}).subscribe((res)=>{
       console.error("3adia")
       console.error(res)
       this.spinner.show(); 
@@ -991,9 +982,36 @@ console.log(err);
         /** spinner ends after 5 seconds */
         this.spinner.hide();
       }, 200);
-      this.data = res;
+
+      console.log(res);
+
+      // setTimeout(() => {
+      //   /** spinner ends after 5 seconds */
+      //   this.spinner.hide();
+      // }, 5000);
+      var names = []
+      var nouvelleData=[]
+      var element ={}
+      for(let i = 0;i<res.length;i++){
+        element ={}
+
+        if(!names.includes(res[i]["name"])){
+          element['name'] = res[i]["name"]
+          element['data'] = []
+
+          for(let k = 0;k<res.length;k++){
+            if(res[k]["name"] == res[i]["name"])
+            element['data'].push(res[k]['data'][0])
+          }
+          nouvelleData.push(element)
+          names.push(res[i]["name"])
+        }
+      }
+      console.log(nouvelleData)
+      console.log(names)
+      this.data = nouvelleData;
       this.chartOptionsS.series = []
-      this.chartOptionsS.series = <ApexAxisChartSeries> <unknown>res
+      this.chartOptionsS.series = <ApexAxisChartSeries> <unknown>nouvelleData
 
       console.log("88888888888888888888888888")
       this.mediumLowPointsrc.clear();
@@ -1068,6 +1086,11 @@ console.log(err);
 
   }
 
+
+  selectedAttribute2F(val){
+    this.selectedAttribute2 = val
+    console.log(val)
+  }
 
 
   createTextStyle(feature, resolution, dom, type) {
@@ -1160,7 +1183,16 @@ console.log(err);
     return str;
   }
 
-
+  selectedEventF2(val){
+    this.selectedEvent2 = val;
+    console.log(this.selectedEvent);
+    this.lrsServiceService.getEventParams(val).subscribe(res=>{
+     console.log(res)
+     this.Attributes2 = res
+   },err=>{console.log(err)}
+    )
+ }
+ 
 
   ee(ee){
     this.vid = <HTMLVideoElement> document.getElementById("myvideo1");
@@ -1172,7 +1204,8 @@ console.log(err);
       this.vitess = (this.pkfV -this.pkdV) / (this.vid.duration);
       console.log("this.vitess",this.vitess)
       this.mesure = this.pkdV + this.vitess * this.vid.currentTime
-      console.log("this.mesure",this.mesure)
+      console.log("this.mesure",this.mesure) 
+      console.log("this.series",this.chartOptionsS.series) 
       this.object12 ={
         pkEvent: this.mesure,
         voie:this.voie,
@@ -1194,19 +1227,44 @@ console.log(err);
 
       //hna fin kayn lblan
 
-      for(let i =0 ;i<this.chartOptionsS.series.length;i++){
-        for(let j =0;j<this.chartOptionsS.series[i].data.length;j++){
-       
-          this.chartOptionsS.series[i].data[j]['goals'] = [
-
-            {
-              name: 'Expected',
-              value: this.mesure,
-              strokeColor: 'red'
-            }
-              ]
-        }
+      if(this.chartOptionsS.series[this.chartOptionsS.series.length-1].name == "Ma position"){
+        this.chartOptionsS.series.pop();
+        this.chartOptionsS.series.pop();
       }
+
+      this.chartOptionsS.series.push(
+        {
+          name: "Ma position",
+          data: [
+            {
+              x: this.selectedEvent1,
+              y: [
+                this.mesure,
+                this.mesure + 2
+              ],
+              fillColor: "#ff0000"
+            }
+          ]
+        }
+      )
+      this.chartOptionsS.series.push(
+        {
+          name: "Ma position",
+          data: [
+            {
+              x: this.selectedEvent2,
+              y: [
+                this.mesure,
+                this.mesure + 2
+              ],
+              fillColor: "#ff0000"
+            }
+          ]
+        }
+      )
+
+
+  
       this.chartOptionsS.series = [...this.chartOptionsS.series];
       
       }, err=>{
@@ -1216,6 +1274,7 @@ console.log(err);
   
    , 1000);
 
+   this.verification  = true
   }
   
   pp(ee){

@@ -1,0 +1,72 @@
+<br/>
+<br/>
+<br/>
+
+ <div class="d-flex flex-row-reverse" style="left:30px">
+    <button mat-fab color="black" (click)="addprofile()" aria-label="Example icon button with a bookmark icon">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+<div class="card">
+    <div class="card-body">
+       
+        <div class="container">
+           
+
+                <div class="cards">
+                <div class="cards__item" *ngFor="let profile of profiles" (click)="navigateToAccount(profile.id)">
+                    <div class="card user-card">
+                        <div class="card-header">
+                            <h5>Profile</h5>
+                        </div>
+                        <div class="card-block">
+                            <div class="user-image">
+                                <img src="https://robohash.org/{{profile.name}}" class="img-radius" alt="User-Profile-Image">
+                            </div>
+                            <h6 class="f-w-600 m-t-25 m-b-10">{{profile.name}} </h6>
+                            <p class="text-muted">{{profile.description}}</p>
+                            <hr>
+                            <p class="text-muted m-t-15">created: {{profile.dateAjout }}</p>
+                            <ul class="list-unstyled activity-leval">
+                                <li class="active"></li>
+                                <li class="active"></li>
+                                <li class="active"></li>
+                                <li class="active"></li>
+                                <li class="active"></li>
+                                
+                            </ul>
+                          
+                            
+                        </div>
+                        </div>
+                    </div>
+
+                    
+                </div>
+                
+                
+                
+       
+  
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!-- style="
+        background-color: #c4ffe9;
+        border: solid black 1px;
+        color: black;
+        border-radius: 2px;" -->

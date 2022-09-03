@@ -151,19 +151,19 @@
                   </div>
                   <div class="row mb-3">
                     <div class="col-sm-3">
-                      <h6 class="mb-0">Province</h6>
+                      <h6 class="mb-0">Profil</h6>
                     </div>
                     <div class="col-sm-9 text-secondary">
                     <mat-form-field appearance="fill">
-                      <mat-label>Province</mat-label>
+                      <mat-label>Profil</mat-label>
                       <mat-select
-                        [(value)]="province"
+                        [(value)]="selectedProfil"
                         (selectionChange)="onchangeP($event.value)"
                       >
                         <mat-option
-                          *ngFor="let the of provinces"
-                          value="{{ the }}"
-                          >{{ the }}</mat-option
+                          *ngFor="let the of profiles"
+                          value="{{ the.id }}"
+                          >{{ the.name }}</mat-option
                         >
                       </mat-select>
                     </mat-form-field>

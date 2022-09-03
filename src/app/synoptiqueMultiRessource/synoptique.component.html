@@ -29,38 +29,31 @@
               </mat-select>
             </mat-form-field>
 
-        </div>
+        </div> 
         <div class="col-md">
-      
-          <label> pkd  </label>
-          <mat-form-field appearance="fill">
-            <mat-label>pkd</mat-label>
-            <mat-select [(value)]="value1" (selectionChange)="valueRequette1($event.value)">
-              <mat-option value={{op}} *ngFor="let op of valueTOs1">{{op}}</mat-option>
+          <label> Sens  </label>
+          <mat-form-field appearance="fill">  
+            <mat-label>Sens</mat-label>
+            <mat-select [(value)]="selectedVoie" (selectionChange)="onchangeVoie($event.value)">
+              
+              <mat-option  value=1 >1</mat-option>
+              <mat-option  value=2 >2</mat-option>
+           
             </mat-select>
           </mat-form-field>
-        
         </div>
         <div class="col-md">
-          <label> pkf  </label>
-            <mat-form-field appearance="fill">
-              <mat-label>pkf</mat-label>
-              <mat-select [(value)]="value2" (selectionChange)="valueRequette2($event.value)">
-                <mat-option value={{op}} *ngFor="let op of valueTOs2">{{op}}</mat-option>
-              </mat-select>
-            </mat-form-field>
-        </div>
-        <div class="col-md">
-            <label> Sens  </label>
-            <mat-form-field appearance="fill">  
-              <mat-label>Sens</mat-label>
-              <mat-select [(value)]="selectedVoie" (selectionChange)="onchangeVoie($event.value)">
-                
-                <mat-option  value=1 >1</mat-option>
-                <mat-option  value=2 >2</mat-option>
-             
-              </mat-select>
-            </mat-form-field>
+          <label> video  </label>
+          <mat-form-field appearance="fill">
+            <mat-label>video</mat-label>
+            <mat-select [(value)]="selectedEvent" (selectionChange)="getMyvideo($event.value)">
+              <mat-option
+                     *ngFor="let v of videos"
+                            value="{{ v.name }}"
+                            >{{ v.name }}</mat-option
+                          >
+            </mat-select>
+          </mat-form-field>
 
         </div>
         
@@ -68,24 +61,23 @@
         </div>
         <div class="row">
           <div class="col-md">
-            <label> Evénemenent  </label>
+            <label> Evénemenent 1</label>
             <mat-form-field appearance="fill">
               <mat-label>Evénemenent</mat-label>
               <mat-select [(value)]="selectedEvent1" (selectionChange)="selectedEventF1($event.value)">
                 <mat-option
-                              *ngFor="let the of thematique"
-                              value="{{ the }}"
-                              >{{ the }}</mat-option
-                            >
+                    *ngFor="let the of thematique"
+                    value="{{ the }}"
+                    >{{ the }}</mat-option
+                  >
               </mat-select>
             </mat-form-field>
           </div>  
           <div class="col-md" >
-
-            <label> Attribut</label>
+            <label> Attribut 1</label>
             <mat-form-field appearance="fill">
               <mat-label>Attribut</mat-label>
-              <mat-select [(value)]="selectedAttribut1" (selectionChange)="selectedAttribute1F($event.value)">
+              <mat-select [(value)]="selectedAttribute1" (selectionChange)="selectedAttribute1F($event.value)">
                 <mat-option
                               *ngFor="let the of Attributes1"
                               value="{{ the.champ_db_stock }}"
@@ -94,6 +86,7 @@
               </mat-select>
             </mat-form-field>
           </div>  
+          
           <div class="col-md">
             <label> Evénemenent 2 </label>
             <mat-form-field appearance="fill">
@@ -106,7 +99,7 @@
                             >
               </mat-select>
             </mat-form-field>
-          </div> 
+          </div>  
           <div class="col-md">
             <label> Attribut</label>
             <mat-form-field appearance="fill">
@@ -120,33 +113,6 @@
               </mat-select>
             </mat-form-field>
           </div> 
-          <div class="col-md">
-            <label> Evénemenent 3 </label>
-            <mat-form-field appearance="fill">
-              <mat-label>Evénemenent</mat-label>
-              <mat-select [(value)]="selectedEvent3" (selectionChange)="selectedEventF3($event.value)">
-                <mat-option
-                              *ngFor="let the of thematique"
-                              value="{{ the }}"
-                              >{{ the }}</mat-option
-                            >
-              </mat-select>
-            </mat-form-field>
-          </div> 
-          <div class="col-md">
-            <label> Attribut</label>
-            <mat-form-field appearance="fill">
-              <mat-label>Attribut</mat-label>
-              <mat-select [(value)]="selectedAttribut3" (selectionChange)="selectedAttribute3F($event.value)">
-                <mat-option
-                              *ngFor="let the of Attributes3"
-                              value="{{ the.champ_db_stock }}"
-                              >{{ the.champs_event }}</mat-option
-                            >
-              </mat-select>
-            </mat-form-field>
-          </div> 
-          
         </div>
     </div>
 </div>
@@ -156,62 +122,44 @@
 
 <div id="chart" *ngIf="advancedIshere()">
   <apx-chart
-  [series]="chartOptions.series"
-  [chart]="chartOptions.chart"
-  [fill]="chartOptions.fill"
-  [legend]="chartOptions.legend"
-  [plotOptions]="chartOptions.plotOptions"
-  [xaxis]="chartOptions.xaxis"
-  [colors]="chartOptions.colors"
-  [tooltip]="chartOptions.tooltip"
-></apx-chart>
+    [series]="chartOptions.series"
+    [chart]="chartOptions.chart"
+    [fill]="chartOptions.fill"
+    [legend]="chartOptions.legend"
+    [plotOptions]="chartOptions.plotOptions"
+    [xaxis]="chartOptions.xaxis"
+  ></apx-chart>
 </div>
 <div class="container" *ngIf="advancedIshere()">
   <div class="row">
     <div class="col-sm">
       <div class="card">
         <div class="card-body">
-          Evenement 1
           <div id="chart2">
-            <apx-chart
-              [series]="chartOptions1.series"
-              [chart]="chartOptions1.chart"
-              [labels]="chartOptions1.labels"
-              [responsive]="chartOptions1.responsive"
-            ></apx-chart>
-          </div>
-    </div>
-    </div>
-    </div>
-
-    <div class="col-sm">
-      <div class="card">
-        <div class="card-body">
-          Evenement 2
-          <div id="chart3">
             <apx-chart
               [series]="chartOptions2.series"
               [chart]="chartOptions2.chart"
               [labels]="chartOptions2.labels"
               [responsive]="chartOptions2.responsive"
             ></apx-chart>
-          </div>
+            </div>
+    </div>
     </div>
     </div>
 
-  </div>
     <div class="col-sm">
       <div class="card">
         <div class="card-body">
-          Evenement 3 
           <div id="chart3">
             <apx-chart
               [series]="chartOptions3.series"
               [chart]="chartOptions3.chart"
-              [labels]="chartOptions3.labels"
-              [responsive]="chartOptions3.responsive"
+              [dataLabels]="chartOptions3.dataLabels"
+              [plotOptions]="chartOptions3.plotOptions"
+              [xaxis]="chartOptions3.xaxis"
             ></apx-chart>
           </div>
+    </div>
     </div>
     </div>
 
@@ -220,4 +168,57 @@
 
 
 
+<button *ngIf="!advancedIshere()" mat-raised-button color="primary"  (click)="map.show()" (click)="graph.show()"
+(click)="video.show()"
+  (click)="previewLineData()">Analyser</button>
+
+
+
+            </div>
+
+
+
+
+
+            </div>
+            </div>
+            </div>
+            </div>
+           
+
+            <app-modal #map class="modal-demo" [maximizable] = "true" [backdrop] = "false">
+              <ng-container class="app-modal-header" >Carte</ng-container>
+              <ng-container class="app-modal-body">
+                <div id="mapWrap" style="width: 100%; height: 400px;">
+            <div id="mapPrevLine" class="mapPrevLine" style="width: 100%; height: 400px;"></div>
+            </div>
+              </ng-container>
+           
+            </app-modal>
+
+            <app-modal #graph class="modal-demo" [maximizable] = "true" [backdrop] = "false">
+              <ng-container class="app-modal-header" >graph</ng-container>
+              <ng-container class="app-modal-body">
+                <div id="chartsyno">
+                  <apx-chart
+                     #chartsynoed
+                    [series]="chartOptionsS.series"
+                    [chart]="chartOptionsS.chart"
+                    [fill]="chartOptionsS.fill"
+                    [legend]="chartOptionsS.legend"
+                    [plotOptions]="chartOptionsS.plotOptions"
+                    [xaxis]="chartOptionsS.xaxis"
+                  ></apx-chart>
+                </div>
+            </ng-container>
+            </app-modal>
+
+            <app-modal #video class="modal-demo" [maximizable] = "true" [backdrop] = "false">
+              <ng-container class="app-modal-header" >video</ng-container>
+              <ng-container class="app-modal-body">
+                <video src={{this.videoPath}} (play)="ee($event)" (pause)="pp($event)"  id="myvideo1" controls preload="none" >
+                </video>
+              </ng-container>
+           
+            </app-modal>
 

@@ -71,11 +71,11 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('user',JSON.stringify(response));
         console.log(localStorage.getItem('user'));
         console.log(response);
-        if(JSON.parse(localStorage.getItem('user')).roles[0].name == "simple_user"){
-          this._router.navigate(['maps'])
-        }else{
+       
           this._router.navigate(['dashboard'])
-        }
+      
+          this._router.navigate(['dashboard'])
+        
         
       },
        err=>{

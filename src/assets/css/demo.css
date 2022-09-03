@@ -1404,6 +1404,12 @@ color: var(--grayish-blue)
   margin: 10px auto auto 10px;
 }
 
+.mesureButtonDiv {
+  position: relative;
+  display: block;
+  margin: 10px auto auto 10px;
+}
+
 
 .card-header{
   background-color:"#D4EE5E"

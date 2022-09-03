@@ -1,7 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import Map from "ol/Map";
-import * as htmlToImage from 'html-to-image';
-import domtoimage from 'dom-to-image';
 
 import View from "ol/View";
 import LayerTile from "ol/layer/Tile";
@@ -124,6 +122,7 @@ export class MapsComponent implements OnInit {
   helpTooltip: any;
   typeSelect: HTMLElement;
   listener: any;
+  optiional: string = "ma";
   constructor(private ngxCsvParser: NgxCsvParser,
     private lrsServiceService: LrsServiceService,
     private httpClient: HttpClient,private fb:FormBuilder,
@@ -159,6 +158,7 @@ export class MapsComponent implements OnInit {
     dim: [190, 160],
     format: "jpeg",
   };
+   
   lines = new LineStyle(
     "Normal",
     "center",
@@ -466,6 +466,14 @@ export class MapsComponent implements OnInit {
     source: new OSM(),
   } as BaseLayerOptions);
 
+  google = new TileLayer({
+    title: "Google",
+    type: "base",
+    source: new XYZ({
+      url: 'http://mt0.google.com/vt/lyrs=y&hl=en&x={x}&y={y}&z={z}'
+    })
+  }as BaseLayerOptions);
+
   watercolor = new LayerTile({
     title: "Water color",
     type: "base",
@@ -474,6 +482,9 @@ export class MapsComponent implements OnInit {
       layer: "watercolor",
     }),
   } as BaseLayerOptions);
+
+
+
 
   baseMaps = new LayerGroup({
     title: "Base maps",
@@ -494,17 +505,20 @@ this.spinner.show();
     }, 5000);
     this.user = JSON.parse(localStorage.getItem('user'));
 
-
-    for(let i = 0;i<this.user.provinces.length;i++){
-      if(this.items == ""){
-        this.items  =  this.items + "''" + this.user.provinces[i].id + "''"
-        this.items2  =  this.items2 + "'" + this.user.provinces[i].id + "'"
-      }else{
-        this.items  =  this.items + ",''" + this.user.provinces[i].id + "''"
-        this.items2  =  this.items2 + ",'" + this.user.provinces[i].id + "'"
+    if(this.user.roles[0].name !='Role_Admin'){
+      for(let i = 0;i<this.user.profil.provinces.length;i++){
+        if(this.items == ""){
+          this.items  =  this.items + "''" + this.user.profil.provinces[i].id + "''"
+          this.items2  =  this.items2 + "'" + this.user.profil.provinces[i].id + "'"
+        }else{
+          this.items  =  this.items + ",''" + this.user.profil.provinces[i].id + "''"
+          this.items2  =  this.items2 + ",'" + this.user.profil.provinces[i].id + "'"
+        }
+  
       }
-
     }
+
+    
 
     
 
@@ -593,6 +607,7 @@ this.spinner.show();
       style: this.highlightStyle,
     });
     /////////////////////////////////////////////////////////
+    if(this.user.roles[0].name !='Role_Admin'){
     this.SourceMAR = new VectorSource({
       format: new GeoJSON(),
       
@@ -604,7 +619,17 @@ this.spinner.show();
       strategy: bboxStrategy,
       
     });
-
+  }else{
+    this.SourceMAR = new VectorSource({
+      format: new GeoJSON(),
+      
+      url:  (extent) => {
+        return ("http://localhost:8081/geoserver/i2singineerie/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=i2singineerie:LRS_ROUTES&outputFormat=application/json");
+      },
+      strategy: bboxStrategy,
+      
+    });
+  }
 
 
     // this.SrcLinear_events = new VectorSource({
@@ -618,7 +643,7 @@ this.spinner.show();
     //   },
     //   strategy: bboxStrategy,
     // });
-
+    if(this.user.roles[0].name !='Role_Admin'){
     this.SrcLinear_events = new VectorSource({
       format: new GeoJSON(),
       url:  (extent)=> {
@@ -631,7 +656,18 @@ this.spinner.show();
       },
       strategy: bboxStrategy,
     });
-
+  }else{
+    this.SrcLinear_events = new VectorSource({
+      format: new GeoJSON(),
+      url:  (extent)=> {
+        return (
+          "http://localhost:8081/geoserver/i2singineerie/ows?service=WFS&" +  
+          "version=1.1.0&request=GetFeature&typename=i2singineerie:LINEAR_EVENT&outputFormat=application/json"
+        );
+      },
+      strategy: bboxStrategy,
+    });
+  }
 
 
     this.MAR2 = new VectorLayer({
@@ -803,7 +839,7 @@ this.spinner.show();
 
   });
 
-  
+  if(this.user.roles[0].name !='Role_Admin'){
     this.SrcPoint_events = new VectorSource({
       format: new GeoJSON(),
       url:  (extent)=> {
@@ -817,6 +853,19 @@ this.spinner.show();
       },
       strategy: bboxStrategy,
     });
+
+  }else{
+    this.SrcPoint_events = new VectorSource({
+      format: new GeoJSON(),
+      url:  (extent)=> {
+        return (
+          "http://localhost:8081/geoserver/i2singineerie/ows?service=WFS&" +
+          "version=1.1.0&request=GetFeature&typename=i2singineerie:PONCTUEL_EVENTS&outputFormat=application/json"
+        );
+      },
+      strategy: bboxStrategy,
+    });
+  }
 
     this.accident = new VectorLayer({
       title: "PONCTUEL_EVENTS",
@@ -907,6 +956,31 @@ this.spinner.show();
     } as BaseLayerOptions);
 
     ///////////////////////////Mesure14////////////////////////
+    var mesureButton = document.createElement('button');
+      mesureButton.innerHTML = '<i class="bi bi-calculator-fill"></i>';
+      mesureButton.className = 'myButton';
+      mesureButton.id = 'mesure';
+
+      var mesureElement = document.createElement('div');
+      mesureElement.className = 'mesureButtonDiv';
+      mesureElement.appendChild(mesureButton);
+
+      var mesureControl = new Control({
+          element: mesureElement
+      })
+
+      mesureButton.addEventListener("click", () => {
+        mesureButton.classList.toggle('clicked');
+        if(this.optiional == "pa") {this.optiional = "ma"}
+        else this.optiional = "pa"
+       console.error(this.optiional)
+        
+
+      })
+      
+       
+
+    ///////////////////////////Mesure14////////////////////////
     var lengthButton = document.createElement('button');
       lengthButton.innerHTML = '<i class="bi bi-rulers"></i>';
       lengthButton.className = 'myButton';
@@ -921,6 +995,7 @@ this.spinner.show();
       })
 
       var lengthFlag = false;
+
     lengthButton.addEventListener("click", () => {
         // disableOtherInteraction('lengthButton');
         lengthButton.classList.toggle('clicked');
@@ -1119,6 +1194,37 @@ this.spinner.show();
         this.eventTypeVhangedVolee(this.productForm.value['name'])
     
         this.edit1.click();
+      }
+
+      if(this.optiional == "pa"){
+
+        console.warn(this.optiional)
+        
+          const coordinate = evt.coordinate;
+          console.log(coordinate);
+      var object ={}
+      object["x"] = coordinate[0];
+      object["y"] = coordinate[1];
+      this.spinner.show();
+          this.lrsServiceService.getByCoordEvent(object).subscribe(
+            (r) => {
+              this.spinner.hide();
+              console.log(r);
+              r = r/1000 
+              var test = ' ' + r + ' km'
+
+           
+          var contentTable = '<table id="customers"> <tr>';
+          contentTable = contentTable + `<th>Mesure</th>`;
+          contentTable = contentTable + "</tr> <tr>";
+          contentTable = contentTable + `<td>${test}</td>`;
+          contentTable = contentTable + "<tr> </table>";
+          content.innerHTML = contentTable;
+          overlay.setPosition(coordinate);
+
+            })
+          
+        
       }
 
       if (this.featureInfoFlag) {
@@ -1886,6 +1992,7 @@ console.log(this.displayedColumns)
 //mesure14
     // this.addInteraction1();
     this.map.addControl(lengthControl);
+    this.map.addControl(mesureControl);
   }
 
   addInteraction(typo: String) {
@@ -4076,7 +4183,7 @@ submitRef(){
     
     
 
-
+ 
 
   }
 }
@@ -4084,8 +4191,9 @@ submitRef(){
 
 getref(){
   this.lrsServiceService.getreference().subscribe((res)=>{
-this.importation = res == "true"? true:false;
-// console.log("achraf", res)
+this.importation = res == true? true:false;
+
+ console.log("l3arbi batman", res)
   },(err)=>{
     console.log(err)
   })

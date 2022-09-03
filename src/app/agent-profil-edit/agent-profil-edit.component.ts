@@ -26,7 +26,13 @@ export class AgentProfilEditComponent implements OnInit {
   provincesSelect: any;
   provinceSelect: string;
   selectedProvince: any;
-  constructor( private lrsServiceService :LrsServiceService, private route:ActivatedRoute) { }
+  selectedProfil: any;
+  profil: any;
+  proflies: any;
+  profiled: any;
+  constructor( private lrsServiceService :LrsServiceService, private route:ActivatedRoute) {
+    this.getprofiles();
+  }
 
   ngOnInit(): void {
     this.getProvinces();
@@ -36,6 +42,7 @@ export class AgentProfilEditComponent implements OnInit {
       this.user = this.lrsServiceService.getUserByid(this.id);
       // this.agent = this.lrsServiceService.getuserById(this.id);
       this.province = this.user.province.name;
+      this.profiled = this.user.profil.id
     }
     ) 
 
@@ -52,7 +59,7 @@ export class AgentProfilEditComponent implements OnInit {
     this.object['lastConnect'] = this.user.lastConnect
     this.object['roles'] = this.user.roles
     this.object['username'] = this.user.username
-    this.object['provinces'] = this.user.provinces
+    this.object['profil'] = this.profil
 
 
     this.lrsServiceService.updateUser(this.object).subscribe(res=>{this.user = res},err=>console.log(err))
@@ -100,6 +107,31 @@ export class AgentProfilEditComponent implements OnInit {
   return false;
   }
 
+
+  onchange(val){
+    console.log(val)
+    for(let i = 0;i<this.proflies.length;i++){
+      console.log(this.proflies[i].name) 
+      console.log(this.proflies[i].id) 
+      if(this.proflies[i].id == val){
+        this.profil = this.proflies[i];
+        console.log(this.proflies[i].name) 
+        console.log("-----------------------")
+        console.log(val);
+        break;
+      }
+    }
+
+  }
+
+
+  getprofiles(){
+    this.lrsServiceService.getprofiles().subscribe(res=>{
+      
+      this.proflies = res;
+       
+      });
+  }
 
   addedProvince(province){
     console.log("hello world",province)
